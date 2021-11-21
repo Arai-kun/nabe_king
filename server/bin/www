@@ -21,8 +21,8 @@ app.set('port', port);
  */
 
 const options = {
-  key: fs.readFileSync('./key/private_key.pem'),
-  cert: fs.readFileSync('./key/server.crt')
+  key: fs.readFileSync('./key/privkey.pem'),
+  cert: fs.readFileSync('./key/fullchain.pem')
 }
 let server = https.createServer(options, app);
 
