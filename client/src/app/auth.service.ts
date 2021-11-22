@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   exchangeToken(code: string): Observable<string> {
-    return this.http.post<string>('auth/exchange', code)
+    return this.http.post<string>('auth/exchange', JSON.stringify({'code': code}))
     .pipe(
       catchError(this.handleError<string>("")),
       shareReplay(1)

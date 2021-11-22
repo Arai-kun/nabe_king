@@ -29,8 +29,8 @@ authRouter.get('/logout', function(req, res, next){
 });
 
 authRouter.post('/exchange', function(req, res, next){
-    console.log(req);
-    getTokenFromCode(req.body)
+    console.log(req.body['code']);
+    getTokenFromCode(req.body['code'])
     .then(data => res.json(data))
     .catch(error => {
         console.log(error);
