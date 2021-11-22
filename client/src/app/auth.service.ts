@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { shareReplay, tap, catchError} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,10 @@ import { user } from './user';
   providedIn: 'root'
 })
 export class AuthService {
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(
     private http: HttpClient
@@ -48,10 +52,10 @@ export class AuthService {
     );
   }
 
-  exchangeToken(code: string): Observable<string> {
-    return this.http.post<string>('auth/exchange', JSON.stringify({'code': code}))
+  exchangeToken(code: string): Observable<any> {
+    return this.http.post('auth/exchange', JSON.stringify({'code': code}), this.httpOptions)
     .pipe(
-      catchError(this.handleError<string>("")),
+      catchError(this.handleError<any>(null)),
       shareReplay(1)
     );
   }
