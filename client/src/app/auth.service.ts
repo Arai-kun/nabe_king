@@ -48,10 +48,10 @@ export class AuthService {
     );
   }
 
-  exchangeToken(code: string): Observable<Object> {
-    return this.http.post('auth/exchange', code)
+  exchangeToken(code: string): Observable<string> {
+    return this.http.post<string>('auth/exchange', code)
     .pipe(
-      catchError(this.handleError<Object>({})),
+      catchError(this.handleError<string>("")),
       shareReplay(1)
     );
   }
