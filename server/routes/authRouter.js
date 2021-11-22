@@ -1,7 +1,10 @@
 let express = require('express');
+const { token } = require('morgan');
 let authRouter = express.Router();
 //const passport = require('passport');
 let request = require('request');
+
+let tokens = { access_token: "", refresh_token: "" };
 
 /* POST Login. */
 /*
@@ -30,7 +33,7 @@ authRouter.get('/logout', function(req, res, next){
 
 authRouter.post('/exchange', function(req, res, next){
     getTokenFromCode(req.body['code'])
-    .then(data => res.json(data))
+    .then(() => res.json(tokens))
     .catch(error => {
         console.log(error);
         res.sendStatus(500);
@@ -51,7 +54,9 @@ async function getTokenFromCode(code){
         request(options, (error, response, body) => {
             if(error) reject(error);
             console.log(body);
-            resolve(JSON.parse(body));
+            tokens.access_token = JSON.parse(body)['access_token'];
+            tokens.refresh_token = JSON.parse(body)['refresh_token'];
+            resolve();
         });
     });
 }
