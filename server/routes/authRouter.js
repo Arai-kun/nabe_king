@@ -46,6 +46,7 @@ async function getTokenFromCode(code){
         },
         body: `grant_type=authorization_code&code=${code}&client_id=amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449&client_secret=7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a&redirect_uri=https://enginestarter.nl/authorize`
     }
+    console.log(options);
     await new Promise((resolve, reject) => {
         request(options, (error, response, body) => {
             if(error) reject(error);
