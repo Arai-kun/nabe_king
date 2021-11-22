@@ -28,7 +28,7 @@ authRouter.get('/logout', function(req, res, next){
   res.json({result: 'Logout Success'});
 });
 
-authRouter.post('/exchangeToken', function(req, res, next){
+authRouter.post('/exchange', function(req, res, next){
     getTokenFromCode(req.body)
     .then(data => res.json(data))
     .catch(error => {
