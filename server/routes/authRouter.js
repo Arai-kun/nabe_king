@@ -1,7 +1,7 @@
 let express = require('express');
 let authRouter = express.Router();
 //const passport = require('passport');
-const { request, response } = require('../app');
+let request = require('request');
 
 /* POST Login. */
 /*
