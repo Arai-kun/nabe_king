@@ -17,21 +17,18 @@ export class AuthService {
   login(user: user): Observable<boolean>{
     return this.http.post<user>('/auth/login', user)
     .pipe(
-      //tap(() => console.log(`sending user data =${user}`)),
       map(result =>{
         if(result) return true;
         return false;
       }),
-      catchError(() => of(false)),
+      catchError(this.handleError<boolean>(false)),
       shareReplay(1)
-    )
+    );
   }
 
   isAuthenticated(): Observable<boolean> {
     return this.http.get<boolean>('/auth')
     .pipe(
-      //tap(() => console.log('Confirm if authenticated')),
-      //catchError(() => of('isAuthenticated fail'))
       map(result => {
         if(result){
           return true;
@@ -40,15 +37,29 @@ export class AuthService {
           return false;
         }
       }),
-      catchError(() => of(false))
-    )
+      catchError(this.handleError<boolean>(false))
+    );
   }
 
   logout(): Observable<string>{
     return this.http.get<string>('auth/logout')
     .pipe(
-      //tap(() => console.log('logouting...')),
-      catchError(() => of('logout failed'))
-    )
+      catchError(this.handleError<string>('logout failed'))
+    );
+  }
+
+  exchangeToken(code: string): Observable<Object> {
+    return this.http.post('auth/exchange', code)
+    .pipe(
+      catchError(this.handleError<Object>({})),
+      shareReplay(1)
+    );
+  }
+
+  handleError<T>(result?: T) {
+    return (error: any): Observable<T> => {
+      console.log(error);
+      return of(result as T);
+    }
   }
 }

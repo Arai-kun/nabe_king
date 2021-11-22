@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -11,7 +12,8 @@ export class AuthComponent implements OnInit {
   url!: string;
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -19,14 +21,14 @@ export class AuthComponent implements OnInit {
     console.log(this.params);
     if(this.params["spapi_oauth_code"] && this.params["selling_partner_id"])
     {
-      console.log(true);
+      this.authService.exchangeToken(this.params["spapi_oauth_code"])
+      .subscribe(tokens => console.log(tokens));
     }
     else
     {
       console.log(false);
-      //window.location.href = `${this.params["amazon_callback_uri"]}?redirect_uri=https://enginestarter.nl/#/authorize&amazon_state=${this.params["amazon_state"]}&version=beta`;
-      //window.location.href = 
-      //"https://sellercentral.amazon.co.jp/apps/authorize/consent?application_id=amzn1.sp.solution.64bd6392-c1a0-4951-9b00-2744796fc74a&version=beta";
+      window.location.href = 
+      "https://sellercentral.amazon.co.jp/apps/authorize/consent?application_id=amzn1.sp.solution.64bd6392-c1a0-4951-9b00-2744796fc74a&version=beta&state=123456";
     }
   }
 
