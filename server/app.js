@@ -40,7 +40,7 @@ app.use(session({
     saveUninitialized: false,  // 未認証時のセッションを保存しないようにする
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,  // クッキーの有効期限は1日
-      secure: false                 // HTTP 利用時は false にする
+      secure: true                 // HTTP 利用時は false にする
     }
 }));
 app.use(passport.initialize());

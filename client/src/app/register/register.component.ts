@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DbService } from '../db.service';
 import { user } from '../user';
-import { Location } from "@angular/common";
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -27,8 +27,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private dbService: DbService,
     private fb: FormBuilder,
-    private location: Location,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -50,7 +50,10 @@ export class RegisterComponent implements OnInit {
       }
       else{
         this.dbService.createUser(this.user)
-        .subscribe(() => this.router.navigate(['login']));  // Proccess to login()
+        .subscribe(() => {
+          this.authService.login(this.user)
+          .subscribe(() => this.router.navigate(['auth']));
+        });
       }
     });
   }

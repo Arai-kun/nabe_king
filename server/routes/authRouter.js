@@ -1,16 +1,15 @@
 let express = require('express');
 const { token } = require('morgan');
 let authRouter = express.Router();
-//const passport = require('passport');
+const passport = require('passport');
 let request = require('request');
 
 let tokens = { access_token: "", refresh_token: "" };
 
 /* POST Login. */
-/*
 authRouter.post('/login', passport.authenticate('local', { session: true }), function(req, res) {
   res.json(true);
-});*/
+});
 
 /* GET isAuthenticated */
 authRouter.get('/', function(req, res, next){

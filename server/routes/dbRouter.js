@@ -10,6 +10,7 @@ dbRouter.post('/', function(req, res, next){
     bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
         if(error) next(error);
         console.log(req.body);
+        req.body['password'] = hash;
         User.create(req.body, error => {
             if(error) next(error);
             res.json({result: 'success'});
