@@ -21,7 +21,7 @@
             <strong>パスワードを入力してください</strong>
           </mat-error>
         </mat-card-content>
-        <button mat-stroked-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
           <span *ngIf="submitting">処理中...</span>
           <span *ngIf="!submitting">ログイン</span>
         </button>
