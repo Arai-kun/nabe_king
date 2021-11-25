@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.http.get<boolean>('/auth')
+    return this.http.get<boolean>('/auth/check')
     .pipe(
       map(result => {
         if(result){
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   logout(): Observable<string>{
-    return this.http.get<string>('auth/logout')
+    return this.http.get<string>('/auth/logout')
     .pipe(
       catchError(this.handleError<string>('logout failed'))
     );

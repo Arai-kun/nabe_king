@@ -12,7 +12,7 @@ authRouter.post('/login', passport.authenticate('local', { session: true }), fun
 });
 
 /* GET isAuthenticated */
-authRouter.get('/', function(req, res, next){
+authRouter.get('/check', function(req, res, next){
   //console.log('Call GET /auth')
   //if(error) next(error);
   if(req.isAuthenticated()){
