@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -15,7 +16,6 @@
     "morgan": "~1.9.1",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
-    "request": "^2.88.2",
-    "sendgrid": "^5.2.3"
+    "request": "^2.88.2"
   }
 }
