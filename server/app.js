@@ -91,10 +91,10 @@ function passwordValidator(reqPassword, dbPassword) {
     return bcrypt.compareSync(reqPassword, dbPassword);
 }
 
-app.use(express.static(path.join(__dirname, '../client/dist/client')));
-app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
-
 app.use('/auth', authRouter);
 app.use('/user', dbRouter);
+
+app.use(express.static(path.join(__dirname, '../client/dist/client')));
+app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
 
 module.exports = app;
