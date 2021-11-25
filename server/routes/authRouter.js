@@ -1,5 +1,4 @@
 let express = require('express');
-const { token } = require('morgan');
 let authRouter = express.Router();
 const passport = require('passport');
 let request = require('request');
@@ -15,6 +14,7 @@ authRouter.post('/login', passport.authenticate('local', { session: true }), fun
 authRouter.get('/check', function(req, res, next){
   //console.log('Call GET /auth')
   //if(error) next(error);
+  console.log(req);
   if(req.isAuthenticated()){
     res.json(true);
   }
