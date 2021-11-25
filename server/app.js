@@ -30,7 +30,7 @@ let dbRouter = require('./routes/dbRouter');
 
 let app = express();
 
-app.set('trust proxy', true);
+app.enable('trust proxy');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -43,7 +43,8 @@ app.use(session({
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,  // クッキーの有効期限は1日
       secure: true                 // HTTP 利用時は false にする
-    }
+    },
+    proxy: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
