@@ -9,4 +9,6 @@ async function sendgridExample() {
     html: '<h1>abc123</h1>'
   });
 }
-sendgridExample();
+sendgridExample()
+.then(() => console.log('complete!'))
+.catch(error => console.log(error));
