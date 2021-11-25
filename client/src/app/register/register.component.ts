@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { DbService } from '../db.service';
 import { user } from '../user';
 import { Location } from "@angular/common";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private dbService: DbService,
     private fb: FormBuilder,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -44,11 +46,11 @@ export class RegisterComponent implements OnInit {
     this.dbService.userExist(this.user.email)
     .subscribe(exist => {
       if(exist){
-        this.location.go("login");
+        this.router.navigate(['login']);
       }
       else{
         this.dbService.createUser(this.user)
-        .subscribe(() => this.location.go("auth"));
+        .subscribe(() => this.router.navigate(['login']));  // Proccess to login()
       }
     });
   }
