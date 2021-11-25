@@ -4,7 +4,7 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY || 'SG.Jl-6N-ywQaal4JR818zTWg.Re
 async function sendgridExample() {
   await sendgrid.send({
     to: 'koki.alright@gmail.com',
-    from: 'noreply@mail.nabeking.com',
+    from: 'noreply@enginestarter.nl',
     subject: 'test',
     html: '<h1>abc123</h1>'
   });
