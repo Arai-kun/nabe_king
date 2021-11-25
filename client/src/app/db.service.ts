@@ -39,6 +39,21 @@ export class DbService {
     );
   }
 
+  tokensExist(): Observable<boolean> {
+    return this.http.get<boolean>('user/tokens', this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+  }
+
   
 
   private handleError<T>(result?: T) {

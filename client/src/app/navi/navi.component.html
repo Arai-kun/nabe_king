@@ -20,7 +20,15 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>client</span>
+      <span>アプリケーション</span>
+      <span fxFlexOffset="auto">
+        <button
+          type="button"
+          mat-raised-button
+          (click)="onLogout()">
+          ログアウト
+        </button>
+      </span>
     </mat-toolbar>
     <!-- Add Content Here -->
   </mat-sidenav-content>

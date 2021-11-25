@@ -19,7 +19,7 @@ export class AuthService {
   ) { }
 
   login(user: user): Observable<boolean>{
-    return this.http.post<user>('/auth/login', user)
+    return this.http.post<user>('/auth/login', user, this.httpOptions)
     .pipe(
       map(result =>{
         if(result) return true;
@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.http.get<boolean>('/auth')
+    return this.http.get<boolean>('/auth/check', this.httpOptions)
     .pipe(
       map(result => {
         if(result){
@@ -46,14 +46,14 @@ export class AuthService {
   }
 
   logout(): Observable<string>{
-    return this.http.get<string>('auth/logout')
+    return this.http.get<string>('/auth/logout', this.httpOptions)
     .pipe(
       catchError(this.handleError<string>('logout failed'))
     );
   }
 
-  exchangeToken(code: string): Observable<any> {
-    return this.http.post('auth/exchange', JSON.stringify({'code': code}), this.httpOptions)
+  exchangeToken(code: string, id: string): Observable<any> {
+    return this.http.post('auth/exchange', JSON.stringify({'code': code, 'id': id}), this.httpOptions)
     .pipe(
       catchError(this.handleError<any>(null)),
       shareReplay(1)

@@ -30,6 +30,8 @@ let dbRouter = require('./routes/dbRouter');
 
 let app = express();
 
+app.enable('trust proxy');
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,8 +42,9 @@ app.use(session({
     saveUninitialized: false,  // 未認証時のセッションを保存しないようにする
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,  // クッキーの有効期限は1日
-      secure: false                 // HTTP 利用時は false にする
-    }
+      secure: true                 // HTTP 利用時は false にする
+    },
+    proxy: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,10 +94,10 @@ function passwordValidator(reqPassword, dbPassword) {
     return bcrypt.compareSync(reqPassword, dbPassword);
 }
 
-app.use(express.static(path.join(__dirname, '../client/dist/client')));
-app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
-
 app.use('/auth', authRouter);
 app.use('/user', dbRouter);
+
+app.use(express.static(path.join(__dirname, '../client/dist/client')));
+app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
 
 module.exports = app;
