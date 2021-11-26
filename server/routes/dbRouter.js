@@ -30,7 +30,7 @@ dbRouter.post('/exist', function(req, res, next){
 });
 
 dbRouter.get('/tokens', function(req, res, next){
-    console.log(req);
+    //console.log(req);
     User.findOne({email: req.user['email']}, function(error, user){
         if(error) next(error);
         if(user.seller_partner_id === "" || user.refresh_token === "" || user.access_token === ""){
