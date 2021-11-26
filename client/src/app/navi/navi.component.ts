@@ -26,7 +26,7 @@ export class NaviComponent {
 
   onLogout(): void{
     this.authService.logout().subscribe(() => {
-      this.router.navigateByUrl('/');
+      this.router.navigate(['/']);
     });
   }
 

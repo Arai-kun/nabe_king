@@ -32,7 +32,7 @@ export class AuthComponent implements OnInit {
         if(this.params["spapi_oauth_code"] && this.params["selling_partner_id"])
         {
           this.authService.exchangeToken(this.params["spapi_oauth_code"], this.params["selling_partner_id"])
-          .subscribe(()=> this.router.navigateByUrl('/auth'));
+          .subscribe(()=> this.ngOnInit());
         }
         else
         {
