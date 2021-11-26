@@ -101,10 +101,12 @@ app.use('/user', dbRouter);
 app.use(express.static(path.join(__dirname, '../client/dist/client')));
 app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
 
-// catch 404 and forward to error handler
+// catch 404 and forward to error handler => Angular in charge of this process
+/*
 app.use(function(req, res, next) {
   next(createError(404));
 });
+*/
 
 // error handler
 app.use(function(err, req, res, next) {
