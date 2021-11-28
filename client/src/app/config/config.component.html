@@ -19,6 +19,7 @@
                     <mat-select [formControl]="selectControl"
                         name="dulation"
                         [(ngModel)]="dulation">
+                        <!--<mat-option>--</mat-option>-->
                         <mat-option *ngFor="let dulation of dulations" [value]="dulation.value">
                             {{dulation.viewValue}}
                         </mat-option>

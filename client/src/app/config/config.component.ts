@@ -18,9 +18,9 @@ export class ConfigComponent implements OnInit {
   statusOptions: string[] = ['無効', '有効'];
   status : string = this.statusOptions[0];
   dulation: number = 0;
-  dulations = [{value: 0, viewValue: ""}];
+  dulations = [{value: 0, viewValue: "0日後に送信する"}];
   radioControl = new FormControl(this.status);
-  selectControl = new FormControl(this.dulation, Validators.required);
+  selectControl = new FormControl(this.dulation);//, Validators.required);
   form!: FormGroup;
 
   constructor(
@@ -29,7 +29,7 @@ export class ConfigComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    for(let i = 0; i < 31; i++){
+    for(let i = 1; i < 31; i++){
       this.dulations.push({value: i, viewValue: `${i}日後に送信する`});
     }
     this.form = this.fb.group({
