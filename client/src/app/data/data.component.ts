@@ -84,6 +84,7 @@ export class DataComponent implements OnInit {
           this.dataSource[i].isSent = '未配信';
         }
         this.dataSource[i].orderId = this.data_arr[i].orderId;
+        this.data_arr[i].purchaseDate = new Date(this.data_arr[i].purchaseDate);
         this.dataSource[i].purchaseDate = `${this.data_arr[i].purchaseDate.getFullYear()}年${this.data_arr[i].purchaseDate.getMonth() + 1}月${this.data_arr[i].purchaseDate.getDate()}日${this.data_arr[i].purchaseDate.getHours()}時${this.data_arr[i].purchaseDate.getMinutes()}分`;
         this.dataSource[i].buyerName = this.data_arr[i].buyerName;
         this.dataSource[i].buyerEmail = this.data_arr[i].buyerEmail;
