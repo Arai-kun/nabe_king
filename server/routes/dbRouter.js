@@ -83,4 +83,11 @@ dbRouter.get('/init', function(req, res, next){
     });
 });
 
+dbRouter.get('/config', function(req, res, next) {
+    Config.findOne({email: req.user['email']}, (config, error) => {
+        if(error) next(error);
+        res.json(config);
+    })
+})
+
 module.exports = dbRouter;
