@@ -37,7 +37,7 @@ authRouter.post('/exchange', function(req, res, next){
      */
     getTokenFromCode(req.body['code'])
     .then(() => {
-        User.updateOne({email: req.user.email},
+        User.updateOne({email: req.user['email']}, // req.user.email => req.user['email']
             {
                 seller_partner_id: req.body['id'], 
                 refresh_token: tokens.refresh_token, 

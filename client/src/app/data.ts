@@ -7,6 +7,7 @@ export interface data {
         buyerEmail: string,
         buyerName: string,
         itemName: string,
-        quantityOrdered: number
+        quantityOrdered: number,
+        isSent: boolean
     }]
 }

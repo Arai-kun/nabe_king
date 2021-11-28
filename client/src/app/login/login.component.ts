@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
     .subscribe(result => {
       if(result)
       {
-        this.submitting = false;
         this.router.navigate(['auth']);
       }
       else

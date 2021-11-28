@@ -58,12 +58,13 @@ dbRouter.get('/init', function(req, res, next){
             email: mail,
             data_arr: [{
                 orderId: "",
-                purchaseDate: new Date(),
+                purchaseDate: new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })),
                 orderStatus: "",
                 buyerEmail: "",
                 buyerName: "",
                 itemName: "",
-                quantityOrdered: 0
+                quantityOrdered: 0,
+                isSent: false
             }]
         }, error => {
             if(error) next(error);
@@ -87,6 +88,23 @@ dbRouter.get('/config', function(req, res, next) {
     Config.findOne({email: req.user['email']}, (error, config) => {
         if(error) next(error);
         res.json(config);
+    });
+});
+
+dbRouter.post('/config', function(req, res, next){
+    Config.updateOne({email: req.user['email']}, {
+        status: req.body['status'], 
+        dulation: req.body['dulation']
+    }, error => {
+        if(error) next(error);
+        res.json({result: 'success'});
+    });
+});
+
+dbRouter.get('/data', function(req, res, next){
+    Data.findOne({email: req.user['email']}, (error, data) => {
+        if(error) next(error);
+        res.json(data);
     })
 })
 

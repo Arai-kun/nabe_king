@@ -8,7 +8,8 @@ let mongoose = require("mongoose"),
         buyerEmail: String,
         buyerName: String,
         itemName: String,
-        quantityOrdered: Number
+        quantityOrdered: Number,
+        isSent: Boolean
     }]
 
   });

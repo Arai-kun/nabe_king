@@ -51,9 +51,18 @@ export class ConfigComponent implements OnInit {
 
   onSave(): void {
     this.submitting = true;
-    console.log(this.form.value);
-    console.log(this.status);
-    console.log(this.dulation);
+    if(this.status === this.statusOptions[0]) this.config.status = false;
+    if(this.status === this.statusOptions[1]) this.config.status = true;
+    this.config.dulation = this.dulation;
+    this.dbService.update<config>('config', this.config)
+    .subscribe(result => {
+      if(result){
+        this.ngOnInit();
+      }
+      else{
+        console.log("update failed");
+      }
+    })
 
   }
 
