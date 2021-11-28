@@ -42,7 +42,16 @@ export class DataComponent implements OnInit {
     'isSent',
     'notSend'
   ];
-  dataSource: displayData[] = [];
+  dataSource: displayData[] = [{
+    orderId: "",
+    purchaseDate: new Date(),
+    buyerName: "",
+    buyerEmail: "",
+    itemName: "",
+    quantityOrdered: 0,
+    orderStatus: "",
+    isSent: ""
+  }];
   notSend: boolean = false;
 
   constructor(

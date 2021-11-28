@@ -57,6 +57,7 @@ export class ConfigComponent implements OnInit {
     this.dbService.update<config>('config', this.config)
     .subscribe(result => {
       if(result){
+        this.submitting = false;
         this.ngOnInit();
       }
       else{
