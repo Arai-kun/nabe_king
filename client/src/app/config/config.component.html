@@ -4,32 +4,34 @@
     </mat-card-header>
     <mat-card-content>
         <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
-            <label>メール自動送信</label>
-            <mat-radio-group [formControl]="radioControl"
-                name="status"
-                class="radio-group"
-                [(ngModel)]="status">
-                <mat-radio-button name="status" class="radio-button" *ngFor="let status of statusOptions" [value]="status">
-                    {{status}}
-                </mat-radio-button>
-            </mat-radio-group>
-            <mat-form-field>
-                <mat-label>発送から送信までの間隔</mat-label>
-                <mat-select [formControl]="selectControl"
-                    name="dulation"
-                    [(ngModel)]="dulation">
-                    <mat-option *ngFor="let dulation of dulations" [value]="dulation.value">
-                        {{dulation.viewValue}}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="selectControl.hasError('required')">
-                    <strong>選択してください</strong>
-                </mat-error>
-            </mat-form-field>
-            <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                <span *ngIf="submitting">処理中...</span>
-                <span *ngIf="!submitting">更新</span>
-            </button>
+            <div fxLayout="row">
+                <label>メール自動送信</label>
+                <mat-radio-group [formControl]="radioControl"
+                    name="status"
+                    class="radio-group"
+                    [(ngModel)]="status">
+                    <mat-radio-button name="status" class="radio-button" *ngFor="let status of statusOptions" [value]="status">
+                        {{status}}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field>
+                    <mat-label>発送から送信までの間隔</mat-label>
+                    <mat-select [formControl]="selectControl"
+                        name="dulation"
+                        [(ngModel)]="dulation">
+                        <mat-option *ngFor="let dulation of dulations" [value]="dulation.value">
+                            {{dulation.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                    <!--<mat-error *ngIf="selectControl.hasError('required')">
+                        <strong>選択してください</strong>
+                    </mat-error>-->
+                </mat-form-field>
+                <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+                    <span *ngIf="submitting">処理中...</span>
+                    <span *ngIf="!submitting">更新</span>
+                </button>
+            </div>
         </form>
     </mat-card-content>
 </mat-card>
