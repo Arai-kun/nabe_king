@@ -97,6 +97,7 @@ export class DataComponent implements OnInit {
 
   onSave(): void {
     this.submitting = true;
+    /* 未配信のみの配列に絞るべきか */
     for(let i = 0; i < this.dataSource.length; i++){
       if(this.dataSource[i].unSend === true) this.data_arr[i].unSend = true;
       if(this.dataSource[i].unSend === false) this.data_arr[i].unSend = false;
