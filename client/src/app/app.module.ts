@@ -44,6 +44,10 @@ import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { NaviComponent } from './navi/navi.component';
+import { DataComponent } from './data/data.component';
+import { MailComponent } from './mail/mail.component';
+import { HomeComponent } from './home/home.component';
+import { ConfigComponent } from './config/config.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,10 @@ import { NaviComponent } from './navi/navi.component';
     NaviComponent,
     LoginComponent,
     RegisterComponent,
+    DataComponent,
+    MailComponent,
+    HomeComponent,
+    ConfigComponent,
   ],
   imports: [
     BrowserModule,

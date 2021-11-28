@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { user } from './user';
-
+import { config } from './config'; 
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,21 @@ export class DbService {
     );
   }
 
-  
+  dbInit(): Observable<any> {
+    return this.http.get('user/init', this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null)),
+      shareReplay(1)
+    );
+  }
+
+  get<T>(kind: string): Observable<T> {
+    const url = `user/${kind}`;
+    return this.http.get<T>(url, this.httpOptions)
+    .pipe(
+      catchError(this.handleError<T>())
+    )
+  }
 
   private handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
