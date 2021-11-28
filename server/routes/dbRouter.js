@@ -84,7 +84,7 @@ dbRouter.get('/init', function(req, res, next){
 });
 
 dbRouter.get('/config', function(req, res, next) {
-    Config.findOne({email: req.user['email']}, (config, error) => {
+    Config.findOne({email: req.user['email']}, (error, config) => {
         if(error) next(error);
         res.json(config);
     })
