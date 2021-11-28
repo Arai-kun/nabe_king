@@ -20,7 +20,7 @@ export class ConfigComponent implements OnInit {
   dulation: number = 0;
   dulations = [{value: 0, viewValue: ""}];
   radioControl = new FormControl(this.status);
-  selectControl = new FormControl(null, Validators.required);
+  selectControl = new FormControl(this.dulation, Validators.required);
   form!: FormGroup;
 
   constructor(
