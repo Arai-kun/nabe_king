@@ -29,6 +29,7 @@ export class ConfigComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.submitting = false;
     for(let i = 1; i < 31; i++){
       this.dulations.push({value: i, viewValue: `${i}日後に送信する`});
     }
@@ -57,7 +58,7 @@ export class ConfigComponent implements OnInit {
     this.dbService.update<config>('config', this.config)
     .subscribe(result => {
       if(result){
-        this.submitting = false;
+        //this.submitting = false;
         this.ngOnInit();
       }
       else{

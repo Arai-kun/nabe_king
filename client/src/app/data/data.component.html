@@ -1,7 +1,7 @@
 <mat-card class="data-card">
     <mat-card-header>
         <mat-card-title>データ</mat-card-title>
-        <button fxFlexOffset="auto" mat-button class="btn-block" (click)="onSave()">反映</button>
+        <button fxFlexOffset="auto" mat-raised-button color="accent" class="btn-block" (click)="onSave()">反映</button>
     </mat-card-header>
     <mat-card-content>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -49,8 +49,8 @@
             <ng-container matColumnDef="orderStatus">
                 <th mat-header-cell *matHeaderCellDef>発送状況</th>
                 <td mat-cell *matCellDef="let element">
-                    <span *ngIf="element.status=='未発送'" style="color: red;">{{element.orderStatus}}</span>
-                    <span *ngIf="element.status=='発送済'" style="color: green;">{{element.orderStatus}}</span>
+                    <span *ngIf="element.orderStatus=='未発送'" style="color: red;">{{element.orderStatus}}</span>
+                    <span *ngIf="element.orderStatus=='発送済'" style="color: green;">{{element.orderStatus}}</span>
                 </td>
             </ng-container>
 
@@ -58,8 +58,8 @@
             <ng-container matColumnDef="isSent">
                 <th mat-header-cell *matHeaderCellDef>メール配信</th>
                 <td mat-cell *matCellDef="let element">
-                    <span *ngIf="element.status=='未配信'" style="color: red;">{{element.isSent}}</span>
-                    <span *ngIf="element.status=='配信済'" style="color: green;">{{element.isSent}}</span>
+                    <span *ngIf="element.isSent=='未配信'" style="color: red;">{{element.isSent}}</span>
+                    <span *ngIf="element.isSent=='配信済'" style="color: green;">{{element.isSent}}</span>
                 </td>
             </ng-container>
 
@@ -67,7 +67,7 @@
             <ng-container matColumnDef="notSend">
                 <th mat-header-cell *matHeaderCellDef>配信しない</th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-slide-toggle *ngIf="element.status=='未配信'" name="notSend" [(ngModel)]="notSend"></mat-slide-toggle>
+                    <mat-slide-toggle *ngIf="element.orderStatus=='未配信'" name="notSend" [(ngModel)]="notSend"></mat-slide-toggle>
                 </td>
             </ng-container>
         
