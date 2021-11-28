@@ -28,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTreeModule } from '@angular/material/tree';
@@ -87,6 +88,7 @@ import { ConfigComponent } from './config/config.component';
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
+    MatSlideToggleModule,
     MatTableModule,
     MatTabsModule,
     MatFormFieldModule,
