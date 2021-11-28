@@ -62,7 +62,7 @@ export class ConfigComponent implements OnInit {
         this.ngOnInit();
       }
       else{
-        console.log("update failed");
+        console.log("config update failed");
       }
     })
 

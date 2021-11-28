@@ -8,6 +8,7 @@ export interface data {
         buyerName: string,
         itemName: string,
         quantityOrdered: number,
-        isSent: boolean
+        isSent: boolean,
+        unSend: boolean
     }]
 }

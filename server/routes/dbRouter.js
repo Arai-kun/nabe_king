@@ -64,7 +64,8 @@ dbRouter.get('/init', function(req, res, next){
                 buyerName: "",
                 itemName: "",
                 quantityOrdered: 0,
-                isSent: false
+                isSent: false,
+                unSend: false
             }]
         }, error => {
             if(error) next(error);
@@ -107,5 +108,23 @@ dbRouter.get('/data', function(req, res, next){
         res.json(data);
     })
 })
+
+dbRouter.post('/data', function(req, res, next){
+    Data.updateOne({email: req.user['email']}, {
+        data_arr: req.body['data_arr']
+    }, error => {
+        if(error) next(error);
+        res.json({result: 'success'});
+    });
+});
+
+/*
+dbRouter.get('/unsend', function(req, res, next){
+    Unsend.find((error, data) => {
+        if(error) next(error);
+        res.json(data);
+    })
+})
+*/
 
 module.exports = dbRouter;

@@ -1,7 +1,7 @@
 <mat-card class="data-card">
     <mat-card-header>
         <mat-card-title>データ</mat-card-title>
-        <button fxFlexOffset="auto" mat-raised-button color="accent" class="btn-block" (click)="onSave()">反映</button>
+        <button fxFlexOffset="auto" mat-raised-button color="accent" class="btn-block" (click)="onSave()" [disabled]="submitting">反映</button>
     </mat-card-header>
     <mat-card-content>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -63,11 +63,11 @@
                 </td>
             </ng-container>
 
-            <!-- notSend Column -->
+            <!-- unSend Column -->
             <ng-container matColumnDef="notSend">
                 <th mat-header-cell *matHeaderCellDef>配信しない</th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-slide-toggle *ngIf="element.isSent=='未配信'" name="notSend" [(ngModel)]="notSend"></mat-slide-toggle>
+                    <mat-slide-toggle *ngIf="element.isSent=='未配信'" [(ngModel)]="element.unSend"></mat-slide-toggle>
                 </td>
             </ng-container>
         

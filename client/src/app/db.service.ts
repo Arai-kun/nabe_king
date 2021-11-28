@@ -67,7 +67,15 @@ export class DbService {
     return this.http.get<T>(url, this.httpOptions)
     .pipe(
       catchError(this.handleError<T>())
-    )
+    );
+  }
+
+  getAll<T>(kind: string): Observable<T[]> {
+    const url = `user/${kind}`;
+    return this.http.get<T[]>(url, this.httpOptions)
+    .pipe(
+      catchError(this.handleError<T[]>())
+    );
   }
 
   update<T>(kind: string, data: T): Observable<boolean> {

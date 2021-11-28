@@ -9,7 +9,8 @@ let mongoose = require("mongoose"),
         buyerName: String,
         itemName: String,
         quantityOrdered: Number,
-        isSent: Boolean
+        isSent: Boolean,
+        unSend: Boolean
     }]
 
   });
