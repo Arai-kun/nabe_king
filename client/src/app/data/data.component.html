@@ -1,0 +1,80 @@
+<mat-card class="data-card">
+    <mat-card-header>
+        <mat-card-title>データ</mat-card-title>
+        <button fxFlexOffset="auto" mat-raised-button color="accent" class="btn-block" (click)="onSave()" [disabled]="submitting">反映</button>
+    </mat-card-header>
+    <mat-card-content>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
+        
+            <!-- orderId Column -->
+            <ng-container matColumnDef="orderId">
+                <th mat-header-cell *matHeaderCellDef>注文番号</th>
+                <td mat-cell *matCellDef="let element"> {{element.orderId}} </td>
+            </ng-container>
+
+            <!-- purchaseDate Column -->
+            <ng-container matColumnDef="purchaseDate">
+                <th mat-header-cell *matHeaderCellDef>購入日</th>
+                <td mat-cell *matCellDef="let element"> {{element.purchaseDate}} </td>
+            </ng-container>
+
+            <!-- buyerName Column -->
+            <ng-container matColumnDef="buyerName">
+                <th mat-header-cell *matHeaderCellDef>購入者</th>
+                <td mat-cell *matCellDef="let element"> {{element.buyerName}} </td>
+            </ng-container>
+
+            <!-- buyerEmail Column -->
+            <ng-container matColumnDef="buyerEmail">
+                <th mat-header-cell *matHeaderCellDef>メールアドレス</th>
+                <td mat-cell *matCellDef="let element"> {{element.buyerEmail}} </td>
+            </ng-container>
+
+            <!-- itemName Column -->
+            <ng-container matColumnDef="itemName">
+                <th mat-header-cell *matHeaderCellDef>商品名</th>
+                <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+            </ng-container>
+
+            <!-- quantityOrdered Column -->
+            <ng-container matColumnDef="quantityOrdered">
+                <th mat-header-cell *matHeaderCellDef>数量</th>
+                <td mat-cell *matCellDef="let element"> {{element.quantityOrdered}} </td>
+            </ng-container>
+        
+            <!-- orderStatus Column -->
+            <ng-container matColumnDef="orderStatus">
+                <th mat-header-cell *matHeaderCellDef>発送状況</th>
+                <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.orderStatus=='未発送'" style="color: red;">{{element.orderStatus}}</span>
+                    <span *ngIf="element.orderStatus=='発送済'" style="color: green;">{{element.orderStatus}}</span>
+                </td>
+            </ng-container>
+
+            <!-- isSent Column -->
+            <ng-container matColumnDef="isSent">
+                <th mat-header-cell *matHeaderCellDef>メール配信</th>
+                <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.isSent=='未配信'" style="color: red;">{{element.isSent}}</span>
+                    <span *ngIf="element.isSent=='配信済'" style="color: green;">{{element.isSent}}</span>
+                </td>
+            </ng-container>
+
+            <!-- unSend Column -->
+            <ng-container matColumnDef="notSend">
+                <th mat-header-cell *matHeaderCellDef>配信しない</th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-slide-toggle *ngIf="element.isSent=='未配信'" [(ngModel)]="element.unSend"></mat-slide-toggle>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-card-content>
+</mat-card>
+  
+

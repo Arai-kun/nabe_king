@@ -1,0 +1,41 @@
+<mat-toolbar color="primary" class="app-header">
+    <span>アプリケーション</span>
+    <span class="nav-tool-items" fxFlexOffset="auto">
+      <a mat-button routerLink="/login" routerLinkActive="active">ログイン</a>
+      <a mat-button mat-raised-button routerLink="/register" routerLinkActive="active">登録</a>
+    </span>
+</mat-toolbar>
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card class="box">
+      <mat-card-header>
+        <mat-card-title>登録</mat-card-title>
+      </mat-card-header>
+  
+      <form class="example-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+  
+        <mat-card-content>
+
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="メールアドレス" type="email" name="email" formControlName="email">
+            <mat-error *ngIf="emailControl.hasError('required')">
+                <strong>メールアドレスを入力してください</strong>
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="パスワード" type="password" name="password" formControlName="password" autocomplete="off">
+            <mat-error *ngIf="passwordControl.hasError('required')">
+                <strong>パスワードを入力してください</strong>
+            </mat-error>
+          </mat-form-field>
+  
+        </mat-card-content>
+  
+        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+            <span *ngIf="submitting">処理中...</span>
+            <span *ngIf="!submitting">登録</span>
+        </button>
+  
+      </form>
+    </mat-card>
+  </div>
