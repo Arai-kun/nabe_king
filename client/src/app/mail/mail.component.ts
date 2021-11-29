@@ -26,9 +26,6 @@ export class MailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmail();
-    this.form = this.fb.group({
-      email: this.emailControl
-    });
   }
 
   editorLoaded(event: any) {
@@ -56,6 +53,9 @@ export class MailComponent implements OnInit {
     this.dbService.get<user>('email')
     .subscribe(user => {
       this.email = user.email;
+      this.form = this.fb.group({
+        email: this.emailControl
+      });
     })
   }
 
