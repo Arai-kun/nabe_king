@@ -56,6 +56,7 @@ export class MailComponent implements OnInit {
     this.dbService.get<user>('email')
     .subscribe(user => {
       this.email = user.email;
+      console.log(this.email);
     })
   }
 

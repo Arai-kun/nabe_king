@@ -4,7 +4,7 @@
 <mat-toolbar class="bottom-toolbar">
     <form [formGroup]="form" novalidate (ngSubmit)="onSend()">
         <div fxLayout="row" fxLayoutAlign="space-around center" >
-            <button mat-raised-button color="warm" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+            <button mat-raised-button color="warn" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
                 <span *ngIf="submitting">送信中...</span>
                 <span *ngIf="!submitting">テスト送信</span>
             </button>
