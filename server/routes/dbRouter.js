@@ -119,13 +119,13 @@ dbRouter.post('/data', function(req, res, next){
 });
 
 dbRouter.get('/email', function(req, res, next){
-    res.json(JSON.stringify({
+    res.json({
         email: req.user['email'],
         password: "",
         seller_partner_id: "",
         refresh_token: "",
         access_token: ""
-    }));
+    });
 })
 
 /*
