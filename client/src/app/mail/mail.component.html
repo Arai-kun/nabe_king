@@ -1,8 +1,8 @@
 <div class="container">
-    <email-editor locale="ja-JP" minHeight="800px" (loaded)="editorLoaded($event)"></email-editor>
+    <email-editor locale="ja-JP" (loaded)="editorLoaded($event)"></email-editor>
 </div>
 <mat-toolbar class="bottom-toolbar">
-    <div fxLayout="row">
+    <div fxLayout="row" fxLayout="space-around center">
         <form [formGroup]="form" novalidate (ngSubmit)="onSend()">
             <button fxFlex="20" mat-raised-button color="warn" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
                 <span *ngIf="submitting">送信中...</span>
