@@ -91,6 +91,8 @@ MIT
 @angular/router
 MIT
 
+angular-email-editor
+
 css-loader
 MIT
 Copyright JS Foundation and other contributors

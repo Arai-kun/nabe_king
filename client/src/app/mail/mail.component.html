@@ -1,1 +1,21 @@
-<p>mail works!</p>
+<div class="container">
+    <email-editor locale="ja-JP" (loaded)="editorLoaded($event)"></email-editor>
+</div>
+<mat-toolbar fxLayout="end">
+    <div fxLayoutAlign="space-around row">
+        <form class="example-form" [formGroup]="form" novalidate (ngSubmit)="onSend()">
+            <button mat-raised-button color="warm" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+                <span *ngIf="submitting">送信中...</span>
+                <span *ngIf="!submitting">テスト送信</span>
+            </button>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="メールアドレス" type="email" name="email" formControlName="email">
+                <mat-error *ngIf="emailControl.hasError('required')">
+                    <strong>メールアドレスを入力してください</strong>
+                </mat-error>
+            </mat-form-field>
+        </form>
+        <button mat-raised-button color="primary" type="button" (click)="exportHtml()">保存</button>
+    </div>
+</mat-toolbar>
+

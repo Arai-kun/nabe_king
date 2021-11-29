@@ -118,6 +118,16 @@ dbRouter.post('/data', function(req, res, next){
     });
 });
 
+dbRouter.get('/email', function(req, res, next){
+    res.json(JSON.stringify({
+        email: req.user['email'],
+        password: "",
+        seller_partner_id: "",
+        refresh_token: "",
+        access_token: ""
+    }));
+})
+
 /*
 dbRouter.get('/unsend', function(req, res, next){
     Unsend.find((error, data) => {
