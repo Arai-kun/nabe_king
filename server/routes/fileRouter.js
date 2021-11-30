@@ -2,7 +2,7 @@ let express = require('express');
 let fileRouter = express.Router();
 let cloudinary = require('cloudinary').v2;
 
-fileRouter.post('/upload', function(res, req, next){
+fileRouter.post('/upload', function(req, res, next){
     console.log(req.body);
     /*
     cloudinary.uploader.upload(req.body, function(error, result){
