@@ -32,10 +32,8 @@ export class MailComponent implements OnInit {
     //this.emailEditor.editor.loadDesign(sample);
     const reader = new FileReader();
     this.emailEditor.editor.registerCallback("image", (file: any, done: (arg0: { progress: number, url: string; }) => void) => {
-      console.log("image");
       reader.readAsDataURL(file.attachments[0]);
       reader.onload = () => {
-        console.log(reader.result);
         if(typeof reader.result === 'string'){
           this.fileService.upload(reader.result)
           .subscribe(url =>{

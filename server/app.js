@@ -4,7 +4,8 @@ let cookieParser = require('cookie-parser');
 let createError = require('http-errors')
 let logger = require('morgan');
 let mongoose = require('mongoose');
-let cloudinary = require('cloudinary').v2
+let cloudinary = require('cloudinary').v2;
+const sendgrid = require('@sendgrid/mail');
 
 mongoose.connect(
     "mongodb://localhost:27017/nabe_king?authSource=admin",
@@ -27,6 +28,8 @@ cloudinary.config({
   secure: true
 });
 
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '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');
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
@@ -37,6 +40,7 @@ let User = require('./models/user');
 let authRouter = require('./routes/authRouter');
 let dbRouter = require('./routes/dbRouter');
 let fileRouter = require('./routes/fileRouter');
+let mailRouter = require('./routes/mailRouter');
 
 let app = express();
 
@@ -107,6 +111,7 @@ function passwordValidator(reqPassword, dbPassword) {
 app.use('/auth', authRouter);
 app.use('/user', dbRouter);
 app.use('/file', fileRouter);
+app.use('/mail', mailRouter);
 
 app.use(express.static(path.join(__dirname, '../client/dist/client')));
 app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
