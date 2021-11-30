@@ -3,7 +3,7 @@ let mailRouter = express.Router();
 const sendgrid = require('@sendgrid/mail');
 let handlebars = require('handlebars');
 
-mailRouter.get('send', function(req, res, next){
+mailRouter.post('send', function(req, res, next){
   testValue = {
     name: '鈴木太郎',
     orderId: 'abcde012345',
