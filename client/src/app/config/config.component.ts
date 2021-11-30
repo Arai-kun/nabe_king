@@ -44,7 +44,7 @@ export class ConfigComponent implements OnInit {
     this.dbService.get<config>('config')
     .subscribe(config => {
       this.config = config;
-      console.log(this.config);
+      //console.log(this.config);
       if(this.config.status) this.status = this.statusOptions[1];
       this.dulation = this.config.dulation;
     });

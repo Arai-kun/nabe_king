@@ -81,8 +81,7 @@ export class MailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
+      //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
         this.sending = true;
@@ -96,7 +95,7 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              console.log('Send success');
+              this.sending = false;
             }
             else{
               console.log('Send failed');
