@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+}
+
+.app-footer {
+    position: relative;
+    left: 0;
+    right: 0;
+}

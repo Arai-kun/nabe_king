@@ -1,4 +1,34 @@
 <div class="container">
-  <button (click)="exportHtml()">Export</button>
+<!--<div class="container">-->
   <email-editor locale="ja-JP" (loaded)="editorLoaded($event)"></email-editor>
+  <mat-toolbar color="primary">
+    <span fxLayout="row" fxFlexOffset="auto" fxLayoutGap="10px">
+      <button mat-raised-button type="button" (click)="onSend()" [disabled]="submitting">
+        <span *ngIf="submitting">送信中...</span>
+        <span *ngIf="!submitting">{{email}} にテスト送信</span>
+      </button>
+      <button mat-raised-button color="accent" type="button" (click)="exportHtml()">保存</button>
+    </span>
+  </mat-toolbar>
 </div>
+<!--
+<mat-card color="primary" class="app-footer">
+      <form [formGroup]="form" novalidate (ngSubmit)="onSend()">
+        <div fxLayout="row" fxLayoutAlign="space-around start">
+          <button mat-raised-button color="warn" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+              <span *ngIf="submitting">送信中...</span>
+              <span *ngIf="!submitting">テスト送信</span>
+          </button>
+          <div style="font-size: 9px;">
+          <mat-form-field appearance="outline">
+              <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email">
+              <mat-error *ngIf="emailControl.hasError('required') || emailControl.hasError('email')">
+                  <strong>メールアドレスを入力してください</strong>
+              </mat-error>
+          </mat-form-field>
+          </div>
+          <button mat-raised-button color="accent" type="button" (click)="exportHtml()">保存</button>
+        </div>
+      </form>
+</mat-card>
+-->

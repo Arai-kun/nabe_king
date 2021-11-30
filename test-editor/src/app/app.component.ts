@@ -1,6 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Inject} from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import sample from './sample.json';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+
+export interface DialogData {
+  subject: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -9,9 +15,30 @@ import sample from './sample.json';
 })
 export class AppComponent {
   title = 'angular-email-editor';
+  email : string = '';
+  subject: string= '';
+  form!: FormGroup;
+  emailControl = new FormControl(null, [
+    Validators.required,
+    Validators.email
+  ]);
+  submitting: boolean = false;
 
   @ViewChild(EmailEditorComponent)
   private emailEditor!: EmailEditorComponent;
+
+  constructor(
+    private fb: FormBuilder,
+    public dialog: MatDialog
+  ) { }
+
+  ngOnInit(): void {
+    this.getEmail();
+    this.form = this.fb.group({
+      email: this.emailControl
+    });
+    this.subject = 'タイトル';
+  }
   
   editorLoaded(event: any) {
     // load the design json here
@@ -33,5 +60,41 @@ export class AppComponent {
 
   exportHtml() {
     this.emailEditor.editor.exportHtml((data: any) => console.log('exportHtml', data));
+  }
+
+  getEmail(): void {
+    this.email = 'mail@test.com';
+    //console.log(this.email);
+  }
+
+  onSend(): void {
+    this.openDialog();
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data: {subject: this.subject}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.subject = result;
+    });
+  }
+}
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: 'dialog-overview-example-dialog.html',
+})
+export class DialogOverviewExampleDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
