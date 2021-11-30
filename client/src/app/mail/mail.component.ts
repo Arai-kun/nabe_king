@@ -82,14 +82,14 @@ export class MailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(this.subject);
+      console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
         this.sending = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           let mail: mail = {
             email: this.email,
-            html: data,
+            html: data['html'],
             subject: this.subject,
             to: this.email   
           }
