@@ -4,6 +4,7 @@ const sendgrid = require('@sendgrid/mail');
 let handlebars = require('handlebars');
 
 mailRouter.post('/send', function(req, res, next){
+  console.log(req.body);
   testValue = {
     name: '鈴木太郎',
     orderId: 'abcde012345',
@@ -11,6 +12,7 @@ mailRouter.post('/send', function(req, res, next){
   }
   let templete = handlebars.compile(req.body['html']);
   let html = templete(testValue);
+  console.log(html);
   sendMail(req.body['to'], req.body['subject'], html)
   .then(() => res.json(true))
   .catch(error => {
