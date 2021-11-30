@@ -4,6 +4,7 @@ let cookieParser = require('cookie-parser');
 let createError = require('http-errors')
 let logger = require('morgan');
 let mongoose = require('mongoose');
+let cloudinary = require('cloudinary').v2
 
 mongoose.connect(
     "mongodb://localhost:27017/nabe_king?authSource=admin",
@@ -17,6 +18,13 @@ mongoose.connect(
 let db = mongoose.connection;
 db.once("open", () => {
   console.log("Successfully connected to MongoDB using Mongoose!");
+});
+
+cloudinary.config({ 
+  cloud_name: 'du1gt2vtq', 
+  api_key: '453981237853244', 
+  api_secret: 'YrpNlSJPjbHajBsQSUL4AcYNtVY',
+  secure: true
 });
 
 const passport = require('passport');
