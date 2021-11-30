@@ -10,7 +10,8 @@ cloudinary.config({
 });
 
 fileRouter.post('/upload', function(res, req, next){
-    cloudinary.uploader.upload(req.body['data'], function(error, result){
+    cloudinary.uploader.upload(req.body, function(error, result){
+        console.log(req.body);
         if(error) next(error);
         console.log(result);
         res.json(result['secure_url']);
