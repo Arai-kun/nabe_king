@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="app-header">
     <span>アプリケーション</span>
-    <span class="nav-tool-items" fxFlexOffset="auto">
+    <span class="nav-tool-items" fxLayout="row" fxFlexOffset="auto" fxLayoutGap="10px">
       <a mat-button routerLink="/login" routerLinkActive="active">ログイン</a>
       <a mat-button mat-raised-button routerLink="/register" routerLinkActive="active">登録</a>
     </span>
@@ -17,7 +17,7 @@
 
           <mat-form-field class="example-full-width">
             <input matInput placeholder="メールアドレス" type="email" name="email" formControlName="email">
-            <mat-error *ngIf="emailControl.hasError('required')">
+            <mat-error *ngIf="emailControl.hasError('required') || emailControl.hasError('email')">
                 <strong>メールアドレスを入力してください</strong>
             </mat-error>
           </mat-form-field>

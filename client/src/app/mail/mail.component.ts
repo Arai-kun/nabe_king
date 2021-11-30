@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
+import { FileService } from '../file.service';
 import { user } from '../user';
 
 @Component({
@@ -11,24 +11,20 @@ import { user } from '../user';
 })
 export class MailComponent implements OnInit {
   email: string = "";
-  form!: FormGroup;
-  emailControl = new FormControl(null, Validators.required);
   submitting: boolean = false;
+  sending: boolean = false;
 
 
   @ViewChild(EmailEditorComponent)
   private emailEditor!: EmailEditorComponent;
 
   constructor(
-    private fb: FormBuilder,
-    private dbService: DbService
+    private dbService: DbService,
+    private fileService: FileService
   ) { }
 
   ngOnInit(): void {
     this.getEmail();
-    this.form = this.fb.group({
-      email: this.emailControl
-    });
   }
 
   editorLoaded(event: any) {
@@ -40,28 +36,31 @@ export class MailComponent implements OnInit {
       reader.readAsDataURL(file.attachments[0]);
       reader.onload = () => {
         console.log(reader.result);
+        if(typeof reader.result === 'string'){
+          this.fileService.upload(reader.result)
+          .subscribe(url =>{
+            done({
+              progress: 100,
+              url: url
+            });
+          });
+        }
       }
-      done({
-          progress: 100,
-          url: "http://portalmelhoresamigos.com.br/wp-content/uploads/2017/06/ferrett-buraco_DOMINIO-PUBLICO.jpg"
-      });
     });
   }
 
   exportHtml() {
+    this.submitting = true;
     this.emailEditor.editor.exportHtml((data: any) => console.log('exportHtml', data));
   }
 
   getEmail(): void {
     this.dbService.get<user>('email')
-    .subscribe(user => {
-      this.email = user.email;
-      console.log(this.email);
-    })
+    .subscribe(user => this.email = user.email);
   }
 
   onSend(): void {
-    console.log(this.form.value);
+    this.sending = true;
     this.exportHtml();
   }
 }

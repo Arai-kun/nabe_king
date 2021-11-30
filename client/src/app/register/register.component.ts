@@ -19,7 +19,10 @@ export class RegisterComponent implements OnInit {
     access_token: ""
   };
   form!: FormGroup;
-  emailControl = new FormControl(null, Validators.required);
+  emailControl = new FormControl(null, [
+    Validators.required,
+    Validators.email
+  ]);
   passwordControl = new FormControl(null, Validators.required);
   submitting: boolean = false;
 

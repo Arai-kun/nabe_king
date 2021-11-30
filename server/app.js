@@ -28,6 +28,7 @@ let User = require('./models/user');
 
 let authRouter = require('./routes/authRouter');
 let dbRouter = require('./routes/dbRouter');
+let fileRouter = require('./routes/fileRouter');
 
 let app = express();
 
@@ -97,6 +98,7 @@ function passwordValidator(reqPassword, dbPassword) {
 
 app.use('/auth', authRouter);
 app.use('/user', dbRouter);
+app.use('/file', fileRouter);
 
 app.use(express.static(path.join(__dirname, '../client/dist/client')));
 app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
