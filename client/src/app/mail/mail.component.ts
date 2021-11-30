@@ -3,8 +3,10 @@ import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
 import { user } from '../user';
+import { mail } from '../mail';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { MailService } from '../mail.service';
 
 export interface DialogData {
   subject: string;
@@ -28,7 +30,8 @@ export class MailComponent implements OnInit {
   constructor(
     private dbService: DbService,
     private fileService: FileService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private mailService: MailService
   ) { }
 
   ngOnInit(): void {
@@ -67,21 +70,40 @@ export class MailComponent implements OnInit {
   }
 
   onSend(): void {
-    this.sending = true;
     this.openDialog();
     //this.exportHtml();
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
-      width: '250px',
+      width: '400px',
       data: {subject: this.subject} 
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.subject = result;
       console.log(this.subject);
+      if(typeof result === 'string'){
+        this.subject = result;
+        this.sending = true;
+        this.emailEditor.editor.exportHtml((data: any) => {
+          let mail: mail = {
+            email: this.email,
+            html: data,
+            subject: this.subject,
+            to: this.email   
+          }
+          this.mailService.send(mail)
+          .subscribe(res => {
+            if(res){
+              console.log('Send success');
+            }
+            else{
+              console.log('Send failed');
+            }
+          })
+        });
+      }
     });
   }
 }

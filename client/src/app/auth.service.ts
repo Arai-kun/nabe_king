@@ -22,8 +22,12 @@ export class AuthService {
     return this.http.post<user>('/auth/login', user, this.httpOptions)
     .pipe(
       map(result =>{
-        if(result) return true;
-        return false;
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
       }),
       catchError(this.handleError<boolean>(false)),
       shareReplay(1)
