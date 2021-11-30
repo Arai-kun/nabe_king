@@ -40,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmailEditorModule } from 'angular-email-editor';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
@@ -50,6 +51,7 @@ import { DataComponent } from './data/data.component';
 import { MailComponent } from './mail/mail.component';
 import { HomeComponent } from './home/home.component';
 import { ConfigComponent } from './config/config.component';
+import { DialogComponent } from './dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +64,7 @@ import { ConfigComponent } from './config/config.component';
     MailComponent,
     HomeComponent,
     ConfigComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,7 +108,11 @@ import { ConfigComponent } from './config/config.component';
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    EmailEditorModule
+    EmailEditorModule,
+    MatDialogModule
+  ],
+  entryComponents: [
+    DialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent],

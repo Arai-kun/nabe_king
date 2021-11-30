@@ -1,8 +1,14 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
 import { user } from '../user';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
+
+export interface DialogData {
+  subject: string;
+}
 
 @Component({
   selector: 'app-mail',
@@ -11,6 +17,7 @@ import { user } from '../user';
 })
 export class MailComponent implements OnInit {
   email: string = "";
+  subject: string = "";
   submitting: boolean = false;
   sending: boolean = false;
 
@@ -20,11 +27,13 @@ export class MailComponent implements OnInit {
 
   constructor(
     private dbService: DbService,
-    private fileService: FileService
+    private fileService: FileService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.getEmail();
+    this.subject = 'タイトル';
   }
 
   editorLoaded(event: any) {
@@ -59,6 +68,20 @@ export class MailComponent implements OnInit {
 
   onSend(): void {
     this.sending = true;
-    this.exportHtml();
+    this.openDialog();
+    //this.exportHtml();
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '250px',
+      data: {subject: this.subject} 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.subject = result;
+      console.log(this.subject);
+    });
   }
 }
