@@ -15,7 +15,7 @@ export class FileService {
   constructor(private http: HttpClient) { }
 
   upload(data: string): Observable<string> {
-    return this.http.post<string>('file/upload', data, this.httpOptions)
+    return this.http.post<string>('file/upload', JSON.stringify({data: data}), this.httpOptions)
     .pipe(
       catchError(this.handleError<string>())
     );
