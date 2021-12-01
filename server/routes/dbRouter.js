@@ -6,8 +6,10 @@ let Data = require('../models/data');
 let Mail = require('../models/mail');
 let MailDesign = require('../models/mailDesign');
 let bcrypt = require('bcrypt');
+const data = require('../models/data');
 const saltRounds = 10;
 
+let data_arr = [];
 
 dbRouter.post('/', function(req, res, next){
     bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
@@ -54,35 +56,36 @@ dbRouter.get('/init', function(req, res, next){
         dulation: 0
     }, error => {
         if(error) next(error);
-        Data.create({
-            email: mail,
-            data_arr: [{
-                orderId: "",
-                purchaseDate: new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })),
-                orderStatus: "",
-                buyerEmail: "",
-                buyerName: "",
-                itemName: "",
-                quantityOrdered: 0,
-                isSent: false,
-                unSend: false
-            }]
-        }, error => {
+        // テスト用 -> 実際はここでデータを取らない
+        User.findOne({email: req.user['email']}, (error, user) => {
             if(error) next(error);
-            Mail.create({
-                email: mail,
-                html: "",
-                subject: ""
-            }, error => {
-                if(error) next(error);
-                MailDesign.create({
+            getOrders(user.access_token)
+            .then(() => {
+                Data.create({
                     email: mail,
-                    design: ""
+                    data_arr: data_arr
                 }, error => {
                     if(error) next(error);
-                    res.json({result: 'success'});
+                    Mail.create({
+                        email: mail,
+                        html: "",
+                        subject: ""
+                    }, error => {
+                        if(error) next(error);
+                        MailDesign.create({
+                            email: mail,
+                            design: ""
+                        }, error => {
+                            if(error) next(error);
+                            res.json({result: 'success'});
+                        });
+                    });
                 });
-            });
+            })
+            .catch(error =>{
+                console.log(error);
+                next(error);
+            })
         });
     });
 });
@@ -163,13 +166,20 @@ dbRouter.get('/subject', function(req, res, next){
     })
 })
 
-/*
-async function getTestData(token){
+
+async function getOrders(token){
+    const apiKey = 'AKIAWECJIQCPNMRPFJ7T';
+    const serKey = '8tYCrkCM8zTUN09MjW01HspNQUf/vyCiQZn7Hsr6';
+    const region = 'us-west-2';
+    const service = 'execute-api'
+    let now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
     const options = {
         method: 'GET',
         url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/vo/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
-        headers:{
-           'x-amz-access-token': token
+        headers: {
+           'x-amz-access-token': token,
+           'X-Amz-Date': `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}T${now.getHours}${now.getMinutes()}${now.getSeconds()}Z`,
+           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${serKey}`
         }
     }
     console.log(options);
@@ -177,12 +187,30 @@ async function getTestData(token){
         request(options, (error, response, body) => {
             if(error) reject(error);
             console.log(body);
-            tokens.access_token = JSON.parse(body)['access_token'];
-            tokens.refresh_token = JSON.parse(body)['refresh_token'];
-            resolve();
+            let orders = [{}];
+            try{
+                orders = body['Orders'];
+                for(let i = 0; i < orders.length; i++){
+                    data_arr.push({
+                        orderId: orders[i]['AmazonOrderId'],
+                        purchaseDate: new Date(orders[i]['PurchaseDate']),
+                        orderStatus: orders[i]['OrderStatus'],
+                        buyerEmail: "",
+                        buyerName: "",
+                        itemName: "",
+                        quantityOrdered: 0,
+                        isSent: false,
+                        unSend: false
+                    })
+                }
+                resolve();
+            }
+            catch(e){
+                console.log(e);
+                reject(e);
+            }
         });
     });
 }
-*/
 
 module.exports = dbRouter;
