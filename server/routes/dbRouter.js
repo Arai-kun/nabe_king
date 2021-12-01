@@ -8,6 +8,7 @@ let MailDesign = require('../models/mailDesign');
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
 let request = require('request');
+let crypto = require('crypto-js');
 
 let data_arr = [];
 
@@ -172,14 +173,19 @@ async function getOrders(token){
     const serKey = '8tYCrkCM8zTUN09MjW01HspNQUf/vyCiQZn7Hsr6';
     const region = 'us-west-2';
     const service = 'execute-api'
-    let now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
+    const now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
+    const dateStamp = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${('0' + now.getHours()).slice(-2)}${('0' + now.getMinutes()).slice(-2)}${('0' + now.getSeconds()).slice(-2)}Z`;
+    let kDate = crypto.HmacSHA256(dateStamp, 'AWS4' + serKey);
+    let kRegion = crypto.HmacSHA256(region, kDate);
+    let kService = crypto.HmacSHA256(service, kRegion);
+    let kSigning = crypto.HmacSHA256('aws4_request', kService);
     const options = {
         method: 'GET',
-        url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/vo/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
+        url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/v0/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
         headers: {
            'x-amz-access-token': token,
-           'X-Amz-Date': `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${('0' + now.getHours()).slice(-2)}${('0' + now.getMinutes()).slice(-2)}${('0' + now.getSeconds()).slice(-2)}Z`,
-           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${serKey}`
+           'X-Amz-Date': dateStamp,
+           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${kSigning}`
         }
     }
     console.log(options);
