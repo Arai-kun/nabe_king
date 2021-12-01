@@ -178,7 +178,7 @@ async function getOrders(token){
         url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/vo/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
         headers: {
            'x-amz-access-token': token,
-           'X-Amz-Date': `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${now.getHours()}${now.getMinutes()}${now.getSeconds()}Z`,
+           'X-Amz-Date': `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${now.getHours()}${now.getMinutes()}${('0' + now.getSeconds()).slice(-2)}Z`,
            'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${serKey}`
         }
     }
