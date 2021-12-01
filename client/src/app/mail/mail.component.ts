@@ -4,9 +4,11 @@ import { DbService } from '../db.service';
 import { FileService } from '../file.service';
 import { user } from '../user';
 import { mail } from '../mail';
+import { mailDesign } from '../mailDesign';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
+import { testMail } from '../testMail';
 
 export interface DialogData {
   subject: string;
@@ -36,11 +38,13 @@ export class MailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmail();
-    this.subject = 'タイトル';
+    this.getSubject();
   }
 
   editorLoaded(event: any) {
     // load the design json here
+    this.dbService.get<mailDesign>('mailDesign')
+    .subscribe(design => this.emailEditor.editor.loadDesign(design.design));
     //this.emailEditor.editor.loadDesign(sample);
     const reader = new FileReader();
     this.emailEditor.editor.registerCallback("image", (file: any, done: (arg0: { progress: number, url: string; }) => void) => {
@@ -59,22 +63,28 @@ export class MailComponent implements OnInit {
     });
   }
 
+  /*
   exportHtml() {
     this.submitting = true;
     this.emailEditor.editor.exportHtml((data: any) => console.log('exportHtml', data));
   }
+  */
 
   getEmail(): void {
     this.dbService.get<user>('email')
     .subscribe(user => this.email = user.email);
   }
 
-  onSend(): void {
-    this.openDialog();
-    //this.exportHtml();
+  getSubject(): void {
+    this.dbService.get<DialogData>('subject')
+    .subscribe(data => this.subject = data.subject);
   }
 
-  openDialog(): void {
+  /**
+   * Sending test mail
+   */
+
+  onSend(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
@@ -86,7 +96,7 @@ export class MailComponent implements OnInit {
         this.subject = result;
         this.sending = true;
         this.emailEditor.editor.exportHtml((data: any) => {
-          let mail: mail = {
+          const mail: testMail = {
             email: this.email,
             html: data['html'],
             subject: this.subject,
@@ -105,4 +115,54 @@ export class MailComponent implements OnInit {
       }
     });
   }
+
+  /**
+   * Save mail design and html, subject
+   */
+
+  onSave(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '400px',
+      data: {subject: this.subject} 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log(result);
+      if(typeof result === 'string'){
+        this.subject = result;
+        this.sending = true;
+        this.emailEditor.editor.exportHtml((data: any) => {
+          const mail: mail = {
+            email: "",
+            html: data['html'],
+            subject: this.subject  
+          }
+          const mailDesign: mailDesign = {
+            email: "",
+            design: data['design']
+          }
+
+          this.dbService.update<mailDesign>('mailDesign', mailDesign)
+          .subscribe(result => {
+            if(result){
+              this.dbService.update<mail>('mail', mail)
+              .subscribe(result => {
+                if(result){
+                  this.submitting = false;
+                }
+                else{
+                  console.log('Save mail failed');
+                }
+              });
+            }
+            else{
+              console.log('Save mailDesign failed');
+            }
+          })
+        });
+      }
+    });
+  }
+
+
 }

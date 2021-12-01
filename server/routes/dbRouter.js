@@ -4,7 +4,7 @@ let User = require('../models/user');
 let Config = require('../models/config');
 let Data = require('../models/data');
 let Mail = require('../models/mail');
-let Unsend = require('../models/unsend');
+let MailDesign = require('../models/mailDesign');
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -71,11 +71,13 @@ dbRouter.get('/init', function(req, res, next){
             if(error) next(error);
             Mail.create({
                 email: mail,
-                html: "<h1>メールテンプレート</h1>"
+                html: "",
+                subject: ""
             }, error => {
                 if(error) next(error);
-                Unsend.create({
-                    orderId: ""
+                MailDesign.create({
+                    email: mail,
+                    design: ""
                 }, error => {
                     if(error) next(error);
                     res.json({result: 'success'});
@@ -126,15 +128,61 @@ dbRouter.get('/email', function(req, res, next){
         refresh_token: "",
         access_token: ""
     });
+});
+
+dbRouter.get('/mailDesgin', function(req, res, next){
+    MailDesign.findOne({email: req.user['email']}, (error, data) => {
+        if(error) next(error);
+        res.json(data);
+    });
+});
+
+dbRouter.post('/mailDesign', function(req, res, next){
+    MailDesign.updateOne({email: req.user['email']}, {
+        design: req.body
+    }), error => {
+        if(error) next(error);
+        res.json({result: 'success'});
+    }
+});
+
+dbRouter.post('/mail', function(req, res, next){
+    Mail.updateOne({email: req.user['email']}, {
+        html: req.body['html'],
+        subject: req.body['subject']
+    }, error => {
+        if(error) next(error);
+        res.json({result: 'success'});
+    });
+});
+
+dbRouter.get('/subject', function(req, res, next){
+    Mail.findOne({email: req.user['email']}, (error, data) => {
+        if(error) next(error);
+        res.json({html: "", subject: data['subject']});
+    })
 })
 
 /*
-dbRouter.get('/unsend', function(req, res, next){
-    Unsend.find((error, data) => {
-        if(error) next(error);
-        res.json(data);
-    })
-})
+async function getTestData(token){
+    const options = {
+        method: 'GET',
+        url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/vo/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
+        headers:{
+           'x-amz-access-token': token
+        }
+    }
+    console.log(options);
+    await new Promise((resolve, reject) => {
+        request(options, (error, response, body) => {
+            if(error) reject(error);
+            console.log(body);
+            tokens.access_token = JSON.parse(body)['access_token'];
+            tokens.refresh_token = JSON.parse(body)['refresh_token'];
+            resolve();
+        });
+    });
+}
 */
 
 module.exports = dbRouter;

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
-import { mail } from './mail';
+import { testMail } from './testMail';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class MailService {
 
   constructor(private http: HttpClient) { }
 
-  send(mail: mail): Observable<boolean>{
-    return this.http.post<mail>('/mail/send', mail, this.httpOptions)
+  send(mail: testMail): Observable<boolean>{
+    return this.http.post<testMail>('/mail/send', mail, this.httpOptions)
     .pipe(
       map(result =>{
         if(result) {
