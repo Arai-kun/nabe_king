@@ -174,7 +174,8 @@ async function getOrders(token){
     const region = 'us-west-2';
     const service = 'execute-api'
     const now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
-    const dateStamp = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${('0' + now.getHours()).slice(-2)}${('0' + now.getMinutes()).slice(-2)}${('0' + now.getSeconds()).slice(-2)}Z`;
+    const date = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${('0' + now.getHours()).slice(-2)}${('0' + now.getMinutes()).slice(-2)}${('0' + now.getSeconds()).slice(-2)}Z`;
+    const dateStamp = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}`;
     let kDate = crypto.HmacSHA256(dateStamp, 'AWS4' + serKey);
     let kRegion = crypto.HmacSHA256(region, kDate);
     let kService = crypto.HmacSHA256(service, kRegion);
@@ -184,8 +185,8 @@ async function getOrders(token){
         url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/v0/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
         headers: {
            'x-amz-access-token': token,
-           'X-Amz-Date': dateStamp,
-           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${kSigning}`
+           'X-Amz-Date': date,
+           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${kSigning}`
         }
     }
     console.log(options);
