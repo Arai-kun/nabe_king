@@ -185,6 +185,7 @@ async function getOrders(token){
         url: 'https://sandbox.sellingpartnerapi-fe.amazon.com/orders/v0/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER',
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
+            host: 'sandbox.sellingpartnerapi-fe.amazon.com',
             'x-amz-access-token': token,
             'x-amz-date': date,
             Authorization: `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date;x-amz-access-token, Signature=${kSigning}`
