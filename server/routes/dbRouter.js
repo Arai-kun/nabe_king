@@ -169,8 +169,8 @@ dbRouter.get('/subject', function(req, res, next){
 
 
 async function getOrders(token){
-    const apiKey = 'AKIAWECJIQCPNMRPFJ7T';
-    const serKey = '8tYCrkCM8zTUN09MjW01HspNQUf/vyCiQZn7Hsr6';
+    const apiKey = 'AKIAWECJIQCPNPKXOAON';
+    const serKey = 'J2OnTdB7neEXbuu1XXbCJApXEI/yNiOW8izZBW2J';
     const region = 'us-west-2';
     const service = 'execute-api'
     const now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
@@ -186,8 +186,7 @@ async function getOrders(token){
         headers: {
            'x-amz-access-token': token,
            'x-amz-date': date,
-           'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36',
-           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request,SignedHeaders=host;user-agent;x-amz-date;x-amz-access-token,Signature=${kSigning}`
+           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request,SignedHeaders=host;x-amz-date;x-amz-access-token,Signature=${kSigning}`
         }
     }
     console.log(options);
