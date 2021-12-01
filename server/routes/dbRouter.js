@@ -186,7 +186,7 @@ async function getOrders(token){
         headers: {
            'x-amz-access-token': token,
            'x-amz-date': date,
-           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request,SignedHeaders=host;x-amz-date;x-amz-access-token,Signature=${kSigning}`
+           'Authorization': encodeURI(`AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request,SignedHeaders=host;x-amz-date;x-amz-access-token,Signature=${kSigning}`)
         }
     }
     console.log(options);
