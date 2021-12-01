@@ -169,8 +169,8 @@ dbRouter.get('/subject', function(req, res, next){
 
 
 async function getOrders(token){
-    const apiKey = 'AKIAWECJIQCPNPKXOAON';
-    const serKey = 'J2OnTdB7neEXbuu1XXbCJApXEI/yNiOW8izZBW2J';
+    const apiKey = 'AKIAWECJIQCPBTLTQXVD';
+    const serKey = 'yskXjbFw7cT1mraGypAoSe1f2Ck9RKO4ATpfzLQW';
     const region = 'us-west-2';
     const service = 'execute-api'
     const now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
