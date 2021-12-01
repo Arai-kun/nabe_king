@@ -6,8 +6,8 @@ let Data = require('../models/data');
 let Mail = require('../models/mail');
 let MailDesign = require('../models/mailDesign');
 let bcrypt = require('bcrypt');
-const data = require('../models/data');
 const saltRounds = 10;
+let request = require('request');
 
 let data_arr = [];
 
@@ -178,8 +178,8 @@ async function getOrders(token){
         url: encodeURI('https://sandbox.sellingpartnerapi-fe.amazon.com/orders/vo/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER'),
         headers: {
            'x-amz-access-token': token,
-           'X-Amz-Date': `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}T${now.getHours}${now.getMinutes()}${now.getSeconds()}Z`,
-           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${serKey}`
+           'X-Amz-Date': `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${now.getHours()}${now.getMinutes()}${now.getSeconds()}Z`,
+           'Authorization': `AWS4-HMAC-SHA256 Credential=${apiKey}/${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date, Signature=${serKey}`
         }
     }
     console.log(options);
