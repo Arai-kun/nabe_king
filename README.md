@@ -1,7 +1,7 @@
 # nabe_king
 ## 連携サービス
 - Amazon SP-API: 根幹
-- Sendgrid: メール送信 GCP経由で一日400通まで
+- Sendgrid: メール送信 GCP経由登録で一日400通まで
 - Cloudinary: 画像アップロード&CDN配信 月25GBまで(ストレージ容量&CDNダウンロードサイズ含む)
 - MongoDB: DB (サイズはサーバー環境依存)
 - GCP(暫定): ホストサーバー
