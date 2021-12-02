@@ -135,7 +135,7 @@ dbRouter.get('/email', function(req, res, next){
     });
 });
 
-dbRouter.get('/mailDesgin', function(req, res, next){
+dbRouter.get('/mailDesign', function(req, res, next){
     MailDesign.findOne({email: req.user['email']}, (error, data) => {
         if(error) next(error);
         res.json(data);

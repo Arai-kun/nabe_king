@@ -81,6 +81,7 @@ export class DataComponent implements OnInit {
   getData(): void {
     this.dbService.get<data>('data')
     .subscribe(data => {
+      console.log(data['data_arr']);
       this.data_arr = data['data_arr'];
       console.log(this.data_arr);
       for(let i = 0; i < this.data_arr.length; i++){
@@ -104,7 +105,8 @@ export class DataComponent implements OnInit {
         this.dataSource[i].buyerEmail = this.data_arr[i].buyerEmail;
         this.dataSource[i].itemName= this.data_arr[i].itemName;
         this.dataSource[i].quantityOrdered = this.data_arr[i].quantityOrdered;
-        this.dataSource[i].unSend = this.data_arr[i].unSend
+        this.dataSource[i].unSend = this.data_arr[i].unSend;
+        console.log(this.dataSource);
       }
     });
   }
