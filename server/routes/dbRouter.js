@@ -9,6 +9,7 @@ let bcrypt = require('bcrypt');
 const saltRounds = 10;
 let request = require('request');
 let crypto = require('crypto-js');
+const SellingPartnerAPI = require('amazon-sp-api');
 
 let data_arr = [];
 
@@ -168,7 +169,7 @@ dbRouter.get('/subject', function(req, res, next){
 })
 
 
-async function getOrders(token){
+async function getOrders1(token){
     const apiKey = 'AKIAWECJIQCPBTLTQXVD';
     const serKey = 'yskXjbFw7cT1mraGypAoSe1f2Ck9RKO4ATpfzLQW';
     const region = 'us-west-2';
@@ -221,5 +222,50 @@ async function getOrders(token){
         });
     });
 }
+
+async function getOrders(acToken){
+    try {
+        let sellingPartner = new SellingPartnerAPI({
+            region: 'fe',
+            access_token: acToken,
+            credentials: {
+                AWS_ACCESS_KEY_ID: 'AKIAWECJIQCPBTLTQXVD',
+                AWS_SECRET_ACCESS_KEY: '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'
+            },
+            options: {
+                use_sandbox: true
+            }
+        });
+        let res = await sellingPartner.callAPI({
+            api_path: '/orders/v0/orders',
+            method: 'GET',
+            query: {
+                CreatedAfter: 'TEST_CASE_200',
+                MarketplaceIds: 'ATVPDKIKX0DER'
+            }
+        });
+        console.log(res);
+        let orders = [];
+        orders = res['Orders'];
+        for(let i = 0; i < orders.length; i++){
+            data_arr.push({
+                orderId: orders[i]['AmazonOrderId'],
+                purchaseDate: new Date(orders[i]['PurchaseDate']),
+                orderStatus: orders[i]['OrderStatus'],
+                buyerEmail: "",
+                buyerName: "",
+                itemName: "",
+                quantityOrdered: 0,
+                isSent: false,
+                unSend: false
+            });
+        }
+
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
 
 module.exports = dbRouter;
