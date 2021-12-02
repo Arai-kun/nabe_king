@@ -33,7 +33,17 @@ export interface displayData {
 })
 export class DataComponent implements OnInit {
   submitting: boolean = false;
-  data_arr!: data['data_arr'];
+  data_arr: data['data_arr'] = [{
+    orderId: '',
+    purchaseDate: new Date(),
+    orderStatus: '',
+    buyerEmail: '',
+    buyerName: '',
+    itemName: '',
+    quantityOrdered: 0,
+    isSent: false,
+    unSend: false
+  }];
   displayedColumns: string[] = [
     'orderId',
     'purchaseDate',
@@ -76,7 +86,7 @@ export class DataComponent implements OnInit {
           this.dataSource[i].orderStatus = '発送済';
         }
         else{
-          console.log('flag');
+          console.log(`flag + ${i}`);
           this.dataSource[i].orderStatus = '未発送';
         }
         if(this.data_arr[i].isSent){
