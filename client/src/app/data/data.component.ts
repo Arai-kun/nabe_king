@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
 import { displayData } from '../displayData';
+import { MatTableDataSource } from '@angular/material/table';
 
 /*
 export interface displayData {
@@ -59,7 +60,7 @@ export class DataComponent implements OnInit {
     'isSent',
     'notSend'
   ];
-  
+  /*
   dataSource: displayData[] = [{
     orderId: "",
     purchaseDate: "",
@@ -70,8 +71,8 @@ export class DataComponent implements OnInit {
     orderStatus: "",
     isSent: "",
     unSend: false
-  }];
-  //dataSource: displayData[] = [];
+  }];*/
+  dataSource!: MatTableDataSource<displayData>;
 
   constructor(
     private dbService: DbService
@@ -107,7 +108,7 @@ export class DataComponent implements OnInit {
           bufIsSent = '未配信';
         }
         let date = new Date(this.data['data_arr'][i].purchaseDate);
-        this.dataSource.push({
+        this.dataSource.data.push({
           orderId: this.data['data_arr'][i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
           buyerName: this.data['data_arr'][i].buyerName,
@@ -133,15 +134,16 @@ export class DataComponent implements OnInit {
         */
       }
     });
-    console.log(this.dataSource);
+    //console.log(this.dataSource);
+    this.dataSource.data = this.dataSource.data;
   }
 
   onSave(): void {
     this.submitting = true;
     /* 未配信のみの配列に絞るべきか */
-    for(let i = 0; i < this.dataSource.length; i++){
-      if(this.dataSource[i].unSend === true) this.data['data_arr'][i].unSend = true;
-      if(this.dataSource[i].unSend === false) this.data['data_arr'][i].unSend = false;
+    for(let i = 0; i < this.dataSource.data.length; i++){
+      if(this.dataSource.data[i].unSend === true) this.data['data_arr'][i].unSend = true;
+      if(this.dataSource.data[i].unSend === false) this.data['data_arr'][i].unSend = false;
     }
     this.dbService.update<data>('data', {email: "", data_arr: this.data['data_arr']})
     .subscribe(result => {
