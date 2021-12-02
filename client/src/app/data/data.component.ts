@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
+import { displayData } from '../displayData';
 
+/*
 export interface displayData {
     orderId: string,
     purchaseDate: string,
@@ -12,7 +14,7 @@ export interface displayData {
     orderStatus: string,
     isSent: string,
     unSend: boolean
-}
+}*/
 
 /**
  * OrderStatuses
