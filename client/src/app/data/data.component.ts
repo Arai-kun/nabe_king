@@ -115,7 +115,7 @@ export class DataComponent implements OnInit {
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
           unSend: this.data['data_arr'][i].unSend
-        })
+        });
         /*
         this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
         console.log(this.data['data_arr'][i].purchaseDate);
@@ -131,6 +131,7 @@ export class DataComponent implements OnInit {
         */
       }
     });
+    console.log(this.dataSource);
   }
 
   onSave(): void {
