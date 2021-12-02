@@ -70,6 +70,7 @@ export class DataComponent implements OnInit {
     this.dbService.get<data>('data')
     .subscribe(data => {
       this.data_arr = data['data_arr'];
+      console.log(this.data_arr);
       for(let i = 0; i < this.data_arr.length; i++){
         if(this.data_arr[i].orderStatus === 'Shipped' || this.data_arr[i].orderStatus === 'InvoiceUnconfirmed'){
           this.dataSource[i].orderStatus = '発送済';
