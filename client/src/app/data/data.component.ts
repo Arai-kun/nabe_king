@@ -76,6 +76,7 @@ export class DataComponent implements OnInit {
           this.dataSource[i].orderStatus = '発送済';
         }
         else{
+          console.log('flag');
           this.dataSource[i].orderStatus = '未発送';
         }
         if(this.data_arr[i].isSent){
