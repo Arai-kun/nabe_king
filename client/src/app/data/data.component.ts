@@ -100,9 +100,9 @@ export class DataComponent implements OnInit {
         }
         this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
         console.log(this.data['data_arr'][i].purchaseDate);
-        this.data['data_arr'][i].purchaseDate = new Date(this.data['data_arr'][i].purchaseDate);
+        let date = new Date(this.data['data_arr'][i].purchaseDate);
         console.log(this.data['data_arr'][i].purchaseDate);
-        this.dataSource[i].purchaseDate = `${this.data['data_arr'][i].purchaseDate.getFullYear()}年${this.data['data_arr'][i].purchaseDate.getMonth() + 1}月${this.data['data_arr'][i].purchaseDate.getDate()}日${this.data['data_arr'][i].purchaseDate.getHours()}時${this.data['data_arr'][i].purchaseDate.getMinutes()}分`;
+        this.dataSource[i].purchaseDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`;
         this.dataSource[i].buyerName = this.data['data_arr'][i].buyerName;
         this.dataSource[i].buyerEmail = this.data['data_arr'][i].buyerEmail;
         this.dataSource[i].itemName= this.data['data_arr'][i].itemName;

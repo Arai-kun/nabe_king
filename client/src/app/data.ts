@@ -2,7 +2,7 @@ export interface data {
     email: string,
     data_arr: [{
         orderId: string,
-        purchaseDate: Date,
+        purchaseDate: string,
         orderStatus: string,
         buyerEmail: string,
         buyerName: string,
