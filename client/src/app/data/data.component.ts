@@ -57,6 +57,7 @@ export class DataComponent implements OnInit {
     'isSent',
     'notSend'
   ];
+  /*
   dataSource: displayData[] = [{
     orderId: "",
     purchaseDate: "",
@@ -67,7 +68,8 @@ export class DataComponent implements OnInit {
     orderStatus: "",
     isSent: "",
     unSend: false
-  }];
+  }];*/
+  dataSource: displayData[] = [];
 
   constructor(
     private dbService: DbService
@@ -81,23 +83,40 @@ export class DataComponent implements OnInit {
   getData(): void {
     this.dbService.get<data>('data')
     .subscribe(data => {
-      console.log(data['data_arr']);
       this.data = data;
-      console.log(this.data);
+      let bufOrderStatus: string;
+      let bufIsSent: string
       for(let i = 0; i < this.data['data_arr'].length; i++){
         if(this.data['data_arr'][i].orderStatus === 'Shipped' || this.data['data_arr'][i].orderStatus === 'InvoiceUnconfirmed'){
-          this.dataSource[i].orderStatus = '発送済';
+          //this.dataSource[i].orderStatus = '発送済';
+          bufOrderStatus = '発送済';
         }
         else{
           console.log(`flag + ${i}`);
-          this.dataSource[i].orderStatus = '未発送';
+          //this.dataSource[i].orderStatus = '未発送';
+          bufOrderStatus = '未発送';
         }
         if(this.data['data_arr'][i].isSent){
-          this.dataSource[i].isSent = '配信済';
+          //this.dataSource[i].isSent = '配信済';
+          bufIsSent = '配信済';
         }
         else{
-          this.dataSource[i].isSent = '未配信';
+          //this.dataSource[i].isSent = '未配信';
+          bufIsSent = '未配信';
         }
+        let date = new Date(this.data['data_arr'][i].purchaseDate);
+        this.dataSource.push({
+          orderId: this.data['data_arr'][i].orderId,
+          purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
+          buyerName: this.data['data_arr'][i].buyerName,
+          buyerEmail: this.data['data_arr'][i].buyerEmail,
+          itemName: this.data['data_arr'][i].itemName,
+          quantityOrdered: this.data['data_arr'][i].quantityOrdered,
+          orderStatus: bufOrderStatus,
+          isSent: bufIsSent,
+          unSend: this.data['data_arr'][i].unSend
+        })
+        /*
         this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
         console.log(this.data['data_arr'][i].purchaseDate);
         let date = new Date(this.data['data_arr'][i].purchaseDate);
@@ -109,6 +128,7 @@ export class DataComponent implements OnInit {
         this.dataSource[i].quantityOrdered = this.data['data_arr'][i].quantityOrdered;
         this.dataSource[i].unSend = this.data['data_arr'][i].unSend;
         console.log(this.dataSource);
+        */
       }
     });
   }
