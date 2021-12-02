@@ -61,7 +61,7 @@ dbRouter.get('/init', function(req, res, next){
         // テスト用 -> 実際はここでデータを取らない
         User.findOne({email: req.user['email']}, (error, user) => {
             if(error) next(error);
-            getOrders(user.access_token)
+            getOrders(user.access_token, user.refresh_token)
             .then(() => {
                 Data.create({
                     email: mail,
@@ -223,11 +223,12 @@ async function getOrders1(token){
     });
 }
 
-async function getOrders(acToken){
+async function getOrders(acToken, refToken){
     try {
         let sellingPartner = new SellingPartnerAPI({
             region: 'fe',
             access_token: acToken,
+            refresh_token: refToken,
             credentials: {
                 SELLING_PARTNER_APP_CLIENT_ID: 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449',
                 SELLING_PARTNER_APP_CLIENT_SECRET: '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a',
