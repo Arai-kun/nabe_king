@@ -234,7 +234,7 @@ async function getOrders(acToken, refToken){
                 SELLING_PARTNER_APP_CLIENT_SECRET: '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a',
                 AWS_ACCESS_KEY_ID: 'AKIAWECJIQCPBTLTQXVD',
                 AWS_SECRET_ACCESS_KEY: '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',
-                AWS_SELLING_PARTNER_ROLE: 'arn:aws:iam::421060444318:user/nabe_king_app'
+                AWS_SELLING_PARTNER_ROLE: 'arn:aws:iam::421060444318:role/Role-SP-API'
             },
             options: {
                 use_sandbox: true
