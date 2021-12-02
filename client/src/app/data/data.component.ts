@@ -5,11 +5,11 @@ import { data } from '../data';
 export interface displayData {
     orderId: string,
     purchaseDate: string,
-    orderStatus: string,
     buyerEmail: string,
     buyerName: string,
     itemName: string,
     quantityOrdered: number,
+    orderStatus: string,
     isSent: string,
     unSend: boolean
 }
@@ -33,6 +33,8 @@ export interface displayData {
 })
 export class DataComponent implements OnInit {
   submitting: boolean = false;
+  data_arr!: data['data_arr']; 
+  /*
   data_arr: data['data_arr'] = [{
     orderId: '',
     purchaseDate: new Date(),
@@ -43,7 +45,7 @@ export class DataComponent implements OnInit {
     quantityOrdered: 0,
     isSent: false,
     unSend: false
-  }];
+  }];*/
   displayedColumns: string[] = [
     'orderId',
     'purchaseDate',
