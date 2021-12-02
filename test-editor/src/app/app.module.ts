@@ -43,10 +43,12 @@ import {MatDialogModule} from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { EmailEditorModule } from 'angular-email-editor';
+import { NaviComponent } from './navi/navi.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NaviComponent
   ],
   imports: [
     BrowserModule,

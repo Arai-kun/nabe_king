@@ -2,7 +2,6 @@ import { Component, ViewChild, Inject} from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import sample from './sample.json';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 export interface DialogData {
   subject: string;
@@ -28,8 +27,7 @@ export class AppComponent {
   private emailEditor!: EmailEditorComponent;
 
   constructor(
-    private fb: FormBuilder,
-    public dialog: MatDialog
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -68,33 +66,6 @@ export class AppComponent {
   }
 
   onSend(): void {
-    this.openDialog();
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '250px',
-      data: {subject: this.subject}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.subject = result;
-    });
-  }
-}
-
-@Component({
-  selector: 'dialog-overview-example-dialog',
-  templateUrl: 'dialog-overview-example-dialog.html',
-})
-export class DialogOverviewExampleDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
+    
   }
 }
