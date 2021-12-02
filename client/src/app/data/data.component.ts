@@ -59,7 +59,7 @@ export class DataComponent implements OnInit {
     'isSent',
     'notSend'
   ];
-  /*
+  
   dataSource: displayData[] = [{
     orderId: "",
     purchaseDate: "",
@@ -70,8 +70,8 @@ export class DataComponent implements OnInit {
     orderStatus: "",
     isSent: "",
     unSend: false
-  }];*/
-  dataSource: displayData[] = [];
+  }];
+  //dataSource: displayData[] = [];
 
   constructor(
     private dbService: DbService
