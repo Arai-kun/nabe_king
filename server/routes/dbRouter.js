@@ -229,8 +229,11 @@ async function getOrders(acToken){
             region: 'fe',
             access_token: acToken,
             credentials: {
+                SELLING_PARTNER_APP_CLIENT_ID: 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449',
+                SELLING_PARTNER_APP_CLIENT_SECRET: '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a',
                 AWS_ACCESS_KEY_ID: 'AKIAWECJIQCPBTLTQXVD',
-                AWS_SECRET_ACCESS_KEY: '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'
+                AWS_SECRET_ACCESS_KEY: 'yskXjbFw7cT1mraGypAoSe1f2Ck9RKO4ATpfzLQW',
+                AWS_SELLING_PARTNER_ROLE: 'arn:aws:iam::421060444318:user/nabe_king_app'
             },
             options: {
                 use_sandbox: true
