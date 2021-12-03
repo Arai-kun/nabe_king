@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
-import { displayData } from '../displayData';
 import { MatTableDataSource } from '@angular/material/table';
 
-/*
 export interface displayData {
     orderId: string,
     purchaseDate: string,
@@ -15,7 +13,7 @@ export interface displayData {
     orderStatus: string,
     isSent: string,
     unSend: boolean
-}*/
+}
 
 /**
  * OrderStatuses
@@ -72,7 +70,7 @@ export class DataComponent implements OnInit {
     isSent: "",
     unSend: false
   }];*/
-  dataSource!: MatTableDataSource<displayData>;
+  public dataSource = new MatTableDataSource<displayData>();
 
   constructor(
     private dbService: DbService
@@ -135,7 +133,7 @@ export class DataComponent implements OnInit {
       }
     });
     //console.log(this.dataSource);
-    this.dataSource.data = this.dataSource.data;
+    //this.dataSource.data = this.dataSource.data;
   }
 
   onSave(): void {
