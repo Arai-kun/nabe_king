@@ -135,7 +135,7 @@ export class DataComponent implements OnInit {
     });
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
-    //this.dataSource.
+    this.dataSource.connect();
   }
 
   onSave(): void {
