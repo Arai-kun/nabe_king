@@ -1,12 +1,12 @@
 table {
     width: 100%;
+    display: flex;
 }
 
-/*
 .mat-cell {
     padding: 8px 8px 8px 0;
 }
-*/
+
 
 .data-header {
     padding-bottom: 16px;
