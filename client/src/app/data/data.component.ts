@@ -135,7 +135,9 @@ export class DataComponent implements OnInit {
     });
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
-    this.dataSource.connect();
+    //this.dataSource.connect();
+    let cloned = this.dataSource.data.slice();
+    this.dataSource.data = cloned;
   }
 
   onSave(): void {
