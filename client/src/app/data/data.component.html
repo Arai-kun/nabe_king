@@ -4,7 +4,7 @@
         <button fxFlexOffset="auto" mat-raised-button color="accent" class="btn-block" (click)="onSave()" [disabled]="submitting">反映</button>
     </mat-card-header>
     <mat-card-content>
-        <table mat-table [dataSource]="dataSource | async" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->

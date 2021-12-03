@@ -3,6 +3,7 @@ import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
 
+
 export interface displayData {
     orderId: string,
     purchaseDate: string,
@@ -71,7 +72,6 @@ export class DataComponent implements OnInit {
     unSend: false
   }];*/
   dataSource = new MatTableDataSource<displayData>();
-  //dataSource : displayData[] = [];
 
   constructor(
     private dbService: DbService
@@ -134,9 +134,7 @@ export class DataComponent implements OnInit {
       }
     });
     //console.log(this.dataSource);
-    //this.dataSource.data = this.dataSource.data;
-    //this.dataSource.connect();
-    //this.dataArray = [...this.dataArray];
+    this.dataSource.data = this.dataSource.data;
   }
 
   onSave(): void {

@@ -9,9 +9,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { HttpClientModule } from '@angular/common/http';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { CdkTreeModule } from '@angular/cdk/tree';
-import { PortalModule } from '@angular/cdk/portal';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
@@ -77,7 +74,6 @@ import { DialogComponent } from './dialog/dialog.component';
     MatIconModule,
     MatListModule,
     HttpClientModule,
-    CdkTreeModule,
     MatAutocompleteModule,
     MatCardModule,
     MatCheckboxModule,
@@ -98,8 +94,6 @@ import { DialogComponent } from './dialog/dialog.component';
     MatFormFieldModule,
     MatButtonToggleModule,
     MatTreeModule,
-    OverlayModule,
-    PortalModule,
     MatBadgeModule,
     MatGridListModule,
     MatRadioModule,
