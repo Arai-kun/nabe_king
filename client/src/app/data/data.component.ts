@@ -70,8 +70,8 @@ export class DataComponent implements OnInit {
     isSent: "",
     unSend: false
   }];*/
-  public dataSource = new MatTableDataSource<displayData>();
-  //dataSource : displayData[] = [];
+  //public dataSource = new MatTableDataSource<displayData>();
+  dataSource : displayData[] = [];
 
   constructor(
     private dbService: DbService
@@ -107,7 +107,7 @@ export class DataComponent implements OnInit {
           bufIsSent = '未配信';
         }
         let date = new Date(this.data['data_arr'][i].purchaseDate);
-        this.dataSource.data.push({
+        this.dataSource.push({
           orderId: this.data['data_arr'][i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
           buyerName: this.data['data_arr'][i].buyerName,
@@ -136,16 +136,15 @@ export class DataComponent implements OnInit {
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
     //this.dataSource.connect();
-    let cloned = this.dataSource.data.slice();
-    this.dataSource.data = cloned;
+    this.dataSource = [...this.dataSource];
   }
 
   onSave(): void {
     this.submitting = true;
     /* 未配信のみの配列に絞るべきか */
-    for(let i = 0; i < this.dataSource.data.length; i++){
-      if(this.dataSource.data[i].unSend === true) this.data['data_arr'][i].unSend = true;
-      if(this.dataSource.data[i].unSend === false) this.data['data_arr'][i].unSend = false;
+    for(let i = 0; i < this.dataSource.length; i++){
+      if(this.dataSource[i].unSend === true) this.data['data_arr'][i].unSend = true;
+      if(this.dataSource[i].unSend === false) this.data['data_arr'][i].unSend = false;
     }
     this.dbService.update<data>('data', {email: "", data_arr: this.data['data_arr']})
     .subscribe(result => {
