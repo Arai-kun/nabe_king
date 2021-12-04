@@ -71,7 +71,7 @@ export class DataComponent implements OnInit {
     isSent: "",
     unSend: false
   }];*/
-  dataSource = new MatTableDataSource<displayData>();
+  public dataSource = new MatTableDataSource<displayData>();
 
   constructor(
     private dbService: DbService,
@@ -139,7 +139,7 @@ export class DataComponent implements OnInit {
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
     //this.dataSource=new MatTableDataSource<displayData>(this.dataSource.data);
-    this.cd.detectChanges();
+    //this.cd.detectChanges();
   }
 
   onSave(): void {

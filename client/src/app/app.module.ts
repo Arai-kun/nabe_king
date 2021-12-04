@@ -99,7 +99,7 @@ import { DialogComponent } from './dialog/dialog.component';
     MatRadioModule,
     MatDatepickerModule,
     MatTooltipModule,
-    FlexLayoutModule,
+    //FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
     EmailEditorModule,
