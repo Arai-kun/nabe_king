@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
@@ -74,13 +74,16 @@ export class DataComponent implements OnInit {
   dataSource = new MatTableDataSource<displayData>();
 
   constructor(
-    private dbService: DbService
+    private dbService: DbService,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.submitting = false;
     this.getData();
   }
+
+  
 
   getData(): void {
     this.dbService.get<data>('data')
@@ -135,7 +138,8 @@ export class DataComponent implements OnInit {
     });
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
-    this.dataSource=new MatTableDataSource<displayData>(this.dataSource.data);
+    //this.dataSource=new MatTableDataSource<displayData>(this.dataSource.data);
+    this.cd.detectChanges();
   }
 
   onSave(): void {
