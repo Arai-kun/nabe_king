@@ -28,7 +28,7 @@ export class AuthComponent implements OnInit {
       }
       else{
         this.params = this.route.snapshot.queryParams;
-        console.log(this.params);
+        //console.log(this.params);
         if(this.params["spapi_oauth_code"] && this.params["selling_partner_id"])
         {
           this.authService.exchangeToken(this.params["spapi_oauth_code"], this.params["selling_partner_id"])

@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
+import { Router } from '@angular/router';
 
 export interface DialogData {
   subject: string;
@@ -33,14 +34,13 @@ export class MailComponent implements OnInit {
     private dbService: DbService,
     private fileService: FileService,
     public dialog: MatDialog,
-    private mailService: MailService
+    private mailService: MailService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.getEmail();
     this.getSubject();
-    this.sending = false;
-    this.submitting = false;
   }
 
   editorLoaded(event: any) {
@@ -51,7 +51,6 @@ export class MailComponent implements OnInit {
         this.emailEditor.editor.loadDesign(JSON.parse(design.design));
       }
     });
-    //this.emailEditor.editor.loadDesign(sample);
     const reader = new FileReader();
     this.emailEditor.editor.registerCallback("image", (file: any, done: (arg0: { progress: number, url: string; }) => void) => {
       reader.readAsDataURL(file.attachments[0]);
@@ -111,7 +110,8 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              this.ngOnInit();
+              this.sending = false;
+              this.router.navigate(['/home/mail']);
             }
             else{
               console.log('Send failed');
@@ -154,9 +154,8 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  //this.ngOnInit();
                   this.submitting = false;
-                  console.log(this.submitting);
+                  this.router.navigate(['/home/mail']);
                 }
                 else{
                   console.log('Save mail failed');
