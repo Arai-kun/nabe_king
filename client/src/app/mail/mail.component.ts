@@ -10,6 +10,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 export interface DialogData {
   subject: string;
@@ -41,8 +42,8 @@ export class MailComponent implements OnInit {
   ngOnInit(): void {
     this.getEmail();
     this.getSubject();
-    this.sending = false;
-    this.submitting = false;
+    //this.sending = false;
+    //this.submitting = false;
   }
 
   editorLoaded(event: any) {
@@ -92,16 +93,16 @@ export class MailComponent implements OnInit {
    */
 
   onSend(): void {
-    this.sending = true;
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
+        this.sending = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: testMail = {
             email: this.email,
@@ -112,10 +113,10 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              //this.sending = false;
+              this.sending = false;
               //this.router.navigate(['/home/mail']);
               console.log('Send success');
-              this.ngOnInit();
+              //this.ngOnInit();
             }
             else{
               console.log('Send failed');
@@ -131,16 +132,16 @@ export class MailComponent implements OnInit {
    */
 
   onUserSave(): void {
-    this.submitting = true;
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
+        this.submitting = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
@@ -159,7 +160,8 @@ export class MailComponent implements OnInit {
               .subscribe(result => {
                 if(result){
                   console.log('Save success');
-                  this.ngOnInit();
+                  //this.ngOnInit();
+                  this.submitting = false;
                 }
                 else{
                   console.log('Save mail failed');
