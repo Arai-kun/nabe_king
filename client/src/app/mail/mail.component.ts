@@ -41,6 +41,8 @@ export class MailComponent implements OnInit {
   ngOnInit(): void {
     this.getEmail();
     this.getSubject();
+    this.sending = false;
+    this.submitting = false;
   }
 
   editorLoaded(event: any) {
@@ -113,13 +115,13 @@ export class MailComponent implements OnInit {
               //this.sending = false;
               //this.router.navigate(['/home/mail']);
               console.log('Send success');
+              this.ngOnInit();
             }
             else{
               console.log('Send failed');
             }
           })
         });
-        this.sending = true;
       }
     });
   }
@@ -157,6 +159,7 @@ export class MailComponent implements OnInit {
               .subscribe(result => {
                 if(result){
                   console.log('Save success');
+                  this.ngOnInit();
                 }
                 else{
                   console.log('Save mail failed');
@@ -168,7 +171,6 @@ export class MailComponent implements OnInit {
             }
           })
         });
-        this.submitting = false;
       }
     });
   }
