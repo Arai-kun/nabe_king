@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
@@ -9,8 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
-import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
 
 export interface DialogData {
   subject: string;
@@ -36,7 +34,7 @@ export class MailComponent implements OnInit {
     private fileService: FileService,
     public dialog: MatDialog,
     private mailService: MailService,
-    private router: Router
+    public cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -163,6 +161,7 @@ export class MailComponent implements OnInit {
                 if(result){
                   console.log('Save success');
                   this.submitting = false;
+                  this.cd.detectChanges();
                   this.ngOnInit();
                 }
                 else{
