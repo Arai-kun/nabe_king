@@ -90,7 +90,7 @@ export class DataComponent implements OnInit {
     .subscribe(data => {
       this.data = data;
       let bufOrderStatus: string;
-      let bufIsSent: string
+      let bufIsSent: string;
       for(let i = 0; i < this.data['data_arr'].length; i++){
         if(this.data['data_arr'][i].orderStatus === 'Shipped' || this.data['data_arr'][i].orderStatus === 'InvoiceUnconfirmed'){
           //this.dataSource[i].orderStatus = '発送済';
@@ -110,7 +110,7 @@ export class DataComponent implements OnInit {
           bufIsSent = '未配信';
         }
         let date = new Date(this.data['data_arr'][i].purchaseDate);
-        this.dataSource.data = [{
+        this.dataSource.data.push({
           orderId: this.data['data_arr'][i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
           buyerName: this.data['data_arr'][i].buyerName,
@@ -120,7 +120,7 @@ export class DataComponent implements OnInit {
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
           unSend: this.data['data_arr'][i].unSend
-        }];
+        });
         /*
         this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
         console.log(this.data['data_arr'][i].purchaseDate);
