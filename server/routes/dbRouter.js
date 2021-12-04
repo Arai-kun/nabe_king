@@ -143,9 +143,10 @@ dbRouter.get('/mailDesign', function(req, res, next){
 });
 
 dbRouter.post('/mailDesign', function(req, res, next){
-    console.log(String(req.body));
+    console.log(JSON.stringify(req.body));
+    console.log(typeof JSON.stringify(req.body));
     MailDesign.updateOne({email: req.user['email']}, {
-        design: String(req.body)
+        design: JSON.stringify(req.body)
     }), error => {
         if(error) next(error);
         res.json({result: 'success'});
