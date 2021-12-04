@@ -98,7 +98,7 @@ export class MailComponent implements OnInit {
       data: {subject: this.subject} 
     });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
@@ -137,11 +137,12 @@ export class MailComponent implements OnInit {
       data: {subject: this.subject} 
     });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
         this.submitting = true;
+        console.log(1);
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
@@ -162,6 +163,7 @@ export class MailComponent implements OnInit {
                   console.log('Save success');
                   //this.ngOnInit();
                   this.submitting = false;
+                  console.log(2);
                 }
                 else{
                   console.log('Save mail failed');
