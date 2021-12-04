@@ -138,14 +138,14 @@ dbRouter.get('/email', function(req, res, next){
 dbRouter.get('/mailDesign', function(req, res, next){
     MailDesign.findOne({email: req.user['email']}, (error, data) => {
         if(error) next(error);
-        res.json(data);
+        res.json(JSON.parse(data));
     });
 });
 
 dbRouter.post('/mailDesign', function(req, res, next){
     console.log(req);
     MailDesign.updateOne({email: req.user['email']}, {
-        design: req.body
+        design: JSON.stringify(req.body)
     }), error => {
         if(error) next(error);
         res.json({result: 'success'});
