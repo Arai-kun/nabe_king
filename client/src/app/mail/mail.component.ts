@@ -40,10 +40,6 @@ export class MailComponent implements OnInit {
   ngOnInit(): void {
     this.getEmail();
     this.getSubject();
-    //this.sending = false;
-    //this.submitting = false;
-    console.log("submitting:"+this.submitting);
-    console.log("sending:"+this.sending);
   }
 
   editorLoaded(event: any) {
@@ -113,9 +109,8 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              console.log('Send success');
               this.sending = false
-              this.ngOnInit();
+              this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
             }
             else{
               console.log('Send failed');
@@ -141,7 +136,6 @@ export class MailComponent implements OnInit {
       if(typeof result === 'string'){
         this.subject = result;
         this.submitting = true;
-        console.log(1);
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
@@ -159,10 +153,8 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  console.log('Save success');
                   this.submitting = false;
-                  this.cd.detectChanges();
-                  this.ngOnInit();
+                  this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                 }
                 else{
                   console.log('Save mail failed');
