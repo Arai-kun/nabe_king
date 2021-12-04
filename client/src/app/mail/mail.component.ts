@@ -44,6 +44,8 @@ export class MailComponent implements OnInit {
     this.getSubject();
     //this.sending = false;
     //this.submitting = false;
+    console.log("submitting:"+this.submitting);
+    console.log("sending:"+this.sending);
   }
 
   editorLoaded(event: any) {
