@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
-
 
 export interface displayData {
     orderId: string,
@@ -35,19 +34,7 @@ export interface displayData {
 })
 export class DataComponent implements OnInit {
   submitting: boolean = false;
-  data!: data; 
-  /*
-  data_arr: data['data_arr'] = [{
-    orderId: '',
-    purchaseDate: new Date(),
-    orderStatus: '',
-    buyerEmail: '',
-    buyerName: '',
-    itemName: '',
-    quantityOrdered: 0,
-    isSent: false,
-    unSend: false
-  }];*/
+  data!: data['data_arr']; 
   displayedColumns: string[] = [
     'orderId',
     'purchaseDate',
@@ -59,99 +46,70 @@ export class DataComponent implements OnInit {
     'isSent',
     'notSend'
   ];
-  /*
-  dataSource: displayData[] = [{
-    orderId: "",
-    purchaseDate: "",
-    buyerName: "",
-    buyerEmail: "",
-    itemName: "",
-    quantityOrdered: 0,
-    orderStatus: "",
-    isSent: "",
-    unSend: false
-  }];*/
-  public dataSource = new MatTableDataSource<displayData>();
+
+  dataSource = new MatTableDataSource<displayData>();
 
   constructor(
-    private dbService: DbService,
-    private cd: ChangeDetectorRef
+    private dbService: DbService
   ) { }
 
   ngOnInit(): void {
     this.submitting = false;
     this.getData();
   }
-
   
+  /**
+   * Notice!: Push() for dataSource does not generate a trigger of object change in mat-table.
+   *          Use '=' to provide data to dataSource.
+   */
 
   getData(): void {
     this.dbService.get<data>('data')
     .subscribe(data => {
-      this.data = data;
+      this.data = data['data_arr'];
       let bufOrderStatus: string;
       let bufIsSent: string;
-      let buf: displayData[] = [];
-      for(let i = 0; i < this.data['data_arr'].length; i++){
-        if(this.data['data_arr'][i].orderStatus === 'Shipped' || this.data['data_arr'][i].orderStatus === 'InvoiceUnconfirmed'){
+      let bufData: displayData[] = [];
+      for(let i = 0; i < this.data.length; i++){
+        if(this.data[i].orderStatus === 'Shipped' || this.data[i].orderStatus === 'InvoiceUnconfirmed'){
           //this.dataSource[i].orderStatus = '発送済';
           bufOrderStatus = '発送済';
         }
         else{
-          console.log(`flag + ${i}`);
-          //this.dataSource[i].orderStatus = '未発送';
           bufOrderStatus = '未発送';
         }
-        if(this.data['data_arr'][i].isSent){
-          //this.dataSource[i].isSent = '配信済';
+        if(this.data[i].isSent){
           bufIsSent = '配信済';
         }
         else{
           //this.dataSource[i].isSent = '未配信';
           bufIsSent = '未配信';
         }
-        let date = new Date(this.data['data_arr'][i].purchaseDate);
-        buf.push({
-          orderId: this.data['data_arr'][i].orderId,
+        let date = new Date(this.data[i].purchaseDate);
+        bufData.push({
+          orderId: this.data[i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
-          buyerName: this.data['data_arr'][i].buyerName,
-          buyerEmail: this.data['data_arr'][i].buyerEmail,
-          itemName: this.data['data_arr'][i].itemName,
-          quantityOrdered: this.data['data_arr'][i].quantityOrdered,
+          buyerName: this.data[i].buyerName,
+          buyerEmail: this.data[i].buyerEmail,
+          itemName: this.data[i].itemName,
+          quantityOrdered: this.data[i].quantityOrdered,
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
-          unSend: this.data['data_arr'][i].unSend
+          unSend: this.data[i].unSend
         });
-        /*
-        this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
-        console.log(this.data['data_arr'][i].purchaseDate);
-        let date = new Date(this.data['data_arr'][i].purchaseDate);
-        console.log(this.data['data_arr'][i].purchaseDate);
-        this.dataSource[i].purchaseDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`;
-        this.dataSource[i].buyerName = this.data['data_arr'][i].buyerName;
-        this.dataSource[i].buyerEmail = this.data['data_arr'][i].buyerEmail;
-        this.dataSource[i].itemName= this.data['data_arr'][i].itemName;
-        this.dataSource[i].quantityOrdered = this.data['data_arr'][i].quantityOrdered;
-        this.dataSource[i].unSend = this.data['data_arr'][i].unSend;
-        console.log(this.dataSource);
-        */
       }
-      this.dataSource.data = buf;
+      this.dataSource.data = bufData;
     });
-    //console.log(this.dataSource);
-    //this.dataSource.data = this.dataSource.data;
-    //this.dataSource=new MatTableDataSource<displayData>(this.dataSource.data);
-    //this.cd.detectChanges();
   }
 
   onSave(): void {
     this.submitting = true;
     /* 未配信のみの配列に絞るべきか */
     for(let i = 0; i < this.dataSource.data.length; i++){
-      if(this.dataSource.data[i].unSend === true) this.data['data_arr'][i].unSend = true;
-      if(this.dataSource.data[i].unSend === false) this.data['data_arr'][i].unSend = false;
+      if(this.dataSource.data[i].unSend === true) this.data[i].unSend = true;
+      if(this.dataSource.data[i].unSend === false) this.data[i].unSend = false;
     }
-    this.dbService.update<data>('data', {email: "", data_arr: this.data['data_arr']})
+    this.dbService.update<data>('data', {email: "", data_arr: this.data})
     .subscribe(result => {
       if(result){
         this.ngOnInit();
@@ -161,5 +119,4 @@ export class DataComponent implements OnInit {
       }
     })
   }
-
 }
