@@ -1,12 +1,13 @@
 .container {
     display: flex;
     flex-direction: column;
-    position: relative;
-    height: 100%;
+    position: inherit;
+    height: 80%;
+    flex: 1;
 }
 
-.app-footer {
-    position: relative;
-    left: 0;
-    right: 0;
-}
+.mat-toolbar.mat-primary {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+  }
