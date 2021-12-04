@@ -120,7 +120,7 @@ export class MailComponent implements OnInit {
    * Save mail design and html, subject
    */
 
-  onSave(): void {
+  onUserSave(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
@@ -130,7 +130,7 @@ export class MailComponent implements OnInit {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
-        this.sending = true;
+        this.submitting = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
