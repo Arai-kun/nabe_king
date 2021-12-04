@@ -37,6 +37,8 @@ export class MailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.sending = false;
+    this.submitting = false;
     this.getEmail();
     this.getSubject();
   }
@@ -105,7 +107,7 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              this.sending = false;
+              this.ngOnInit();
             }
             else{
               console.log('Send failed');
@@ -148,7 +150,7 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  this.submitting = false;
+                  this.ngOnInit();
                 }
                 else{
                   console.log('Save mail failed');
