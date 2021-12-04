@@ -46,7 +46,11 @@ export class MailComponent implements OnInit {
   editorLoaded(event: any) {
     // load the design json here
     this.dbService.get<mailDesign>('mailDesign')
-    .subscribe(design => this.emailEditor.editor.loadDesign(design.design));
+    .subscribe(design => {
+      if(design.design !== ''){
+        this.emailEditor.editor.loadDesign(JSON.parse(design.design));
+      }
+    });
     //this.emailEditor.editor.loadDesign(sample);
     const reader = new FileReader();
     this.emailEditor.editor.registerCallback("image", (file: any, done: (arg0: { progress: number, url: string; }) => void) => {
