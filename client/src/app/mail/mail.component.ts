@@ -90,6 +90,7 @@ export class MailComponent implements OnInit {
    */
 
   onSend(): void {
+    this.sending = true;
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
@@ -99,7 +100,6 @@ export class MailComponent implements OnInit {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
-        this.sending = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: testMail = {
             email: this.email,
@@ -110,7 +110,7 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              //this.sending = false;
+              this.sending = false;
               //this.router.navigate(['/home/mail']);
             }
             else{
@@ -119,7 +119,6 @@ export class MailComponent implements OnInit {
           })
         });
       }
-      this.sending = false;
     });
   }
 
@@ -128,6 +127,7 @@ export class MailComponent implements OnInit {
    */
 
   onUserSave(): void {
+    this.submitting = true;
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
       data: {subject: this.subject} 
@@ -137,7 +137,6 @@ export class MailComponent implements OnInit {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
-        this.submitting = true;
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
@@ -155,7 +154,7 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  //this.submitting = false;
+                  this.submitting = false;
                   //this.router.navigate(['/home/mail']);
                 }
                 else{
@@ -169,7 +168,6 @@ export class MailComponent implements OnInit {
           })
         });
       }
-      this.submitting = false;
     });
   }
 
