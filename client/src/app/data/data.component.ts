@@ -91,6 +91,7 @@ export class DataComponent implements OnInit {
       this.data = data;
       let bufOrderStatus: string;
       let bufIsSent: string;
+      let buf: displayData[] = [];
       for(let i = 0; i < this.data['data_arr'].length; i++){
         if(this.data['data_arr'][i].orderStatus === 'Shipped' || this.data['data_arr'][i].orderStatus === 'InvoiceUnconfirmed'){
           //this.dataSource[i].orderStatus = '発送済';
@@ -110,7 +111,7 @@ export class DataComponent implements OnInit {
           bufIsSent = '未配信';
         }
         let date = new Date(this.data['data_arr'][i].purchaseDate);
-        this.dataSource.data.push({
+        buf.push({
           orderId: this.data['data_arr'][i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
           buyerName: this.data['data_arr'][i].buyerName,
@@ -135,6 +136,7 @@ export class DataComponent implements OnInit {
         console.log(this.dataSource);
         */
       }
+      this.dataSource.data = buf;
     });
     //console.log(this.dataSource);
     //this.dataSource.data = this.dataSource.data;
