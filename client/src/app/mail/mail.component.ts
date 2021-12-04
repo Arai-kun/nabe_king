@@ -110,8 +110,8 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              this.sending = false;
-              this.router.navigate(['/home/mail']);
+              //this.sending = false;
+              //this.router.navigate(['/home/mail']);
             }
             else{
               console.log('Send failed');
@@ -119,6 +119,7 @@ export class MailComponent implements OnInit {
           })
         });
       }
+      this.sending = false;
     });
   }
 
@@ -154,8 +155,8 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  this.submitting = false;
-                  this.router.navigate(['/home/mail']);
+                  //this.submitting = false;
+                  //this.router.navigate(['/home/mail']);
                 }
                 else{
                   console.log('Save mail failed');
@@ -168,6 +169,7 @@ export class MailComponent implements OnInit {
           })
         });
       }
+      this.submitting = false;
     });
   }
 
