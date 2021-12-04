@@ -146,11 +146,11 @@ dbRouter.post('/mailDesign', function(req, res, next){
     console.log(JSON.stringify(req.body));
     console.log(typeof JSON.stringify(req.body));
     MailDesign.updateOne({email: req.user['email']}, {
-        design: JSON.stringify(req.body)
-    }), error => {
+        design: req.body
+    }, error => {
         if(error) next(error);
         res.json({result: 'success'});
-    }
+    })
 });
 
 dbRouter.post('/mail', function(req, res, next){
