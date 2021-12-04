@@ -46,7 +46,7 @@ export class MailComponent implements OnInit {
   editorLoaded(event: any) {
     // load the design json here
     this.dbService.get<mailDesign>('mailDesign')
-    .subscribe(design => this.emailEditor.editor.loadDesign(JSON.parse(design.design)));
+    .subscribe(design => this.emailEditor.editor.loadDesign(design.design));
     //this.emailEditor.editor.loadDesign(sample);
     const reader = new FileReader();
     this.emailEditor.editor.registerCallback("image", (file: any, done: (arg0: { progress: number, url: string; }) => void) => {
@@ -150,7 +150,9 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  this.ngOnInit();
+                  //this.ngOnInit();
+                  this.submitting = false;
+                  console.log(this.submitting);
                 }
                 else{
                   console.log('Save mail failed');
