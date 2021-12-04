@@ -110,7 +110,7 @@ export class DataComponent implements OnInit {
           bufIsSent = '未配信';
         }
         let date = new Date(this.data['data_arr'][i].purchaseDate);
-        this.dataSource.data.push({
+        this.dataSource.data = [{
           orderId: this.data['data_arr'][i].orderId,
           purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
           buyerName: this.data['data_arr'][i].buyerName,
@@ -120,7 +120,7 @@ export class DataComponent implements OnInit {
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
           unSend: this.data['data_arr'][i].unSend
-        });
+        }];
         /*
         this.dataSource[i].orderId = this.data['data_arr'][i].orderId;
         console.log(this.data['data_arr'][i].purchaseDate);
