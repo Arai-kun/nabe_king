@@ -1,7 +1,7 @@
 <div class="container">
-    <main fxFlex="grow">
+    <div fxFlex="grow">
         <email-editor locale="ja-JP" (loaded)="editorLoaded($event)"></email-editor>
-    </main>
+    </div>
     <mat-toolbar class="app-footer" color="primary">
     <span fxLayout="row" fxFlexOffset="auto" fxLayoutGap="10px">
         <button mat-raised-button type="button" (click)="onSend()" [disabled]="submitting || sending">
