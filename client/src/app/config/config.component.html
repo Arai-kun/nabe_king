@@ -32,7 +32,7 @@
                             <strong>選択してください</strong>
                         </mat-error>-->
                     </mat-form-field>
-                    <!--
+                    
                     <mat-form-field>
                         <input matInput type="time" name="from" [formControl]="fromControl"/>
                     </mat-form-field>
@@ -40,22 +40,22 @@
                     <mat-form-field>
                         <input matInput type="time" name="to" [formControl]="toControl"/>
                     </mat-form-field>
-                    <span>の間は配信しない</span>-->
+                    <span>の間は配信しない</span>
                 </div>
 
                 <div>
                     <label>出荷方法</label>
-                    <mat-checkbox class="example-margin" [(ngModel)]="fba">FBA</mat-checkbox>
-                    <mat-checkbox class="example-margin" [(ngModel)]="mba">MBA</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="fba" [(ngModel)]="fba">FBA</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="mba" [(ngModel)]="mba">MBA</mat-checkbox>
                 </div>
 
                 <div>
                     <label>コンディション</label>
-                    <mat-checkbox class="example-margin" [(ngModel)]="new">新品</mat-checkbox>
-                    <mat-checkbox class="example-margin" [(ngModel)]="mint">中古-ほぼ新品</mat-checkbox>
-                    <mat-checkbox class="example-margin" [(ngModel)]="verygood">中古-非常に良い</mat-checkbox>
-                    <mat-checkbox class="example-margin" [(ngModel)]="good">中古-良い</mat-checkbox>
-                    <mat-checkbox class="example-margin" [(ngModel)]="acceptable">中古-可</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="new" [(ngModel)]="new">新品</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="mint" [(ngModel)]="mint">中古-ほぼ新品</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="verygood" [(ngModel)]="verygood">中古-非常に良い</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="good" [(ngModel)]="good">中古-良い</mat-checkbox>
+                    <mat-checkbox class="example-margin" name="acceptable" [(ngModel)]="acceptable">中古-可</mat-checkbox>
                 </div>
 
 
