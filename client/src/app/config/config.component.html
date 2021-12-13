@@ -4,8 +4,8 @@
     </mat-card-header>
     <mat-card-content>
         <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
-            <div fxLayout="column" fxLayoutAlign="space-between center">
-                <span fxLayout="row" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxLayoutAlign="space-between">
+                <div fxLayout="row" fxLayoutAlign="space-around center">
                     <label>メール自動送信</label>
                     <mat-radio-group [formControl]="radioControl"
                         name="status"
@@ -30,9 +30,9 @@
                             <strong>選択してください</strong>
                         </mat-error>-->
                     </mat-form-field>
-                </span>
+                </div>
                     
-                <div fxLayout="row" fxLayoutAlign="space-around center">
+                <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
                     <mat-form-field>
                         <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
                     </mat-form-field>
