@@ -21,10 +21,12 @@ export class ConfigComponent implements OnInit {
   status : string = this.statusOptions[0];
   dulation: number = 0;
   dulations = [{value: 0, viewValue: "0日後に送信する"}];
+  from: string = '';
+  to: string = '';
   radioControl = new FormControl(this.status);
   selectControl = new FormControl(this.dulation);
-  fromControl = new FormControl('');
-  toControl = new FormControl('');
+  fromControl = new FormControl(this.from);
+  toControl = new FormControl(this.to);
   form!: FormGroup;
   fba: boolean = false;
   mba: boolean = false;
@@ -53,6 +55,7 @@ export class ConfigComponent implements OnInit {
       to: this.toControl
     });
     this.getConfig();
+    this.to ='12:34';
   }
 
   getConfig() : void {

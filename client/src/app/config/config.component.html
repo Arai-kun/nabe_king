@@ -34,11 +34,11 @@
                     </mat-form-field>
 
                     <mat-form-field>
-                        <input matInput type="time" name="from" formControlName="fromControl"/>
+                        <input matInput type="time" name="from" [formControl]="fromControl"/>
                     </mat-form-field>
                     <span>から</span>
                     <mat-form-field>
-                        <input matInput type="time" name="to" formControlName="toControl"/>
+                        <input matInput type="time" name="to" [formControl]="toControl"/>
                     </mat-form-field>
                     <span>の間は配信しない</span>
                 </div>
