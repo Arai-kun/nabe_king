@@ -17,7 +17,7 @@
                     </mat-radio-group>
                 </div>
 
-                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
                     <div class="example-margin-2">
                         <mat-form-field>
                             <mat-label>発送から配信までの間隔</mat-label>
@@ -34,7 +34,7 @@
                             </mat-error>-->
                         </mat-form-field>
                     </div>
-                    <div fxLayout="row" fxLayoutGap="10px">
+                    <div fxLayout="row" fxLayout="center center" fxLayoutGap="10px">
                         <mat-form-field>
                             <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
                         </mat-form-field>
