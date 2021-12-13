@@ -85,7 +85,17 @@ export class ConfigComponent implements OnInit {
 
     console.log(this.form.value);
     console.log(`fba:${this.fba} mba:${this.mba} new:${this.new} mint:${this.mint} verygood:${this.verygood} good:${this.good} acceptable:${this.acceptable}`);
-    console.log(this.form.get('to')?.value - this.form.get('from')?.value);
+    if (Number(this.to.substr(0,2)) < Number(this.from.substr(0,2))){
+      console.log('hour-error');
+    }
+    else{
+      if(Number(this.to.substr(3,2)) > Number(this.from.substr(3,2))){
+        console.log('time setting valid');
+      }
+      else{
+        console.log('minute-error');
+      }
+    }
 
     this.submitting = true;
     if(this.status === this.statusOptions[0]) this.config.status = false;

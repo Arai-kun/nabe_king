@@ -6,8 +6,8 @@
         <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
             <div fxLayout="column" fxLayoutAlign="space-between">
                 <div fxLayout="row" fxLayoutAlign="space-around center">
-                    <div>
-                        <label>メール自動送信</label>
+                    <span>
+                        <label class="example-margin">メール自動配信</label>
                         <mat-radio-group [formControl]="radioControl"
                             name="status"
                             class="radio-group"
@@ -16,7 +16,7 @@
                                 {{status}}
                             </mat-radio-button>
                         </mat-radio-group>
-                    </div>
+                    </span>
 
                     <mat-form-field>
                         <mat-label>発送から配信までの間隔</mat-label>
@@ -60,7 +60,7 @@
                     <mat-checkbox class="example-margin" name="acceptable" [(ngModel)]="acceptable" formControlName="acceptable">中古-可</mat-checkbox>
                 </div>
 
-                <span fxLayout="row" fxFlexOffset="auto">
+                <span fxLayout="row" fxFlexOffset="80">
                     <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
                         <span *ngIf="submitting">処理中...</span>
                         <span *ngIf="!submitting">更新</span>
