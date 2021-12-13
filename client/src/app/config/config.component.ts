@@ -25,8 +25,8 @@ export class ConfigComponent implements OnInit {
   to: string = '';
   radioControl = new FormControl(this.status);
   selectControl = new FormControl(this.dulation);
-  fromControl = new FormControl(this.from);
-  toControl = new FormControl(this.to);
+  fromControl = new FormControl(null);
+  toControl = new FormControl(null);
   form!: FormGroup;
   fba: boolean = false;
   mba: boolean = false;
@@ -35,6 +35,14 @@ export class ConfigComponent implements OnInit {
   verygood: boolean = false;
   good: boolean = false;
   acceptable: boolean = false;
+  fbaControl = new FormControl(this.fba);
+  mbaControl = new FormControl(this.mba);
+  newControl = new FormControl(this.new);
+  mintControl = new FormControl(this.mint);
+  verygoodControl = new FormControl(this.verygood);
+  goodControl = new FormControl(this.good);
+  acceptableControl = new FormControl(this.acceptable);
+  
 
 
 
@@ -52,7 +60,14 @@ export class ConfigComponent implements OnInit {
       status: this.radioControl,
       select: this.selectControl,
       from: this.fromControl,
-      to: this.toControl
+      to: this.toControl,
+      fba: this.fbaControl,
+      mba: this.mbaControl,
+      new: this.newControl,
+      mint: this.mintControl,
+      verygood: this.verygoodControl,
+      good: this.goodControl,
+      acceptable: this.acceptableControl
     });
     this.getConfig();
     this.to ='12:34';
