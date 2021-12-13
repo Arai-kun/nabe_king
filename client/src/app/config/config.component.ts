@@ -13,15 +13,28 @@ export class ConfigComponent implements OnInit {
   config: config = {
     email: '',
     status: false,
-    dulation: 0
+    dulation: 0,
+    from: '',
+    to: ''
   }
   statusOptions: string[] = ['無効', '有効'];
   status : string = this.statusOptions[0];
   dulation: number = 0;
   dulations = [{value: 0, viewValue: "0日後に送信する"}];
   radioControl = new FormControl(this.status);
-  selectControl = new FormControl(this.dulation);//, Validators.required);
+  selectControl = new FormControl(this.dulation);
+  fromControl = new FormControl('');
+  toControl = new FormControl('');
   form!: FormGroup;
+  fba: boolean = false;
+  mba: boolean = false;
+  new: boolean = false;
+  mint: boolean = false;
+  verygood: boolean = false;
+  good: boolean = false;
+  acceptable: boolean = false;
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +48,9 @@ export class ConfigComponent implements OnInit {
     }
     this.form = this.fb.group({
       status: this.radioControl,
-      select: this.selectControl
+      select: this.selectControl,
+      from: this.fromControl,
+      to: this.toControl
     });
     this.getConfig();
   }
@@ -51,6 +66,12 @@ export class ConfigComponent implements OnInit {
   }
 
   onSave(): void {
+
+    console.log(this.form.value);
+    console.log(`fba:${this.fba} mba:${this.mba} new:${this.new} mint:${this.mint} verygood:${this.verygood} good:${this.good} acceptable:${this.acceptable}`);
+    console.log(new Date(this.form.get('from')?.value));
+    console.log(new Date(this.form.get('to')?.value));
+    
     this.submitting = true;
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;
