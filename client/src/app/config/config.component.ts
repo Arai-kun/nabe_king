@@ -23,11 +23,6 @@ export class ConfigComponent implements OnInit {
   dulations = [{value: 0, viewValue: "0日後に送信する"}];
   from: string = '';
   to: string = '';
-  radioControl = new FormControl(this.status);
-  selectControl = new FormControl(this.dulation);
-  fromControl = new FormControl(null);
-  toControl = new FormControl(null);
-  form!: FormGroup;
   fba: boolean = false;
   mba: boolean = false;
   new: boolean = false;
@@ -35,6 +30,10 @@ export class ConfigComponent implements OnInit {
   verygood: boolean = false;
   good: boolean = false;
   acceptable: boolean = false;
+  radioControl = new FormControl(this.status);
+  selectControl = new FormControl(this.dulation);
+  fromControl = new FormControl(this.from);
+  toControl = new FormControl(this.to);
   fbaControl = new FormControl(this.fba);
   mbaControl = new FormControl(this.mba);
   newControl = new FormControl(this.new);
@@ -42,10 +41,8 @@ export class ConfigComponent implements OnInit {
   verygoodControl = new FormControl(this.verygood);
   goodControl = new FormControl(this.good);
   acceptableControl = new FormControl(this.acceptable);
+  form!: FormGroup;
   
-
-
-
   constructor(
     private fb: FormBuilder,
     private dbService: DbService
@@ -71,6 +68,7 @@ export class ConfigComponent implements OnInit {
     });
     this.getConfig();
     this.to ='12:34';
+    this.mint = true;
   }
 
   getConfig() : void {
