@@ -69,9 +69,8 @@ export class ConfigComponent implements OnInit {
 
     console.log(this.form.value);
     console.log(`fba:${this.fba} mba:${this.mba} new:${this.new} mint:${this.mint} verygood:${this.verygood} good:${this.good} acceptable:${this.acceptable}`);
-    console.log(new Date(this.form.get('from')?.value));
-    console.log(new Date(this.form.get('to')?.value));
-    
+    console.log(this.form.get('to')?.value - this.form.get('from')?.value);
+
     this.submitting = true;
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;
