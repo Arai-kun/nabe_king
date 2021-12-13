@@ -17,8 +17,8 @@
                     </mat-radio-group>
                 </div>
 
-                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                    <span class="example-margin-2">
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+                    <div class="example-margin-2">
                         <mat-form-field>
                             <mat-label>発送から配信までの間隔</mat-label>
                             <mat-select [formControl]="selectControl"
@@ -33,16 +33,17 @@
                                 <strong>選択してください</strong>
                             </mat-error>-->
                         </mat-form-field>
-                    </span>
-                    
-                    <mat-form-field>
-                        <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
-                    </mat-form-field>
-                    <span>から</span>
-                    <mat-form-field>
-                        <input matInput type="time" name="to" [(ngModel)]="to" formControlName="to"/>
-                    </mat-form-field>
-                    <span>の間は配信しない</span>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <mat-form-field>
+                            <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
+                        </mat-form-field>
+                        <span>から</span>
+                        <mat-form-field>
+                            <input matInput type="time" name="to" [(ngModel)]="to" formControlName="to"/>
+                        </mat-form-field>
+                        <span>の間は配信しない</span>
+                    </div>
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="start center">
