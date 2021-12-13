@@ -59,13 +59,14 @@
                     <mat-checkbox class="example-margin" name="good" [(ngModel)]="good" formControlName="good">中古-良い</mat-checkbox>
                     <mat-checkbox class="example-margin" name="acceptable" [(ngModel)]="acceptable" formControlName="acceptable">中古-可</mat-checkbox>
                 </div>
+            
+                <div fxLayout="row" fxFlexOffset="auto">
+                    <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+                        <span *ngIf="submitting">処理中...</span>
+                        <span *ngIf="!submitting">更新</span>
+                    </button>
+                </div>
             </div>
-            <span fxLayout="row" fxFlexOffset="auto">
-                <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                    <span *ngIf="submitting">処理中...</span>
-                    <span *ngIf="!submitting">更新</span>
-                </button>
-            </span>
         </form>
     </mat-card-content>
 </mat-card>
