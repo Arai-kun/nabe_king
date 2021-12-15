@@ -83,6 +83,15 @@ export class ConfigComponent implements OnInit {
       //console.log(this.config);
       if(this.config.status) this.status = this.statusOptions[1];
       this.dulation = this.config.dulation;
+      this.from = this.config.from;
+      this.to = this.config.to;
+      this.fba = this.config.fba;
+      this.mba = this.config.mba;
+      this.new = this.config.new;
+      this.mint = this.config.mint;
+      this.verygood = this.config.verygood;
+      this.good = this.config.good;
+      this.acceptable =this.config.acceptable;
     });
   }
 
@@ -106,6 +115,15 @@ export class ConfigComponent implements OnInit {
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;
     this.config.dulation = this.dulation;
+    this.config.from = this.from;
+    this.config.to = this.to;
+    this.config.fba = this.fba;
+    this.config.mba = this.mba;
+    this.config.new = this.new;
+    this.config.mint = this.mint;
+    this.config.verygood = this.verygood;
+    this.config.good = this.good;
+    this.config.acceptable = this.acceptable;
     this.dbService.update<config>('config', this.config)
     .subscribe(result => {
       if(result){
