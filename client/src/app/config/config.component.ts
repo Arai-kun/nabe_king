@@ -74,8 +74,6 @@ export class ConfigComponent implements OnInit {
       acceptable: this.acceptableControl
     });
     this.getConfig();
-    this.to ='12:34';
-    this.mint = true;
   }
 
   getConfig() : void {

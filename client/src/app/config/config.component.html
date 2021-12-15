@@ -35,11 +35,11 @@
                         </mat-form-field>
                     </div>
                     <mat-form-field>
-                        <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
+                        <input matInput type="time" name="from" [(ngModel)]="config.from" formControlName="from"/>
                     </mat-form-field>
                     <span>から</span>
                     <mat-form-field>
-                        <input matInput type="time" name="to" [(ngModel)]="to" formControlName="to"/>
+                        <input matInput type="time" name="to" [(ngModel)]="config.to" formControlName="to"/>
                     </mat-form-field>
                     <span>の間は配信しない</span>    
                 </div>
