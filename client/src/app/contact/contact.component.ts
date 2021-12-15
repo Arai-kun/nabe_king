@@ -28,7 +28,7 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmail();
-    this.fb.group({
+    this.form = this.fb.group({
       email: this.emailControl,
       subject: this.subjectControl,
       content: this.contentControl
