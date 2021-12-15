@@ -117,6 +117,6 @@ export class DataComponent implements OnInit {
       else{
         console.log('data update failed');
       }
-    })
+    });
   }
 }

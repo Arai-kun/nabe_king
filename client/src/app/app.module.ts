@@ -49,6 +49,7 @@ import { MailComponent } from './mail/mail.component';
 import { HomeComponent } from './home/home.component';
 import { ConfigComponent } from './config/config.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { ContactComponent } from './contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { DialogComponent } from './dialog/dialog.component';
     HomeComponent,
     ConfigComponent,
     DialogComponent,
+    ContactComponent,
   ],
   imports: [
     BrowserModule,

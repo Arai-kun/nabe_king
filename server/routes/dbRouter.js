@@ -117,7 +117,16 @@ dbRouter.get('/config', function(req, res, next) {
 dbRouter.post('/config', function(req, res, next){
     Config.updateOne({email: req.user['email']}, {
         status: req.body['status'], 
-        dulation: req.body['dulation']
+        dulation: req.body['dulation'],
+        from: req.body['from'],
+        to: req.body['to'],
+        fba: req.body['fba'],
+        mba: req.body['mba'],
+        new: req.body['new'],
+        mint: req.body['mint'],
+        verygood: req.body['verygood'],
+        good: req.body['good'],
+        acceptable: req.body['acceptable']
     }, error => {
         if(error) next(error);
         res.json({result: 'success'});
