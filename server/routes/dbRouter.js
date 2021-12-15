@@ -55,7 +55,16 @@ dbRouter.get('/init', function(req, res, next){
     Config.create({
         email: mail,
         status: false,
-        dulation: 0
+        dulation: 0,
+        from: '',
+        to: '',
+        fba: false,
+        mba: false,
+        new: false,
+        mint: false,
+        verygood: false,
+        good: false,
+        acceptable: false
     }, error => {
         if(error) next(error);
         // テスト用 -> 実際はここでデータを取らない
@@ -68,18 +77,24 @@ dbRouter.get('/init', function(req, res, next){
                     data_arr: data_arr
                 }, error => {
                     if(error) next(error);
-                    Mail.create({
-                        email: mail,
-                        html: "",
-                        subject: ""
-                    }, error => {
+                    Mail.findOne({email: 'metadata'}, (error, initMail) => {
                         if(error) next(error);
-                        MailDesign.create({
+                        Mail.create({
                             email: mail,
-                            design: ""
+                            html: initMail['html'],
+                            subject: initMail['subject']
                         }, error => {
                             if(error) next(error);
-                            res.json({result: 'success'});
+                            MailDesign.findOne({email: 'metadata'}, (error, initMailDesign) => {
+                                if(error) next(error);
+                                MailDesign.create({
+                                    email: mail,
+                                    design: initMailDesign['design']
+                                }, error => {
+                                    if(error) next(error);
+                                    res.json({result: 'success'});
+                                });
+                            });
                         });
                     });
                 });

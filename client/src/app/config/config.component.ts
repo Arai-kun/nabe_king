@@ -15,7 +15,14 @@ export class ConfigComponent implements OnInit {
     status: false,
     dulation: 0,
     from: '',
-    to: ''
+    to: '',
+    fba: false,
+    mba: false,
+    new: false,
+    mint: false,
+    verygood: false,
+    good: false,
+    acceptable: false
   }
   statusOptions: string[] = ['無効', '有効'];
   status : string = this.statusOptions[0];

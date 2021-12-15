@@ -11,7 +11,9 @@ mailRouter.post('/send', function(req, res, next){
   }
   let templete = handlebars.compile(req.body['html']);
   let html = templete(testValue);
-  sendMail(req.body['to'], req.body['subject'], html)
+  let templeteSub = handlebars.compile(req.body['subject']);
+  let subject = templeteSub(testValue);
+  sendMail(req.body['to'], subject, html)
   .then(() => res.json(true))
   .catch(error => {
     console.log(error);
