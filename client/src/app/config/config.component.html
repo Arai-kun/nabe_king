@@ -19,7 +19,7 @@
 
                 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
                     <div class="example-margin-2">
-                        <mat-form-field>
+                        <mat-form-field appearance="fill">
                             <mat-label>発送から配信までの間隔</mat-label>
                             <mat-select [formControl]="selectControl"
                                 name="dulation"
@@ -35,11 +35,11 @@
                         </mat-form-field>
                     </div>
                     <div class="spacer"></div>
-                    <mat-form-field>
+                    <mat-form-field appearance="fill">
                         <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
                     </mat-form-field>
                     <span>から</span>
-                    <mat-form-field>
+                    <mat-form-field appearance="fill">
                         <input matInput type="time" name="to" [(ngModel)]="to" formControlName="to"/>
                     </mat-form-field>
                     <span>の間は配信しない</span>    

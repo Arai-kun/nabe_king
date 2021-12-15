@@ -46,7 +46,7 @@ export class ContactComponent implements OnInit {
       email: '',
       subject: `【お問い合わせ】${this.form.get('subject')?.value}`,
       to: this.ADMIN_EMAIL,
-      html: `<p>${this.email} 様より以下の内容でお問い合わせを頂きました。</p><p>上記のメールアドレスに直接ご回答ください</p><p>----------</p><p>${this.form.get('content')?.value}</p>`
+      html: `<p>${this.email} 様より以下の内容でお問い合わせを頂きました。</p><p>上記のメールアドレスに直接ご回答ください。</p><p>----------</p><p>${(this.form.get('content')?.value).split('¥n').join('<br>')}</p>`
     }
     this.mailService.send(mailData)
     .subscribe(result => {
