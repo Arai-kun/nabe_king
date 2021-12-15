@@ -77,6 +77,15 @@ export class ConfigComponent implements OnInit {
   }
 
   getConfig() : void {
+    /* Initialize only checkbox */
+    this.config.fba = false;
+    this.config.mba = false;
+    this.config.new = false;
+    this.config.mint = false;
+    this.config.verygood = false;
+    this.config.good = false;
+    this.config.acceptable = false;
+    
     this.dbService.get<config>('config')
     .subscribe(config => {
       this.config = config;
