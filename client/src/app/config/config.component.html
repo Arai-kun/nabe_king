@@ -36,10 +36,12 @@
                     </div>
                     <div class="spacer"></div>
                     <mat-form-field appearance="fill">
+                        <mat-label>開始時刻</mat-label>
                         <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
                     </mat-form-field>
                     <span>から</span>
                     <mat-form-field appearance="fill">
+                        <mat-label>終了時刻</mat-label>
                         <input matInput type="time" name="to" [(ngModel)]="to" formControlName="to"/>
                     </mat-form-field>
                     <span>の間は配信しない</span>    
