@@ -1,19 +1,22 @@
-<div class="contact" fxLayout="row" fxLayoutAlign="center center">
+<mat-card class="contact-card">
+  <mat-card-header>
+    <mat-card-title>お問い合わせ</mat-card-title>
+  </mat-card-header>
 
-    <mat-card class="contact-card">
-      <mat-card-header>
-        <mat-card-title>お問い合わせ</mat-card-title>
-      </mat-card-header>
-  
-      <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
-            <mat-form-field class="example-full-width" appearance="fill">
-              <mat-label>あなたのメールアドレス</mat-label>
-              <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
-            </mat-form-field>
-            <!--<span>こちらのメールアドレスに回答いたします</span>-->
-    
+  <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-between">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+
+          <div fxLayout="column" fxLayoutAlign="space-between">
+            <div>
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>あなたのメールアドレス</mat-label>
+                <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
+              </mat-form-field>
+              <span>こちらのメールアドレスに回答いたします</span>
+            </div>
+
             <mat-form-field class="example-full-width" appearance="fill">
               <mat-label>タイトル</mat-label>
               <input matInput name="subject" formControlName="subject">
@@ -21,24 +24,24 @@
                   <strong>タイトルを入力してください</strong>
               </mat-error>
             </mat-form-field>
-
-            <mat-form-field class="example-full-width" appearance="fill">
-              <mat-label>内容</mat-label>
-              <textarea matInput rows="20" name="content" formControlName="content"></textarea>
-              <mat-error *ngIf="contentControl.hasError('required')">
-                  <strong>内容を入力してください</strong>
-              </mat-error>
-            </mat-form-field>
-
-            <div fxLayout="row" fxFlexOffset="auto">
-              <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                  <span *ngIf="submitting">送信中...</span>
-                  <span *ngIf="!submitting">送信</span>
-              </button>
-            </div>
           </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    
-  </div>
+
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>内容</mat-label>
+            <textarea matInput rows="20" name="content" formControlName="content"></textarea>
+            <mat-error *ngIf="contentControl.hasError('required')">
+                <strong>内容を入力してください</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div fxLayout="row" fxFlexOffset="auto">
+            <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+                <span *ngIf="submitting">送信中...</span>
+                <span *ngIf="!submitting">送信</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>
