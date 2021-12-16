@@ -5,3 +5,12 @@
 .readonly-email {
     margin-bottom: 24px;
 }
+
+mat-card-header {
+    font-weight: 700;
+}
+  
+mat-card-header mat-card-title {
+    font-size: 30px;
+    margin-bottom: 16px;
+}
