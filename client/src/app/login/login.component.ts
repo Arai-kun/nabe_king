@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit {
     .subscribe(result => {
       if(result)
       {
+        this.overlayRef.detach();
         this.router.navigate(['auth']);
       }
       else
