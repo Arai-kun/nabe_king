@@ -6,11 +6,11 @@
   <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-between">
-        <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="24px">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
 
-          <div fxLayout="column" fxLayoutAlign="space-between">
+          <div fxLayout="column">
             
-            <div>
+            <div class="readonly-email">
               <mat-form-field class="example-full-width" appearance="fill">
                 <mat-label>あなたのメールアドレス</mat-label>
                 <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
