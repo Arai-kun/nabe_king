@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, OnChanges} from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked} from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
@@ -19,7 +19,7 @@ export interface DialogData {
   templateUrl: './mail.component.html',
   styleUrls: ['./mail.component.css']
 })
-export class MailComponent implements OnInit, OnChanges {
+export class MailComponent implements OnInit, AfterViewChecked {
   email: string = "";
   subject: string = "";
   submitting: boolean = false;
@@ -42,7 +42,7 @@ export class MailComponent implements OnInit, OnChanges {
     this.getSubject();
   }
 
-  ngOnChanges(): void {
+  ngAfterViewChecked(): void {
     console.log('Detect change');
   }
 
