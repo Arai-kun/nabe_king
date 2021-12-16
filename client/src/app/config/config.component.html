@@ -65,9 +65,7 @@
                 <div fxLayout="row">
                     <span fxFlexOffset="auto">
                         <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                            <span *ngIf="submitting">
-                                <mat-spinner></mat-spinner>
-                            </span>
+                            <span *ngIf="submitting">処理中...</span>
                             <span *ngIf="!submitting">更新</span>
                         </button>
                     </span>
