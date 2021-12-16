@@ -5,12 +5,12 @@
 
   <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
     <mat-card-content>
-      <div fxLayout="column" fxLayoutAlign="space-between">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign="center center">
 
-          <div fxLayout="column">
+          <div fxFlex fxLayout="column">
             
-            <div class="readonly-email">
+            <div fxFlex class="readonly-email">
               <mat-form-field class="example-full-width" appearance="fill">
                 <mat-label>あなたのメールアドレス</mat-label>
                 <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
@@ -19,7 +19,7 @@
             </div>
             
 
-            <mat-form-field class="example-full-width" appearance="fill">
+            <mat-form-field fxFlex class="example-full-width" appearance="fill">
               <mat-label>タイトル</mat-label>
               <input matInput name="subject" formControlName="subject">
               <mat-error *ngIf="subjectControl.hasError('required')">
@@ -28,7 +28,7 @@
             </mat-form-field>
           </div>
 
-          <mat-form-field class="example-full-width" appearance="fill">
+          <mat-form-field fxFlex class="example-full-width" appearance="fill">
             <mat-label>内容</mat-label>
             <textarea matInput rows="20" name="content" formControlName="content"></textarea>
             <mat-error *ngIf="contentControl.hasError('required')">
