@@ -6,12 +6,12 @@
   <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column">
-        <div fxLayout="row" fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="16px">
 
           <div fxFlex fxLayout="column">
             
-            <div fxFlex class="readonly-email">
-              <mat-form-field class="example-full-width" appearance="fill">
+            <div class="readonly-email">
+              <mat-form-field fxFlex class="example-full-width" appearance="fill">
                 <mat-label>あなたのメールアドレス</mat-label>
                 <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
               </mat-form-field>
