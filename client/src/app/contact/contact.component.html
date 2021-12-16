@@ -6,16 +6,16 @@
   <form class="contact-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-between">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
 
           <div fxLayout="column" fxLayoutAlign="space-between">
-            <div>
-              <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label>あなたのメールアドレス</mat-label>
-                <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
-              </mat-form-field>
-              <span>こちらのメールアドレスに回答いたします</span>
-            </div>
+            
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>あなたのメールアドレス</mat-label>
+              <input matInput type="email" name="email" [(ngModel)]="email" formControlName="email" readonly>
+            </mat-form-field>
+            <span>こちらのメールアドレスに回答いたします</span>
+            
 
             <mat-form-field class="example-full-width" appearance="fill">
               <mat-label>タイトル</mat-label>
@@ -33,13 +33,13 @@
                 <strong>内容を入力してください</strong>
             </mat-error>
           </mat-form-field>
+        </div>
 
-          <div fxLayout="row" fxFlexOffset="auto">
-            <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                <span *ngIf="submitting">送信中...</span>
-                <span *ngIf="!submitting">送信</span>
-            </button>
-          </div>
+        <div fxLayout="row" fxFlexOffset="auto">
+          <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
+              <span *ngIf="submitting">送信中...</span>
+              <span *ngIf="!submitting">送信</span>
+          </button>
         </div>
       </div>
     </mat-card-content>
