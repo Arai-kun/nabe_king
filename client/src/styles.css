@@ -7,7 +7,7 @@ body {
   min-height: 100vh;
   background: #e2e2e2;
 }
-/*
+
 .app-header {
   justify-content: space-between;
   position: fixed;
@@ -106,4 +106,3 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-*/
