@@ -31,8 +31,4 @@ export class OverlaySpinnerService {
     this.overlayRef.detach();
   }
 
-  dispose(): void {
-    this.overlayRef.dispose();
-  }
-
 }

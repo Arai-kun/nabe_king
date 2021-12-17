@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { OverlaySpinnerService } from '../overlay-spinner.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit, OnDestroy{
+export class AuthComponent implements OnInit {
   params!: Params;
   url!: string;
 
@@ -38,21 +38,19 @@ export class AuthComponent implements OnInit, OnDestroy{
           this.authService.exchangeToken(this.params["spapi_oauth_code"], this.params["selling_partner_id"])
           .subscribe(()=> {
             this.dbService.dbInit()
-            .subscribe(() => this.ngOnInit());
+            .subscribe(() => {
+              this.overlaySpinnerService.detach();
+              this.ngOnInit();
+            });
           });
         }
         else
         {
+          this.overlaySpinnerService.detach();
           window.location.href = 
           "https://sellercentral.amazon.co.jp/apps/authorize/consent?application_id=amzn1.sp.solution.64bd6392-c1a0-4951-9b00-2744796fc74a&version=beta&state=123456";
         }
       }
     });
   }
-
-  ngOnDestroy(): void {
-    this.overlaySpinnerService.dispose();
-  }
-
-
 }
