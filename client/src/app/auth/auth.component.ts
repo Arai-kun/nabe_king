@@ -31,7 +31,7 @@ export class AuthComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.overlayRef.attach(new ComponentPortal(MatSpinner))
+    this.overlayRef.attach(new ComponentPortal(MatSpinner));
     this.dbService.tokensExist()
     .subscribe(result => {
       if(result){

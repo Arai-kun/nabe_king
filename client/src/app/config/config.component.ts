@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { config } from '../config';
 import { DbService } from '../db.service';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 @Component({
   selector: 'app-config',
@@ -52,10 +53,12 @@ export class ConfigComponent implements OnInit {
   
   constructor(
     private fb: FormBuilder,
-    private dbService: DbService
+    private dbService: DbService,
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
 
   ngOnInit(): void {
+    this.overlaySpinnerService.attach();
     this.submitting = false;
     for(let i = 1; i < 31; i++){
       this.dulations.push({value: i, viewValue: `${i}日後に送信する`});
@@ -74,6 +77,7 @@ export class ConfigComponent implements OnInit {
       acceptable: this.acceptableControl
     });
     this.getConfig();
+    this.overlaySpinnerService.detach();
   }
 
   getConfig() : void {
@@ -120,6 +124,7 @@ export class ConfigComponent implements OnInit {
       }
     }
 
+    this.overlaySpinnerService.attach();
     this.submitting = true;
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;

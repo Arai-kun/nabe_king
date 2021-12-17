@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
     this.overlayRef.detach();
     this.submitting = false;
     //this.toastr.error('正しいメールアドレスとパスワードを入力してください', 'ログイン失敗', {positionClass: 'toast-top-full-width', timeOut: 5000});
-    this.form.reset();
+    //this.form.reset();
   }
 
 
