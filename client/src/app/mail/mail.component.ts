@@ -169,6 +169,7 @@ export class MailComponent implements OnInit {
                   this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                   this.applicationRef.tick();
+                  this.ngOnInit();
                 }
                 else{
                   this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
