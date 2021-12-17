@@ -22,6 +22,12 @@ export class AppComponent {
     Validators.email
   ]);
   submitting: boolean = false;
+  appearance = {
+    theme: 'dark',
+    loader: {
+      url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1638778224/Rolling-1s-200px_wqzznh.svg'
+    }
+  }
 
   @ViewChild(EmailEditorComponent)
   private emailEditor!: EmailEditorComponent;
@@ -36,6 +42,10 @@ export class AppComponent {
       email: this.emailControl
     });
     this.subject = 'タイトル';
+    this.emailEditor.appearance = {
+      theme: 'dark'
+    }
+
   }
   
   editorLoaded(event: any) {
