@@ -31,10 +31,7 @@
   
         </mat-card-content>
   
-        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-            <span *ngIf="submitting">処理中...</span>
-            <span *ngIf="!submitting">登録</span>
-        </button>
+        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">登録</button>
   
       </form>
     </mat-card>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 export interface displayData {
     orderId: string,
@@ -33,7 +34,6 @@ export interface displayData {
   styleUrls: ['./data.component.css']
 })
 export class DataComponent implements OnInit {
-  submitting: boolean = false;
   data!: data['data_arr']; 
   displayedColumns: string[] = [
     'orderId',
@@ -50,12 +50,14 @@ export class DataComponent implements OnInit {
   dataSource = new MatTableDataSource<displayData>();
 
   constructor(
-    private dbService: DbService
+    private dbService: DbService,
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
 
   ngOnInit(): void {
-    this.submitting = false;
+    this.overlaySpinnerService.attach();
     this.getData();
+    this.overlaySpinnerService.detach();
   }
   
   /**
@@ -103,7 +105,7 @@ export class DataComponent implements OnInit {
   }
 
   onSave(): void {
-    this.submitting = true;
+    this.overlaySpinnerService.attach();
     /* 未配信のみの配列に絞るべきか */
     for(let i = 0; i < this.dataSource.data.length; i++){
       if(this.dataSource.data[i].unSend === true) this.data[i].unSend = true;
@@ -112,6 +114,7 @@ export class DataComponent implements OnInit {
     this.dbService.update<data>('data', {email: "", data_arr: this.data})
     .subscribe(result => {
       if(result){
+        this.overlaySpinnerService.detach();
         this.ngOnInit();
       }
       else{

@@ -4,6 +4,7 @@ import { user } from '../user';
 import { testMail } from '../testMail';
 import { DbService } from '../db.service';
 import { MailService } from '../mail.service';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 @Component({
   selector: 'app-contact',
@@ -16,14 +17,14 @@ export class ContactComponent implements OnInit {
   emailControl = new FormControl(this.email);
   subjectControl = new FormControl(null, Validators.required);
   contentControl = new FormControl(null, Validators.required);
-  submitting: boolean = false;
   ADMIN_EMAIL: string = 'koki.alright@gmail.com'; 
   
 
   constructor(
     private fb: FormBuilder,
     private dbService: DbService,
-    private mailService: MailService
+    private mailService: MailService,
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +42,7 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submitting = true;
+    this.overlaySpinnerService.attach();
     const mailData: testMail = {
       email: '',
       subject: `【お問い合わせ】${this.form.get('subject')?.value}`,
@@ -51,7 +52,7 @@ export class ContactComponent implements OnInit {
     this.mailService.send(mailData)
     .subscribe(result => {
       if(result){
-        this.submitting = false;
+        this.overlaySpinnerService.detach();
       }
       else{
         console.log('Submit failed');

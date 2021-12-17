@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 export interface DialogData {
   subject: string;
@@ -22,8 +23,12 @@ export interface DialogData {
 export class MailComponent implements OnInit {
   email: string = "";
   subject: string = "";
-  submitting: boolean = false;
-  sending: boolean = false;
+  appearance = {
+    loader: {
+      html:'<div></div>'
+      //url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1638778224/Rolling-1s-200px_wqzznh.svg'
+    }
+  }
 
 
   @ViewChild(EmailEditorComponent)
@@ -34,10 +39,12 @@ export class MailComponent implements OnInit {
     private fileService: FileService,
     public dialog: MatDialog,
     private mailService: MailService,
-    public cd: ChangeDetectorRef
+    public cd: ChangeDetectorRef,
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
 
   ngOnInit(): void {
+    this.overlaySpinnerService.attach();
     this.getEmail();
     this.getSubject();
   }
@@ -65,6 +72,10 @@ export class MailComponent implements OnInit {
         }
       }
     });
+  }
+
+  editorReady() {
+    this.overlaySpinnerService.detach();
   }
 
   /*
@@ -98,7 +109,7 @@ export class MailComponent implements OnInit {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
-        this.sending = true;
+        this.overlaySpinnerService.attach();
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: testMail = {
             email: this.email,
@@ -109,8 +120,8 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              this.sending = false
-              this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+              this.overlaySpinnerService.detach();
+              //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
             }
             else{
               console.log('Send failed');
@@ -135,7 +146,7 @@ export class MailComponent implements OnInit {
       //console.log(result);
       if(typeof result === 'string'){
         this.subject = result;
-        this.submitting = true;
+        this.overlaySpinnerService.attach();
         this.emailEditor.editor.exportHtml((data: any) => {
           const mail: mail = {
             email: "",
@@ -153,8 +164,8 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  this.submitting = false;
-                  this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+                  this.overlaySpinnerService.detach();
+                  //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                 }
                 else{
                   console.log('Save mail failed');

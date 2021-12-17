@@ -3,9 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { user } from '../user';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-import { Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { MatSpinner } from '@angular/material/progress-spinner';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 @Component({
   selector: 'app-login',
@@ -26,20 +24,13 @@ export class LoginComponent implements OnInit {
     Validators.email
   ]);
   passwordControl = new FormControl(null, Validators.required);
-  submitting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private overlay: Overlay
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
-
-  overlayRef = this.overlay.create({
-    hasBackdrop: true,
-    positionStrategy: this.overlay
-      .position().global().centerHorizontally().centerVertically()
-  });
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -49,8 +40,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.overlayRef.attach(new ComponentPortal(MatSpinner));
-    this.submitting = true;
+    this.overlaySpinnerService.attach();
     //console.log(this.form.value);
     this.user.email = this.form.get('email')?.value; 
     this.user.password = this.form.get('password')?.value;
@@ -58,7 +48,7 @@ export class LoginComponent implements OnInit {
     .subscribe(result => {
       if(result)
       {
-        this.overlayRef.detach();
+        this.overlaySpinnerService.detach();
         this.router.navigate(['auth']);
       }
       else
@@ -69,8 +59,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginFailed(): void {
-    this.overlayRef.detach();
-    this.submitting = false;
+    this.overlaySpinnerService.detach();
     //this.toastr.error('正しいメールアドレスとパスワードを入力してください', 'ログイン失敗', {positionClass: 'toast-top-full-width', timeOut: 5000});
     //this.form.reset();
   }

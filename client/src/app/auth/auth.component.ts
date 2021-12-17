@@ -3,9 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { DbService } from '../db.service';
-import { Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { MatSpinner } from '@angular/material/progress-spinner';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
 
 @Component({
   selector: 'app-auth',
@@ -21,21 +19,15 @@ export class AuthComponent implements OnInit {
     private authService: AuthService,
     private dbService: DbService,
     private router: Router,
-    private overlay: Overlay
+    private overlaySpinnerService: OverlaySpinnerService
   ) { }
 
-  overlayRef = this.overlay.create({
-    hasBackdrop: true,
-    positionStrategy: this.overlay
-      .position().global().centerHorizontally().centerVertically()
-  });
-
   ngOnInit(): void {
-    this.overlayRef.attach(new ComponentPortal(MatSpinner));
+    this.overlaySpinnerService.attach();
     this.dbService.tokensExist()
     .subscribe(result => {
       if(result){
-        this.overlayRef.detach();
+        this.overlaySpinnerService.detach();
         this.router.navigate(['home']);
       }
       else{

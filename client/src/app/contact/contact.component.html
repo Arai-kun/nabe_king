@@ -36,10 +36,7 @@
 
         <div fxLayout="row"> 
           <span fxFlexOffset="auto">
-            <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid || submitting">
-                <span *ngIf="submitting">送信中...</span>
-                <span *ngIf="!submitting">送信</span>
-            </button>
+            <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">送信</button>
           </span>
         </div>
       </div>
