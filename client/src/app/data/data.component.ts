@@ -3,6 +3,7 @@ import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 export interface displayData {
     orderId: string,
@@ -51,7 +52,8 @@ export class DataComponent implements OnInit {
 
   constructor(
     private dbService: DbService,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -100,7 +102,7 @@ export class DataComponent implements OnInit {
         });
       }
       this.dataSource.data = bufData;
-      this.overlaySpinnerService.detach();
+      //this.overlaySpinnerService.detach();
     });
   }
 
@@ -115,9 +117,11 @@ export class DataComponent implements OnInit {
     .subscribe(result => {
       if(result){
         this.overlaySpinnerService.detach();
+        this.toastrService.success('', '反映しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.ngOnInit();
       }
       else{
+        this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '反映失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
         console.log('data update failed');
       }
     });

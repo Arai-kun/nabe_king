@@ -5,6 +5,7 @@ import { testMail } from '../testMail';
 import { DbService } from '../db.service';
 import { MailService } from '../mail.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-contact',
@@ -24,7 +25,8 @@ export class ContactComponent implements OnInit {
     private fb: FormBuilder,
     private dbService: DbService,
     private mailService: MailService,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -57,8 +59,10 @@ export class ContactComponent implements OnInit {
     .subscribe(result => {
       if(result){
         this.overlaySpinnerService.detach();
+        this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
       }
       else{
+        this.toastrService.error('大変申し訳ありません。しばらく経ってから再度送信していただくか、復旧をお待ちください', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
         console.log('Submit failed');
       }
     })

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { config } from '../config';
 import { DbService } from '../db.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-config',
@@ -53,7 +54,8 @@ export class ConfigComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dbService: DbService,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -140,9 +142,11 @@ export class ConfigComponent implements OnInit {
       if(result){
         this.overlaySpinnerService.detach();
         //this.submitting = false;
+        this.toastrService.success('', '更新しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.ngOnInit();
       }
       else{
+        this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '更新失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
         console.log("config update failed");
       }
     })

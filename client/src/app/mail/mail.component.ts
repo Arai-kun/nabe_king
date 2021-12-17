@@ -10,6 +10,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 export interface DialogData {
   subject: string;
@@ -40,7 +41,8 @@ export class MailComponent implements OnInit {
     public dialog: MatDialog,
     private mailService: MailService,
     public cd: ChangeDetectorRef,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -116,9 +118,11 @@ export class MailComponent implements OnInit {
           .subscribe(res => {
             if(res){
               this.overlaySpinnerService.detach();
+              this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
               this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
             }
             else{
+              this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
               console.log('Send failed');
             }
           })
@@ -160,14 +164,17 @@ export class MailComponent implements OnInit {
               .subscribe(result => {
                 if(result){
                   this.overlaySpinnerService.detach();
+                  this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                 }
                 else{
+                  this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
                   console.log('Save mail failed');
                 }
               });
             }
             else{
+              this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
               console.log('Save mailDesign failed');
             }
           })
