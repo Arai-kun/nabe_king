@@ -24,11 +24,15 @@ export class OverlaySpinnerService {
       if(this.overlayRef.hasAttached()){
         console.log('Network Error');
       }
-    }, 15000);
+    }, 5000);
   }
-
+  
   detach(): void {
     this.overlayRef.detach();
+  }
+
+  dispose(): void {
+    this.overlayRef.dispose();
   }
 
 }

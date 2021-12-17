@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { OverlaySpinnerService } from '../overlay-spinner.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy{
   params!: Params;
   url!: string;
 
@@ -50,6 +50,9 @@ export class AuthComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.overlaySpinnerService.dispose();
+  }
 
 
 }
