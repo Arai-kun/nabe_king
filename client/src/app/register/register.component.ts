@@ -5,6 +5,7 @@ import { user } from '../user';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -32,7 +33,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -51,6 +53,7 @@ export class RegisterComponent implements OnInit {
     .subscribe(exist => {
       if(exist){
         this.overlaySpinnerService.detach();
+        this.toastrService.info('そのメールアドレスは既に登録済みです', '登録済み', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.router.navigate(['login']);
       }
       else{
