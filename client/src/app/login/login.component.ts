@@ -4,6 +4,7 @@ import { user } from '../user';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private overlaySpinnerService: OverlaySpinnerService
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -60,7 +62,7 @@ export class LoginComponent implements OnInit {
 
   loginFailed(): void {
     this.overlaySpinnerService.detach();
-    //this.toastr.error('正しいメールアドレスとパスワードを入力してください', 'ログイン失敗', {positionClass: 'toast-top-full-width', timeOut: 5000});
+    this.toastrService.error('正しいメールアドレスとパスワードを入力してください', 'ログイン失敗', {positionClass: 'toast-top-full-width', timeOut: 5000});
     //this.form.reset();
   }
 

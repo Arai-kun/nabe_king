@@ -40,6 +40,7 @@ import { EmailEditorModule } from 'angular-email-editor';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
@@ -109,7 +110,8 @@ import { ContactComponent } from './contact/contact.component';
     EmailEditorModule,
     MatDialogModule,
     OverlayModule,
-    PortalModule
+    PortalModule,
+    ToastrModule.forRoot()
   ],
   entryComponents: [
     DialogComponent,

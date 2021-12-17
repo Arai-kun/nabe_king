@@ -24,7 +24,7 @@ export class OverlaySpinnerService {
       if(this.overlayRef.hasAttached()){
         console.log('Network Error');
       }
-    }, 5000);
+    }, 15000);
   }
   
   detach(): void {

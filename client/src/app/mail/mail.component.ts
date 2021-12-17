@@ -116,7 +116,7 @@ export class MailComponent implements OnInit {
           .subscribe(res => {
             if(res){
               this.overlaySpinnerService.detach();
-              //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+              this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
             }
             else{
               console.log('Send failed');
@@ -160,7 +160,7 @@ export class MailComponent implements OnInit {
               .subscribe(result => {
                 if(result){
                   this.overlaySpinnerService.detach();
-                  //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+                  this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                 }
                 else{
                   console.log('Save mail failed');
