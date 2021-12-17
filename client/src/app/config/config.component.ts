@@ -141,6 +141,7 @@ export class ConfigComponent implements OnInit {
     this.dbService.update<config>('config', this.config)
     .subscribe(result => {
       if(result){
+        this.overlaySpinnerService.detach();
         //this.submitting = false;
         this.ngOnInit();
       }
