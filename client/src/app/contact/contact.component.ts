@@ -35,12 +35,14 @@ export class ContactComponent implements OnInit {
       subject: this.subjectControl,
       content: this.contentControl
     });
-    this.overlaySpinnerService.detach();
   }
 
   getEmail(): void {
     this.dbService.get<user>('email')
-    .subscribe(user => this.email = user.email);
+    .subscribe(user => {
+      this.email = user.email;
+      this.overlaySpinnerService.detach();
+    });
   }
 
   onSubmit(): void {

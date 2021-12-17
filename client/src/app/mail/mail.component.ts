@@ -26,7 +26,7 @@ export class MailComponent implements OnInit {
   appearance = {
     loader: {
       //html:'<div></div>'
-      url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1638778224/Rolling-1s-200px_wqzznh.svg'
+      url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1639719527/spinner-100px_ul6sme.svg'
     }
   }
 

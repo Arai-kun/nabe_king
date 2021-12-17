@@ -20,6 +20,11 @@ export class OverlaySpinnerService {
 
   attach(): void {
     this.overlayRef.attach(new ComponentPortal(MatSpinner));
+    setTimeout(() => {
+      if(this.overlayRef.hasAttached()){
+        console.log('Network Error');
+      }
+    }, 15000);
   }
 
   detach(): void {

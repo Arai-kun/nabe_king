@@ -57,7 +57,6 @@ export class DataComponent implements OnInit {
   ngOnInit(): void {
     this.overlaySpinnerService.attach();
     this.getData();
-    this.overlaySpinnerService.detach();
   }
   
   /**
@@ -100,7 +99,8 @@ export class DataComponent implements OnInit {
           unSend: this.data[i].unSend
         });
       }
-      setTimeout(() => this.dataSource.data = bufData, 5000);
+      this.dataSource.data = bufData;
+      //this.overlaySpinnerService.detach();
     });
   }
 

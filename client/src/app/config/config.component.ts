@@ -10,7 +10,6 @@ import { OverlaySpinnerService } from '../overlay-spinner.service';
   styleUrls: ['./config.component.css']
 })
 export class ConfigComponent implements OnInit {
-  submitting: boolean = false;
   config: config = {
     email: '',
     status: false,
@@ -59,7 +58,6 @@ export class ConfigComponent implements OnInit {
 
   ngOnInit(): void {
     this.overlaySpinnerService.attach();
-    this.submitting = false;
     for(let i = 1; i < 31; i++){
       this.dulations.push({value: i, viewValue: `${i}日後に送信する`});
     }
@@ -77,7 +75,6 @@ export class ConfigComponent implements OnInit {
       acceptable: this.acceptableControl
     });
     this.getConfig();
-    this.overlaySpinnerService.detach();
   }
 
   getConfig() : void {
@@ -105,6 +102,7 @@ export class ConfigComponent implements OnInit {
       this.verygood = this.config.verygood;
       this.good = this.config.good;
       this.acceptable =this.config.acceptable;
+      this.overlaySpinnerService.detach();
     });
   }
 
@@ -125,7 +123,6 @@ export class ConfigComponent implements OnInit {
     }
 
     this.overlaySpinnerService.attach();
-    this.submitting = true;
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;
     this.config.dulation = this.dulation;
