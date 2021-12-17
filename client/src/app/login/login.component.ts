@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
 
   loginFailed(): void {
     this.overlaySpinnerService.detach();
-    this.toastrService.error('正しいメールアドレスとパスワードを入力してください', 'ログイン失敗', { positionClass: 'toast-bottom-full-width', timeOut: 5000, closeButton: true});
+    this.toastrService.error('正しいメールアドレスと<br>パスワードを入力してください', 'ログイン失敗', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
     //this.form.reset();
   }
 
