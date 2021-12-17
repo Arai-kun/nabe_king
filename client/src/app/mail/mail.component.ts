@@ -98,7 +98,7 @@ export class MailComponent implements OnInit {
 
   onSend(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
-      width: '400px',
+      width: '560px',
       data: {subject: this.subject} 
     });
 
