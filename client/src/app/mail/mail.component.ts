@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
@@ -42,7 +42,8 @@ export class MailComponent implements OnInit {
     private mailService: MailService,
     public cd: ChangeDetectorRef,
     private overlaySpinnerService: OverlaySpinnerService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private applicationRef: ApplicationRef
   ) { }
 
   ngOnInit(): void {
@@ -138,13 +139,12 @@ export class MailComponent implements OnInit {
 
   onUserSave(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
-      width: '400px',
+      width: '560px',
       data: {subject: this.subject} 
     });
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
-      dialogRef.close();
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();
@@ -167,7 +167,8 @@ export class MailComponent implements OnInit {
                 if(result){
                   this.overlaySpinnerService.detach();
                   this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
-                  this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+                  //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+                  this.applicationRef.tick();
                 }
                 else{
                   this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
