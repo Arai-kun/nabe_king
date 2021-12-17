@@ -104,7 +104,6 @@ export class MailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
-      this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();
@@ -145,6 +144,7 @@ export class MailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
+      dialogRef.close();
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();

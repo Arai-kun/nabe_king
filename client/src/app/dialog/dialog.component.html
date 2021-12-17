@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>メールのタイトルを設定</h1>
+<h2 mat-dialog-title>メールのタイトルを設定</h2>
 <div mat-dialog-content>
   <!--<p>What's your favorite animal?</p>-->
   <mat-form-field>
@@ -9,6 +9,6 @@
 <div mat-dialog-actions class="dialog-buttons">
   <button mat-button (click)="onNoClick()">キャンセル</button>
   <span fxFlexOffset="auto">
-    <button mat-raised-button color="primary" [mat-dialog-close]="data.subject" (click)="onClick()">完了</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="data.subject">完了</button>
   </span>
 </div>
