@@ -24,10 +24,9 @@ export class OverlaySpinnerService {
     this.overlayRef.attach(new ComponentPortal(MatSpinner));
     setTimeout(() => {
       if(this.overlayRef.hasAttached()){
-        this.toastrService.error('ネットワークに問題がある恐れがあります。このままお待ちいただくか、しばらく経ってから再度お試しください', 'ネットワークエラー', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-        console.log('Network Error');
+        this.toastrService.error('ネットワークに問題がある恐れがあります。このままお待ちいただくか、しばらく経ってから再度お試しください', 'ネットワークエラー', { positionClass: 'toast-bottom-full-width', disableTimeOut: true, closeButton: true});
       }
-    }, 15000);
+    }, 10000);
   }
   
   detach(): void {

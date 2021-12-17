@@ -118,8 +118,8 @@ export class MailComponent implements OnInit {
           .subscribe(res => {
             if(res){
               this.overlaySpinnerService.detach();
-              this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
               this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+              this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
             }
             else{
               this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
@@ -164,8 +164,8 @@ export class MailComponent implements OnInit {
               .subscribe(result => {
                 if(result){
                   this.overlaySpinnerService.detach();
-                  this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+                  this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                 }
                 else{
                   this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
