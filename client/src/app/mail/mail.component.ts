@@ -25,8 +25,8 @@ export class MailComponent implements OnInit {
   subject: string = "";
   appearance = {
     loader: {
-      html:'<div></div>'
-      //url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1638778224/Rolling-1s-200px_wqzznh.svg'
+      //html:'<div></div>'
+      url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1638778224/Rolling-1s-200px_wqzznh.svg'
     }
   }
 
@@ -44,7 +44,6 @@ export class MailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.overlaySpinnerService.attach();
     this.getEmail();
     this.getSubject();
   }
@@ -72,10 +71,6 @@ export class MailComponent implements OnInit {
         }
       }
     });
-  }
-
-  editorReady() {
-    this.overlaySpinnerService.detach();
   }
 
   /*

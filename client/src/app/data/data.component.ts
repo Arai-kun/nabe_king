@@ -100,7 +100,7 @@ export class DataComponent implements OnInit {
           unSend: this.data[i].unSend
         });
       }
-      this.dataSource.data = bufData;
+      setTimeout(() => this.dataSource.data = bufData, 5000);
     });
   }
 
