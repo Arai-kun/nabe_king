@@ -5,11 +5,13 @@ import { Router } from '@angular/router';
 import { DbService } from '../db.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
+
 export class AuthComponent implements OnInit {
   params!: Params;
   url!: string;
@@ -42,7 +44,7 @@ export class AuthComponent implements OnInit {
             if(Number(res['result']) === 1){
               this.overlaySpinnerService.detach();
               this.toastrService.error(`このセラーアカウントは、既に本アプリの${res['email']} のアカウントに紐づいています。ログインするか、パスワードを忘れた場合は再発行してください`, '連携失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-              this.router.navigate(['/']);
+              this.router.navigate(['/login']);
             }
             else if(Number(res['result']) === 0){
               this.dbService.dbInit()
