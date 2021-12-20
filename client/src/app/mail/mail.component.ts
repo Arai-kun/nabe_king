@@ -5,13 +5,13 @@ import { FileService } from '../file.service';
 import { user } from '../user';
 import { mail } from '../mail';
 import { mailDesign } from '../mailDesign';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { Dialog2Component } from '../dialog2/dialog2.component';
 
 export interface DialogData {
@@ -196,17 +196,21 @@ export class MailComponent implements OnInit {
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-
-
-    if (this.unSaved) {
+    if(this.unSaved) {
       let dialogRef = this.dialog.open(Dialog2Component, {
         width: '400px'
       });
-      
+      let result_buf: Subject<boolean> = new Subject();
+
       dialogRef.afterClosed().subscribe(result => {
-        return of(result);
+        result_buf.next(result);
+        //return of(result);
       });
+      return result_buf;
     }
-    return true;
-  }   
+    else{
+      return true;
+    }
+  }
+
 }
