@@ -1,7 +1,6 @@
 let express = require('express');
 let fileRouter = express.Router();
 let cloudinary = require('cloudinary').v2;
-const sendgrid = require('@sendgrid/mail');
 
 fileRouter.post('/upload', function(req, res, next){
     /*

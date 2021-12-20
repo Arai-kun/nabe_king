@@ -31,27 +31,37 @@ authRouter.get('/logout', function(req, res, next){
 });
 
 authRouter.post('/exchange', function(req, res, next){
-    /**
-     * ユースケース: 既に他アカウントにamazonが紐づいている時に、このアカウントに同じamazonを紐づけようとする
-     * seller_partner_idが既存か確認。以下、ない場合
-     */
-    getTokenFromCode(req.body['code'])
-    .then(() => {
-        User.updateOne({email: req.user['email']}, // req.user.email => req.user['email']
-            {
-                seller_partner_id: req.body['id'], 
-                refresh_token: tokens.refresh_token, 
-                access_token: tokens.access_token
-            }, function(error){
-                if(error) next(error);
-                res.json({result: 'success'});
-            });
-
-    })
-    .catch(error => {
+  /**
+   * ユースケース: 既に他アカウントにamazonが紐づいている時に、このアカウントに同じamazonを紐づけようとする
+   * seller_partner_idが既存か確認。以下、ない場合
+   */
+  User.findOne({seller_partner_id: req.body['id']}, (error, user) => {
+    if(error) next(error);
+    if(user){
+      /* Already exist */
+      User.deleteOne({email: req.user['email']}, error => {
+        if(error) next(error);
+        res.json({result: 1, email: user.email});
+      });
+    }
+    else{
+      getTokenFromCode(req.body['code'])
+      .then(() => {
+        User.updateOne({email: req.user['email']}, {
+          seller_partner_id: req.body['id'], 
+          refresh_token: tokens.refresh_token, 
+          access_token: tokens.access_token
+        }, function(error){
+          if(error) next(error);
+          res.json({result: 0});
+        });
+      })
+      .catch(error => {
         console.log(error);
         res.sendStatus(500);
-    });
+      });
+    }
+  });
 });
 
 async function getTokenFromCode(code){
