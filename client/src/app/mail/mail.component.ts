@@ -174,7 +174,7 @@ export class MailComponent implements OnInit {
                   this.unSaved = false;
                   this.ngZone.run(() => {
                     this.overlaySpinnerService.detach();
-                    this.toastrService.success('', '保存しました。設定で配信が有効になっているか確認してください', { positionClass: 'toast-bottom-center', timeOut: 6000, closeButton: true});
+                    this.toastrService.success('設定で配信が有効になっているか確認してください', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 6000, closeButton: true});
                   });
                   this.router.navigate(['/home/config']);
                 }

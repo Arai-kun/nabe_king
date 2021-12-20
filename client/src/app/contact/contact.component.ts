@@ -63,7 +63,6 @@ export class ContactComponent implements OnInit {
       }
       else{
         this.toastrService.error('大変申し訳ありません。しばらく経ってから再度送信していただくか、復旧をお待ちください', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-        console.log('Submit failed');
       }
     })
 
