@@ -204,7 +204,6 @@ export class MailComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         result_buf.next(result);
-        //return of(result);
       });
       return result_buf;
     }
