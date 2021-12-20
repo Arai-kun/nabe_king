@@ -7,8 +7,9 @@
 
 
 .mat-toolbar.mat-primary {
-    position: relative;
+    position: sticky;
     bottom: 0;
     z-index: 1;
+    height: 64px !important;
 }
 
