@@ -12,6 +12,7 @@ import { testMail } from '../testMail';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
+import { Dialog2Component } from '../dialog2/dialog2.component';
 
 export interface DialogData {
   subject: string;
@@ -143,8 +144,7 @@ export class MailComponent implements OnInit {
   onUserSave(): void {
     let dialogRef = this.dialog.open(DialogComponent, {
       width: '560px',
-      data: {subject: this.subject},
-      restoreFocus: true
+      data: {subject: this.subject}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -186,7 +186,7 @@ export class MailComponent implements OnInit {
             else{
               this.ngZone.run(() => {
                 this.overlaySpinnerService.detach();
-                this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報を告お願いいたします', '保存失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
+                this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告を告お願いいたします', '保存失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
               });
             }
           });
@@ -199,10 +199,13 @@ export class MailComponent implements OnInit {
 
 
     if (this.unSaved) {
-
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-
-       return of(result);
+      let dialogRef = this.dialog.open(Dialog2Component, {
+        width: '400px'
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        return of(result);
+      });
     }
     return true;
   }   
