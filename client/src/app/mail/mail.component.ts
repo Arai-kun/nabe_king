@@ -146,7 +146,8 @@ export class MailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
-      console.log(dialogRef.getState());
+      this.dialog.closeAll();
+      //console.log(dialogRef.getState());
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();
@@ -172,7 +173,7 @@ export class MailComponent implements OnInit {
                   //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                   this.applicationRef.tick();
                   //this.ngOnInit();
-                  console.log(dialogRef.getState());
+                  //console.log(dialogRef.getState());
                   
                 }
                 else{
