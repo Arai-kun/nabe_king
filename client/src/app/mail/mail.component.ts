@@ -140,7 +140,8 @@ export class MailComponent implements OnInit {
   onUserSave(): void {
     let dialogRef = this.dialog.open(DialogComponent, {
       width: '560px',
-      data: {subject: this.subject} 
+      data: {subject: this.subject},
+      restoreFocus: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
