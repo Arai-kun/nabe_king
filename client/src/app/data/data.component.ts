@@ -102,7 +102,7 @@ export class DataComponent implements OnInit {
         });
       }
       this.dataSource.data = bufData;
-      //this.overlaySpinnerService.detach();
+      this.overlaySpinnerService.detach();
     });
   }
 

@@ -10,6 +10,7 @@ import { MailComponent } from './mail/mail.component';
 import { HomeComponent } from './home/home.component';
 import { ConfigComponent } from './config/config.component';
 import { ContactComponent } from './contact/contact.component';
+import { CanDeactivateGuard } from './can-deactivate-guard.service';
 
 
 const routes: Routes = [
@@ -23,7 +24,7 @@ const routes: Routes = [
     children: [
       { path: "config", component: ConfigComponent },
       { path: "data", component: DataComponent },
-      { path: "mail", component: MailComponent },
+      { path: "mail", component: MailComponent, canDeactivate: [CanDeactivateGuard] },
       { path: "contact", component: ContactComponent }
     ]
   },
@@ -32,6 +33,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [CanDeactivateGuard]
 })
 export class AppRoutingModule { }

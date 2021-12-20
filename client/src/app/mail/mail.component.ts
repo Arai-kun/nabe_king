@@ -11,6 +11,7 @@ import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, of } from 'rxjs';
 
 export interface DialogData {
   subject: string;
@@ -30,6 +31,7 @@ export class MailComponent implements OnInit {
       url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1639719527/spinner-100px_ul6sme.svg'
     }
   }
+  unSaved: boolean = true;
 
 
   @ViewChild(EmailEditorComponent)
@@ -167,6 +169,7 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
+                  this.unSaved = false;
                   this.ngZone.run(() => {
                     this.overlaySpinnerService.detach();
                     this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
@@ -192,5 +195,15 @@ export class MailComponent implements OnInit {
     });
   }
 
+  canDeactivate(): Observable<boolean> | boolean {
 
+
+    if (this.unSaved) {
+
+      const result = window.confirm('There are unsaved changes! Are you sure?');
+
+       return of(result);
+    }
+    return true;
+  }   
 }
