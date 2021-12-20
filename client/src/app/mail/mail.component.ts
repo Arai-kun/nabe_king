@@ -5,13 +5,13 @@ import { FileService } from '../file.service';
 import { user } from '../user';
 import { mail } from '../mail';
 import { mailDesign } from '../mailDesign';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Dialog2Component } from '../dialog2/dialog2.component';
 
 export interface DialogData {
