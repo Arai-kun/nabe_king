@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,9 +10,11 @@ export class Dialog2Component implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<Dialog2Component>,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.cd.detectChanges();
   }
 
   ok(): void {
