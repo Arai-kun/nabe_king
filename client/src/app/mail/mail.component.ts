@@ -5,7 +5,7 @@ import { FileService } from '../file.service';
 import { user } from '../user';
 import { mail } from '../mail';
 import { mailDesign } from '../mailDesign';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
@@ -138,13 +138,14 @@ export class MailComponent implements OnInit {
    */
 
   onUserSave(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
+    let dialogRef = this.dialog.open(DialogComponent, {
       width: '560px',
       data: {subject: this.subject} 
     });
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
+      console.log(dialogRef.getState());
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();
@@ -169,7 +170,9 @@ export class MailComponent implements OnInit {
                   this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                   this.applicationRef.tick();
-                  this.ngOnInit();
+                  //this.ngOnInit();
+                  console.log(dialogRef.getState());
+                  
                 }
                 else{
                   this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
