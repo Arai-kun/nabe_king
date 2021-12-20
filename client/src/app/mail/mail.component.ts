@@ -167,8 +167,7 @@ export class MailComponent implements OnInit {
                 if(result){
                   this.overlaySpinnerService.detach();
                   this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
-                  //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
-                  this.applicationRef.tick();
+                  this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
                   this.ngOnInit();
                 }
                 else{
