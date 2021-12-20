@@ -13,6 +13,7 @@ import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subject } from 'rxjs';
 import { Dialog2Component } from '../dialog2/dialog2.component';
+import { Router } from '@angular/router';
 
 export interface DialogData {
   subject: string;
@@ -45,7 +46,8 @@ export class MailComponent implements OnInit {
     private mailService: MailService,
     private overlaySpinnerService: OverlaySpinnerService,
     private toastrService: ToastrService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -172,8 +174,9 @@ export class MailComponent implements OnInit {
                   this.unSaved = false;
                   this.ngZone.run(() => {
                     this.overlaySpinnerService.detach();
-                    this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+                    this.toastrService.success('', '保存しました。設定で配信が有効になっているか確認してください', { positionClass: 'toast-bottom-center', timeOut: 6000, closeButton: true});
                   });
+                  this.router.navigate(['/home/config']);
                 }
                 else{
                   this.ngZone.run(() => {

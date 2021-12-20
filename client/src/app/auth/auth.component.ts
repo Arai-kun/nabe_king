@@ -44,7 +44,7 @@ export class AuthComponent implements OnInit {
             if(Number(res['result']) === 1){
               this.authService.logout().subscribe(() => {
                 this.overlaySpinnerService.detach();
-                this.toastrService.error(`このセラーアカウントは、既に本アプリの${res['email']} のアカウントに紐づいています。ログインするか、パスワードを忘れた場合は再発行してください`, '連携失敗', { positionClass: 'toast-bottom-full-width', timeOut: 8000, closeButton: true});
+                this.toastrService.error(`このセラーアカウントは、既に本アプリの${res['email']} のアカウントに紐づいています。ログインするか、パスワードを忘れた場合は再発行してください`, '連携失敗', { positionClass: 'toast-bottom-full-width', disableTimeOut: true, closeButton: true});
                 this.router.navigate(['/login']);
               });
             }
