@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
 import { user } from '../user';
 import { mail } from '../mail';
 import { mailDesign } from '../mailDesign';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MailService } from '../mail.service';
 import { testMail } from '../testMail';
@@ -40,10 +40,8 @@ export class MailComponent implements OnInit {
     private fileService: FileService,
     public dialog: MatDialog,
     private mailService: MailService,
-    public cd: ChangeDetectorRef,
     private overlaySpinnerService: OverlaySpinnerService,
     private toastrService: ToastrService,
-    private applicationRef: ApplicationRef,
     private ngZone: NgZone
   ) { }
 
@@ -99,7 +97,7 @@ export class MailComponent implements OnInit {
    */
 
   onSend(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
+    let dialogRef = this.dialog.open(DialogComponent, {
       width: '560px',
       data: {subject: this.subject} 
     });
@@ -119,16 +117,18 @@ export class MailComponent implements OnInit {
           this.mailService.send(mail)
           .subscribe(res => {
             if(res){
-              this.overlaySpinnerService.detach();
-              this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
-              this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
+              this.ngZone.run(() => {
+                this.overlaySpinnerService.detach();
+                this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+              });
             }
             else{
-              this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-              this.cd.detectChanges();
-              console.log('Send failed');
+              this.ngZone.run(() => {
+                this.overlaySpinnerService.detach();
+                this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告をお願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
+              });
             }
-          })
+          });
         });
       }
     });
@@ -171,26 +171,22 @@ export class MailComponent implements OnInit {
                     this.overlaySpinnerService.detach();
                     this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   });
-                  //this.overlaySpinnerService.detach();
-                  //this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
-                  //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
-                  //this.applicationRef.tick();
-                  //this.ngOnInit();
-                  
                 }
                 else{
-                  this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-                  this.cd.detectChanges();
-                  console.log('Save mail failed');
+                  this.ngZone.run(() => {
+                    this.overlaySpinnerService.detach();
+                    this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告をお願いいたします', '保存失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
+                  });
                 }
               });
             }
             else{
-              this.toastrService.error('大変申し訳ありません。お手数ですが、よろしければお問い合わせからご報告お願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
-              this.cd.detectChanges();
-              console.log('Save mailDesign failed');
+              this.ngZone.run(() => {
+                this.overlaySpinnerService.detach();
+                this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報を告お願いいたします', '保存失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
+              });
             }
-          })
+          });
         });
       }
     });
