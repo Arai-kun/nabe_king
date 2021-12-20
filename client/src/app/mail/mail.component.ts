@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { EmailEditorComponent } from 'angular-email-editor';
 import { DbService } from '../db.service';
 import { FileService } from '../file.service';
@@ -43,7 +43,8 @@ export class MailComponent implements OnInit {
     public cd: ChangeDetectorRef,
     private overlaySpinnerService: OverlaySpinnerService,
     private toastrService: ToastrService,
-    private applicationRef: ApplicationRef
+    private applicationRef: ApplicationRef,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -146,8 +147,6 @@ export class MailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
-      this.dialog.closeAll();
-      //console.log(dialogRef.getState());
       if(typeof result === 'string'){
         this.subject = result;
         this.overlaySpinnerService.attach();
@@ -168,12 +167,15 @@ export class MailComponent implements OnInit {
               this.dbService.update<mail>('mail', mail)
               .subscribe(result => {
                 if(result){
-                  this.overlaySpinnerService.detach();
-                  this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+                  this.ngZone.run(() => {
+                    this.overlaySpinnerService.detach();
+                    this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+                  });
+                  //this.overlaySpinnerService.detach();
+                  //this.toastrService.success('', '保存しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
                   //this.cd.detectChanges(); // -> なぜかViewの変更検知がいかないため明示的に命令
-                  this.applicationRef.tick();
+                  //this.applicationRef.tick();
                   //this.ngOnInit();
-                  //console.log(dialogRef.getState());
                   
                 }
                 else{
