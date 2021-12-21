@@ -41,14 +41,15 @@ export class ResetComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.overlaySpinnerService.attach();
     this.email = this.form.get('email')?.value; 
     this.password = this.form.get('password')?.value;
     if(this.password !== this.form.get('password2')?.value){
       this.toastrService.error('', 'パスワードが一致しません', {positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+      this.form.reset();
       return;
     }
     else{
+      this.overlaySpinnerService.attach();
       this.dbService.pwRepublish(this.email, this.password)
       .subscribe(result => {
         if(result){
