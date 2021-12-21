@@ -46,7 +46,6 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.overlaySpinnerService.attach();
-    console.log(this.form.get('email')?.value);
     this.user.email = this.form.get('email')?.value; 
     this.user.password = this.form.get('password')?.value;
     this.dbService.userExist(this.user.email)

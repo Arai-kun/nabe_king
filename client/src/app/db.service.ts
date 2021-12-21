@@ -93,6 +93,28 @@ export class DbService {
     );
   }
 
+  pwReset(token: string): Observable<any> {
+    return this.http.post('user/reset', JSON.stringify({"token": token}), this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null))
+    );
+  }
+
+  pwRepublish(email: string, password: string): Observable<boolean> {
+    return this.http.post('user/republish', JSON.stringify({"email": email, "password": password}), this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+  }
+
   private handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

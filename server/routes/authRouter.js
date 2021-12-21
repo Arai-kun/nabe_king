@@ -76,8 +76,9 @@ authRouter.post('/reset', function(req, res, next){
     else{
       crypto.randomBytes(32, (error, buf) => {
         if(error) next(error);
+        const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
         const token = buf.toString('hex');
-        const expire = new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
+        const expire = now.setMinutes(now.getMinutes() + 15);  // 15 minitue for expire 
         User.updateOne({email: email},{
           pw_reset_token: token,
           pw_reset_token_expire: expire

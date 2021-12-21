@@ -55,6 +55,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { ContactComponent } from './contact/contact.component';
 import { Dialog2Component } from './dialog2/dialog2.component';
 import { ForgotComponent } from './forgot/forgot.component';
+import { ResetComponent } from './reset/reset.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { ForgotComponent } from './forgot/forgot.component';
     ContactComponent,
     Dialog2Component,
     ForgotComponent,
+    ResetComponent,
   ],
   imports: [
     BrowserModule,

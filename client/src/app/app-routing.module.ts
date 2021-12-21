@@ -12,6 +12,7 @@ import { ConfigComponent } from './config/config.component';
 import { ContactComponent } from './contact/contact.component';
 import { CanDeactivateGuard } from './can-deactivate-guard.service';
 import { ForgotComponent } from './forgot/forgot.component';
+import { ResetComponent } from './reset/reset.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "register", component: RegisterComponent },
   { path: "forgot", component: ForgotComponent },
+  { path: "reset/:token", component: ResetComponent },
   { path: "auth", component: AuthComponent, canActivate: [AuthGuard] },
   { path: "home", 
     component: HomeComponent, 

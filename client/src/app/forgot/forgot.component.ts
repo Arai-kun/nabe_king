@@ -39,7 +39,7 @@ export class ForgotComponent implements OnInit {
       switch(res['result']){
         case 0:
           this.overlaySpinnerService.detach();
-          this.toastrService.success(`${this.email} にパスワード再発行用メールを送信しました。ご確認ください。`, '送信完了', { positionClass: 'toast-bottom-center', disableTimeOut: true, closeButton: true});
+          this.toastrService.success(`${this.email} にパスワード再発行用メールを送信しました。ご確認ください`, '送信完了', { positionClass: 'toast-bottom-full-width', disableTimeOut: true, closeButton: true});
           break;
         case 1:
           this.overlaySpinnerService.detach();
@@ -47,7 +47,7 @@ export class ForgotComponent implements OnInit {
           break;
         default:
           this.overlaySpinnerService.detach();
-          this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告をお願いいたします', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
+          this.toastrService.error('大変申し訳ありません。しばらく経ってから再度送信していただくか、復旧をお待ちください', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
       }
     });
   }
