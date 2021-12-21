@@ -210,8 +210,8 @@ dbRouter.post('/republish', function(req, res, next){
         if(error) next(error);
         User.updateOne({email: req.body['email']}, {
             password: hash,
-            pw_reset_token: undefined,
-            pw_reset_token_expire: undefined 
+            pw_reset_token: null,
+            pw_reset_token_expire: null
         }, error => {
             if(error) next(error);
             res.json(true);

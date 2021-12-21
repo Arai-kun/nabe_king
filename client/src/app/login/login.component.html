@@ -29,8 +29,11 @@
           </mat-form-field>
         </mat-card-content>
         <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">ログイン</button>
-        <span><a routerLink="/forgot">パスワードを再発行する</a></span>
+        <!--<a routerLink="/forgot">パスワードを再発行する</a>-->
       </form>
+      <mat-card-footer>
+        <a routerLink="/forgot">パスワードを再発行する</a>
+      </mat-card-footer>
     </mat-card>
     
   </div>
