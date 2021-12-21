@@ -142,7 +142,7 @@ export class ConfigComponent implements OnInit {
       if(result){
         this.overlaySpinnerService.detach();
         //this.submitting = false;
-        this.toastrService.success('', '更新しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+        this.toastrService.success('更新しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.ngOnInit();
       }
       else{

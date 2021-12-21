@@ -124,7 +124,7 @@ export class MailComponent implements OnInit {
             if(res){
               this.ngZone.run(() => {
                 this.overlaySpinnerService.detach();
-                this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+                this.toastrService.success('送信しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
               });
             }
             else{

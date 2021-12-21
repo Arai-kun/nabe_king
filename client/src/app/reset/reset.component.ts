@@ -44,8 +44,9 @@ export class ResetComponent implements OnInit {
     this.email = this.form.get('email')?.value; 
     this.password = this.form.get('password')?.value;
     if(this.password !== this.form.get('password2')?.value){
-      this.toastrService.error('', 'パスワードが一致しません', {positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
-      this.form.reset();
+      this.toastrService.error('パスワードが一致しません', '', {positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+      this.form.get('password')?.setValue(null);
+      this.form.get('password2')?.setValue(null);
       return;
     }
     else{
@@ -54,7 +55,7 @@ export class ResetComponent implements OnInit {
       .subscribe(result => {
         if(result){
           this.overlaySpinnerService.detach();
-          this.toastrService.success('', 'パスワードの再発行が完了しました', {positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+          this.toastrService.success('パスワードの再発行が完了しました', '', {positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
           this.router.navigate(['login']);
         }
         else{
@@ -77,7 +78,7 @@ export class ResetComponent implements OnInit {
           break;
         case 1:
           this.overlaySpinnerService.detach();
-          this.toastrService.error('リンクが不正か、有効期限が切れている恐れがあります', 'アクセス失敗', { positionClass: 'toast-bottom-full-width', disableTimeOut: true, closeButton: true});
+          this.toastrService.error('リンクが不正か、有効期限が切れている恐れがあります', 'アクセス失敗', { positionClass: 'toast-bottom-center', timeOut: 6000, closeButton: true});
           this.router.navigate(['login']);
           break;
         default:

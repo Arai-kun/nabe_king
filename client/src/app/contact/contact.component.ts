@@ -59,7 +59,7 @@ export class ContactComponent implements OnInit {
     .subscribe(result => {
       if(result){
         this.overlaySpinnerService.detach();
-        this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+        this.toastrService.success('送信しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
       }
       else{
         this.overlaySpinnerService.detach();

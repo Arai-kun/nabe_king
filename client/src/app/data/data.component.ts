@@ -117,7 +117,7 @@ export class DataComponent implements OnInit {
     .subscribe(result => {
       if(result){
         this.overlaySpinnerService.detach();
-        this.toastrService.success('', '反映しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+        this.toastrService.success('反映しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.ngOnInit();
       }
       else{
