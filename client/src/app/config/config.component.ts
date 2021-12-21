@@ -146,6 +146,7 @@ export class ConfigComponent implements OnInit {
         this.ngOnInit();
       }
       else{
+        this.overlaySpinnerService.detach();
         this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告をお願いいたします', '更新失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
       }
     })

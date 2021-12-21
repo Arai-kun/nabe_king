@@ -62,6 +62,7 @@ export class ContactComponent implements OnInit {
         this.toastrService.success('', '送信しました', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
       }
       else{
+        this.overlaySpinnerService.detach();
         this.toastrService.error('大変申し訳ありません。しばらく経ってから再度送信していただくか、復旧をお待ちください', '送信失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
       }
     })

@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
-import { user } from './user';
-import { config } from './config'; 
+import { user } from './user'; 
 
 @Injectable({
   providedIn: 'root'

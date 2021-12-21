@@ -11,12 +11,14 @@ import { HomeComponent } from './home/home.component';
 import { ConfigComponent } from './config/config.component';
 import { ContactComponent } from './contact/contact.component';
 import { CanDeactivateGuard } from './can-deactivate-guard.service';
+import { ForgotComponent } from './forgot/forgot.component';
 
 
 const routes: Routes = [
   { path: "", redirectTo: "auth", pathMatch: "full" },
   { path: "login", component: LoginComponent },
   { path: "register", component: RegisterComponent },
+  { path: "forgot", component: ForgotComponent },
   { path: "auth", component: AuthComponent, canActivate: [AuthGuard] },
   { path: "home", 
     component: HomeComponent, 

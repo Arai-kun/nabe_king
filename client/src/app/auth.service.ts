@@ -64,6 +64,14 @@ export class AuthService {
     );
   }
 
+  pwReset(email: string): Observable<any> {
+    return this.http.post('auth/reset', JSON.stringify({"email": email}),this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null)),
+      shareReplay(1)
+    );
+  }
+
   handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
       console.log(error);

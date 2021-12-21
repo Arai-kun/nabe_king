@@ -9,27 +9,19 @@
 
     <mat-card class="box">
       <mat-card-header>
-        <mat-card-title>ログイン</mat-card-title>
+        <mat-card-title>パスワード再発行</mat-card-title>
       </mat-card-header>
   
       <form class="example-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
         <mat-card-content>
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="メールアドレス" type="email" name="email" formControlName="email">
+            <input matInput placeholder="登録しているメールアドレス" type="email" name="email" formControlName="email">
             <mat-error *ngIf="emailControl.hasError('required') || emailControl.hasError('email')">
                 <strong>メールアドレスを入力してください</strong>
             </mat-error>
           </mat-form-field>
-  
-          <mat-form-field class="example-full-width">
-            <input matInput placeholder="パスワード" type="password" name="password" formControlName="password" autocomplete="off">
-            <mat-error *ngIf="passwordControl.hasError('required')">
-                <strong>パスワードを入力してください</strong>
-            </mat-error>
-          </mat-form-field>
         </mat-card-content>
-        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">ログイン</button>
-        <a routerLink="/forgot">パスワードを再発行する</a>
+        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">送信</button>
       </form>
     </mat-card>
     

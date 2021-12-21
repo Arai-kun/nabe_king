@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
     .subscribe(exist => {
       if(exist){
         this.overlaySpinnerService.detach();
-        this.toastrService.error('このメールアドレスは既に登録済みです', '登録できません', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
+        this.toastrService.error('このメールアドレスは既に登録済みです', '登録失敗', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         //this.router.navigate(['login']);
       }
       else{

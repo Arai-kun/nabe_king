@@ -3,6 +3,8 @@ let authRouter = express.Router();
 const passport = require('passport');
 let request = require('request');
 let User = require('../models/user');
+let crypto = require('crypto');
+const sendgrid = require('@sendgrid/mail');
 
 let tokens = { access_token: "", refresh_token: "" };
 
@@ -63,6 +65,46 @@ authRouter.post('/exchange', function(req, res, next){
     }
   });
 });
+
+authRouter.post('/reset', function(req, res, next){
+  const email = req.body['email'];
+  User.findOne({email: email}, (error, user) => {
+    if(error) next(error);
+    if(!user){
+      res.json({result: 1});
+    }
+    else{
+      crypto.randomBytes(32, (error, buf) => {
+        if(error) next(error);
+        const token = buf.toString('hex');
+        const expire = new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
+        User.updateOne({email: email},{
+          pw_reset_token: token,
+          pw_reset_token_expire: expire
+        }, error => {
+          if(error) next(error);
+          const title = '【アプリケーション】パスワード再発行';
+          const content = `<p>以下のリンクにアクセスしてパスワード再発行手続きを進めてください。リンクの有効期限は15分です。</p><p>https://${req.headers.host}/reset/${token}</p>`;
+          sendMail(email, title, content)
+          .then(() => res.json({result: 0}))
+          .catch(error => {
+            console.log(error);
+            res.sendStatus(500);
+          });
+        });
+      });
+    }
+  })
+})
+
+async function sendMail(to, subject, html) {
+  await sendgrid.send({
+    to: to,
+    from: 'noreply@enginestarter.nl',
+    subject: subject,
+    html: html
+  });
+}
 
 async function getTokenFromCode(code){
     const options = {
