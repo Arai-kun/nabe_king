@@ -1,7 +1,7 @@
-.reset-button {
+.card-footer {
     margin-top: 8px;
 }
 
-mat-caption {
-    margin-top: 8px;
+mat-button {
+    height: 24px !important;
 }
