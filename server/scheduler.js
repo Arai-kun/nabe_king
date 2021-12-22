@@ -96,7 +96,6 @@ async function dataUpdate(access_token, refresh_token) {
         for (let i=0; i<orderList.length; i++){
             let buyerData = await getBuyerInfo(sellingPartner, orderList[i].AmazonOrderId);
             console.log(buyerData);
-            throw 'Error!';
         }
         /*
         let result = await sellingPartner.callAPI({
