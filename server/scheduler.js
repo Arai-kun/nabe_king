@@ -35,9 +35,9 @@ let User = require('./models/user');
 let Config = require('./models/config');
 let Data = require('./models/data');
 let Mail = require('./models/mail');
-const mailDesign = require('./models/mailDesign');
+let mailDesign = require('./models/mailDesign');
 
-const job = schedule.scheduleJob('* */1 * * * *', () => {
+const job = schedule.scheduleJob('*/10 * * * * *', () => {
     console.log('Start the scheduler');
     try{
         main();
@@ -53,7 +53,13 @@ function main() {
         if(error) throw error;
         users.forEach(user => {
             Config.findOne({email: user.email}, (error, config) => {
+                if(error) throw error;
                 dataUpdate(user.access_token, user.refresh_token)
+                    .then(()=> console.log('Success!'))
+                    .catch(error => {
+                        console.log(error);
+                        throw error;
+                    })
             }); 
         });
     });
@@ -72,14 +78,24 @@ async function dataUpdate(access_token, refresh_token) {
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
         }
     });
-    let result = await sellingPartner.callAPI({
-        api_path: '/orders/v0/orders',
-        method: 'GET',
-        query: {
-            CreatedAfter: new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })).toISOString(),
-            MarketplaceIds: MACKETPLACEID
-        }
-    });
+
+    let date = new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
+    date = date.setMonth((date.getMonth() + 1 - 2)); // Exctract data from two month ago to now.
+    try {
+        let result = await sellingPartner.callAPI({
+            api_path: '/orders/v0/orders',
+            method: 'GET',
+            query: {
+                CreatedAfter: date.toISOString(),
+                MarketplaceIds: MACKETPLACEID
+            }
+        });
+        console.log(result);
+    }
+    catch(e){
+        console.log(e);
+        throw e;
+    }
 }
 
 
