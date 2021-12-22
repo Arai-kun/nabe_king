@@ -100,8 +100,8 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = [];
-        console.log(result['Orders']);
-        orderList = result['Orders'];
+        console.log(JSON.parse(result['Orders']));
+        orderList = JSON.parse(result['Orders']);
         while('NextToken' in result){
             if(result['NextToken'] !== ''){
                 result = await sellingPartner.callAPI({
