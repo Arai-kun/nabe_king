@@ -31,7 +31,7 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY || 'SG.Jl-6N-ywQaal4JR818zTWg.Re
 
 fs.writeFile(filepath, '', error => {
     if(error){
-        console.log('File write failed');
+        console.log('Error: Write file failed. Aborting...');
         exit(1);
     }
 });
@@ -83,9 +83,14 @@ async function dataUpdate(access_token, refresh_token) {
     });
 
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    date = new Date(date.setMonth((date.getMonth() + 1 - 2))); // Exctract data from two month ago to now.
+    /**
+     * How dulation is decided?
+     * For test, set 1 month.
+     * Considering to dulation of Config, it will be 2 month  
+     */
+
+    date = new Date(date.setMonth((date.getMonth() + 1 - 1)));
     try {
-        throw 'Error!';
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
             method: 'GET',
@@ -94,7 +99,26 @@ async function dataUpdate(access_token, refresh_token) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
-        console.log(result);
+        let orderList = [];
+        orderList = result['Orders'];
+        while('NextToken' in result){
+            if(result['NextToken'] !== ''){
+                result = await sellingPartner.callAPI({
+                    api_path: '/orders/v0/orders',
+                    method: 'GET',
+                    query: {
+                        CreatedAfter: date.toISOString(),
+                        MarketplaceIds: MACKETPLACEID,
+                        NextToken: result['NextToken']
+                    }
+                });
+                orderList.push(result['Orders']);
+            }
+            else{
+                break;
+            }
+        }
+        console.log(orderList.length);
     }
     catch(e){
         throw e;
@@ -105,7 +129,7 @@ function log(str) {
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     fs.appendFile(filepath, now +': '+ str + '\n', error => {
         if(error){
-            console.log('File write failed');
+            console.log('Error: Append file failed. Aborting...');
             exit(1);
         }
     });

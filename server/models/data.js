@@ -5,12 +5,13 @@ let mongoose = require("mongoose"),
         orderId: String,
         purchaseDate: Date,
         orderStatus: String,
+        shippedDate: Date,
         buyerEmail: String,
         buyerName: String,
         itemName: String,
-        quantityOrdered: Number,
         isSent: Boolean,
-        unSend: Boolean
+        unSend: Boolean,
+        sendTarget: Boolean
     }]
 
   });
