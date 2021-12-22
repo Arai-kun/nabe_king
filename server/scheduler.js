@@ -100,11 +100,10 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = [];
-        result = JSON.stringify(result);
-        orderList = result['Orders'];
+        orderList = result.Orders;
         console.log(orderList);
-        while('NextToken' in result){
-            if(result['NextToken'] !== ''){
+        while(NextToken in result){
+            if(result.NextToken !== ''){
                 result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
                     method: 'GET',
@@ -114,8 +113,7 @@ async function dataUpdate(access_token, refresh_token) {
                         NextToken: result['NextToken']
                     }
                 });
-                result = JSON.stringify(result);
-                orderList.push(result['Orders']);
+                orderList.push(result.Orders);
             }
             else{
                 break;
