@@ -101,25 +101,25 @@ async function dataUpdate(access_token, refresh_token) {
         });
         let orderList = result.Orders;
         await Promise.all(orderList.map(async order => {
-            setTimeout(async () => {
-                let result = await sellingPartner.callAPI({
-                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
-                    method: 'GET',
-                });
-                const buyerEmail = result.BuyerEmail;
-                console.log(buyerEmail);
-            }, 10);
+            let result = await sellingPartner.callAPI({
+                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                method: 'GET',
+            });
+            const buyerEmail = result.BuyerEmail;
+            console.log(buyerEmail);
+            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            await _sleep(10);
         }));
 
         await Promise.all(orderList.map(async order => {
-            setTimeout(async () => {
-                let result = await sellingPartner.callAPI({
-                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
-                    method: 'GET',
-                });
-                const itemName = result.OrderItems[0].Title;
-                console.log(itemName);
-            }, 10);
+            let result = await sellingPartner.callAPI({
+                api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                method: 'GET',
+            });
+            const itemName = result.OrderItems[0].Title;
+            console.log(itemName);
+            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            await _sleep(10);
         }));
 
         
