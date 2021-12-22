@@ -90,7 +90,6 @@ async function dataUpdate(access_token, refresh_token) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    console.log(date);
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
@@ -100,11 +99,19 @@ async function dataUpdate(access_token, refresh_token) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
-        //console.log(result);
-        let orderList = [];
-        orderList = result.Orders;
+        let orderList = result.Orders;
+        orderList.forEach(order => {
+            let result = await sellingPartner.callAPI({
+                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                method: 'GET',
+            });
+            console.log(result);
+        });
+
+
+
         //console.log(orderList);
-        while('NextToken' in result){
+        /*while('NextToken' in result){
             if(result.NextToken !== ''){
                 result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
@@ -121,7 +128,7 @@ async function dataUpdate(access_token, refresh_token) {
             else{
                 break;
             }
-        }
+        }*/
         //console.log(orderList.length);
     }
     catch(e){
