@@ -43,7 +43,7 @@ let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
 
-const job = schedule.scheduleJob('*/40 * * * * *', () => {
+const job = schedule.scheduleJob('*/60 * * * * *', () => {
     console.log('Start the scheduler program');
     main();
 });
