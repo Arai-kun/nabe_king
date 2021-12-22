@@ -101,21 +101,25 @@ async function dataUpdate(access_token, refresh_token) {
         });
         let orderList = result.Orders;
         await Promise.all(orderList.map(async order => {
-            let result = await sellingPartner.callAPI({
-                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
-                method: 'GET',
-            });
-            const buyerEmail = result.BuyerEmail;
-            console.log(buyerEmail);
+            setTimeout(() => {
+                let result = await sellingPartner.callAPI({
+                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                    method: 'GET',
+                });
+                const buyerEmail = result.BuyerEmail;
+                console.log(buyerEmail);
+            }, 10);
         }));
 
         await Promise.all(orderList.map(async order => {
-            let result = await sellingPartner.callAPI({
-                api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
-                method: 'GET',
-            });
-            const itemName = result.OrderItems[0].Title;
-            console.log(itemName);
+            setTimeout(() => {
+                let result = await sellingPartner.callAPI({
+                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                    method: 'GET',
+                });
+                const itemName = result.OrderItems[0].Title;
+                console.log(itemName);
+            }, 10);
         }));
 
         
