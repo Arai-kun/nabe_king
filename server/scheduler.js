@@ -43,7 +43,7 @@ let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
 
-const job = schedule.scheduleJob('*/60 * * * * *', () => {
+const job = schedule.scheduleJob('*/40 * * * * *', () => {
     console.log('Start the scheduler program');
     main();
 });
@@ -91,14 +91,6 @@ async function dataUpdate(access_token, refresh_token) {
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
-        /*
-        let ordersData = await getOrders(sellingPartner);
-        let orderList = ordersData.Orders;
-        for (let i=0; i<orderList.length; i++){
-            let buyerData = await getBuyerInfo(sellingPartner, orderList[i].AmazonOrderId);
-            console.log(buyerData);
-        }*/
-        
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
             method: 'GET',
@@ -108,13 +100,13 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = result.Orders;
-        for(let order of orderList){
-            let result = await sellingPartner.callAPI({
+        orderList.forEach(async order => {
+            let result = await Promise.all(sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
-            });
+            }));
             console.log(result);
-        }
+        });
 
 
 
@@ -144,7 +136,7 @@ async function dataUpdate(access_token, refresh_token) {
     }
 }
 
-async function getOrders(sellingPartner){
+async function getOrder(sellingPartner){
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     /**
      * How dulation is decided?
