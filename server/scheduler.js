@@ -29,15 +29,21 @@ db.once("open", () => {
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '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');
 
-fs.writeFile(filepath, '');
+fs.writeFile(filepath, '', error => {
+    if(error){
+        console.log('File write failed');
+        exit(1);
+    }
+});
 
 let User = require('./models/user');
 let Config = require('./models/config');
 let Data = require('./models/data');
 let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
+const { exit } = require('process');
 
-const job = schedule.scheduleJob('*/10 * * * * *', function(){
+const job = schedule.scheduleJob('*/10 * * * * *', () => {
     console.log('Start the scheduler');
     try{
         main();
