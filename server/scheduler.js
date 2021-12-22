@@ -49,14 +49,15 @@ const job = schedule.scheduleJob('*/10 * * * * *', () => {
         main();
     }
     catch(e){
-        let now = new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
-        fs.appendFile(filepath, now + e);
+        const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+        fs.appendFile(filepath, now +': '+ e + '\n');
     }
 });
 
 function main() {
     User.find({}, (error, users) => {
-        if(error) throw error;
+        //if(error) throw error;
+        throw 'error occured!';
         users.forEach(user => {
             Config.findOne({email: user.email}, (error, config) => {
                 if(error) throw error;
@@ -85,9 +86,7 @@ async function dataUpdate(access_token, refresh_token) {
     });
 
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    console.log(date.setMonth((date.getMonth() + 1 - 2)));
     date = new Date(date.setMonth((date.getMonth() + 1 - 2))); // Exctract data from two month ago to now.
-    console.log(date);
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
