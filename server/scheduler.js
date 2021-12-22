@@ -100,6 +100,7 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = [];
+        console.log(result['Orders']);
         orderList = result['Orders'];
         while('NextToken' in result){
             if(result['NextToken'] !== ''){
