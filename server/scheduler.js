@@ -112,10 +112,10 @@ async function dataUpdate(access_token, refresh_token) {
                     query: {
                         CreatedAfter: date.toISOString(),
                         MarketplaceIds: MACKETPLACEID,
-                        NextToken: result['NextToken']
+                        NextToken: result.NextToken
                     }
                 });
-                //console.log(result);
+                console.log(result);
                 orderList.push(result.Orders);
             }
             else{
