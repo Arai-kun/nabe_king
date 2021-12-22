@@ -101,14 +101,16 @@ async function dataUpdate(access_token, refresh_token) {
         });
         let orderList = result.Orders;
         await Promise.all(orderList.map(async order => {
+            const before = Date.now();
             let result = await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
             });
+            console.log(Date.now - before);
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(100);
+            await _sleep(10);
         }));
 
         await Promise.all(orderList.map(async order => {
@@ -119,7 +121,7 @@ async function dataUpdate(access_token, refresh_token) {
             const itemName = result.OrderItems[0].Title;
             console.log(itemName);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(100);
+            await _sleep(10);
         }));
 
         
