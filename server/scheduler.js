@@ -106,7 +106,7 @@ async function dataUpdate(access_token, refresh_token) {
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
             });
-            console.log(Date.now - before);
+            console.log(Date.now() - before);
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
