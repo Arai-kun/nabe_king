@@ -101,10 +101,10 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         console.log(result);
-        //let orderList = [];
-        //orderList = result.Orders;
+        let orderList = [];
+        orderList = result.Orders;
         //console.log(orderList);
-        while(NextToken in result){
+        while('NextToken' in result){
             if(result.NextToken !== ''){
                 result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
@@ -116,13 +116,13 @@ async function dataUpdate(access_token, refresh_token) {
                     }
                 });
                 console.log(result);
-                //orderList.push(result.Orders);
+                orderList.push(result.Orders);
             }
             else{
                 break;
             }
         }
-        //console.log(orderList.length);
+        console.log(orderList.length);
     }
     catch(e){
         throw e;
