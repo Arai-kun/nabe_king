@@ -37,7 +37,7 @@ let Data = require('./models/data');
 let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 
-const job = schedule.scheduleJob('*/10 * * * * *', () => {
+const job = schedule.scheduleJob('*/10 * * * * *', function(){
     console.log('Start the scheduler');
     try{
         main();
