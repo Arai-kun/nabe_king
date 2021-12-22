@@ -101,9 +101,9 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         console.log(result);
-        let orderList = [];
-        orderList = result.Orders;
-        /*console.log(orderList);
+        //let orderList = [];
+        //orderList = result.Orders;
+        //console.log(orderList);
         while(NextToken in result){
             if(result.NextToken !== ''){
                 result = await sellingPartner.callAPI({
@@ -115,13 +115,14 @@ async function dataUpdate(access_token, refresh_token) {
                         NextToken: result['NextToken']
                     }
                 });
-                orderList.push(result.Orders);
+                console.log(result);
+                //orderList.push(result.Orders);
             }
             else{
                 break;
             }
         }
-        console.log(orderList.length);*/
+        //console.log(orderList.length);
     }
     catch(e){
         throw e;
