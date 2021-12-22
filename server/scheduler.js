@@ -101,6 +101,7 @@ async function dataUpdate(access_token, refresh_token) {
         });
         let orderList = result.Orders;
         await Promise.all(orderList.map(async order => {
+            try{
             let result= await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
@@ -110,9 +111,11 @@ async function dataUpdate(access_token, refresh_token) {
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                 method: 'GET',
             }); 
-            console.log(result);
             const itemName = result.OrderItems[0].Title;
             console.log(buyerEmail + itemName);
+        } catch(e){
+            console.log(e);
+        }
         }));
 
         
