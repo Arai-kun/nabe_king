@@ -82,22 +82,23 @@ async function dataUpdate(access_token, refresh_token) {
         }
     });
 
-    //let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     /**
      * How dulation is decided?
      * For test, set 1 month.
      * Considering to dulation of Config, it will be 2 month  
      */
 
-    //date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
+        /*
         let ordersData = await getOrders(sellingPartner);
         let orderList = ordersData.Orders;
         for (let i=0; i<orderList.length; i++){
             let buyerData = await getBuyerInfo(sellingPartner, orderList[i].AmazonOrderId);
             console.log(buyerData);
-        }
-        /*
+        }*/
+        
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
             method: 'GET',
@@ -107,13 +108,13 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = result.Orders;
-        orderList.forEach(async order => {
+        for(let i = 0; i < orderList.length; i++){
             let result = await sellingPartner.callAPI({
-                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                api_path: `/orders/v0/orders/${orderList[i].AmazonOrderId}/buyerInfo`,
                 method: 'GET',
             });
             console.log(result);
-        });*/
+        }
 
 
 
