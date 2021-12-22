@@ -100,7 +100,7 @@ async function dataUpdate(access_token, refresh_token) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
-        console.log(result);
+        //console.log(result);
         let orderList = [];
         orderList = result.Orders;
         //console.log(orderList);
@@ -115,14 +115,14 @@ async function dataUpdate(access_token, refresh_token) {
                         NextToken: result['NextToken']
                     }
                 });
-                console.log(result);
+                //console.log(result);
                 orderList.push(result.Orders);
             }
             else{
                 break;
             }
         }
-        console.log(orderList.length);
+        //console.log(orderList.length);
     }
     catch(e){
         throw e;
