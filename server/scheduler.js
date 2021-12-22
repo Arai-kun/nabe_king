@@ -106,7 +106,7 @@ async function dataUpdate(access_token, refresh_token) {
                 method: 'GET',
             });
             const buyerEmail = result.BuyerEmail;
-            let result= await sellingPartner.callAPI({
+            result= await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                 method: 'GET',
             }); 
