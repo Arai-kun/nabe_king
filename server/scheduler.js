@@ -91,15 +91,13 @@ async function dataUpdate(access_token, refresh_token) {
 
     //date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
-        await getOrders(sellingPartner).then(result => {
-            let orderList = result.Orders;
-            orderList.forEach(order => {
-                getBuyerInfo(sellingPartner, order.AmazonOrderId).then(result => {
-                    console.log(result);
-                    throw 'Error';
-                })
-            })
-        })
+        await getOrders(sellingPartner)
+        let orderList = result.Orders;
+        for (let i=0; i<orderList.length; i++){
+            await getBuyerInfo(sellingPartner, order.AmazonOrderId);
+            console.log(result);
+            throw 'Error!';
+        }
         /*
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
