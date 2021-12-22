@@ -91,7 +91,7 @@ async function dataUpdate(access_token, refresh_token) {
 
     //date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
-        getOrders(sellingPartner).then(result => {
+        await getOrders(sellingPartner).then(result => {
             let orderList = result.Orders;
             orderList.forEach(order => {
                 getBuyerInfo(sellingPartner, order.AmazonOrderId).then(result => {
