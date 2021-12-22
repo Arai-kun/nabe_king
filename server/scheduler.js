@@ -63,7 +63,6 @@ function main() {
                 dataUpdate(user.access_token, user.refresh_token)
                     .then(()=> console.log('Success!'))
                     .catch(error => {
-                        console.log(error);
                         throw error;
                     })
             }); 
@@ -85,8 +84,10 @@ async function dataUpdate(access_token, refresh_token) {
         }
     });
 
-    let date = new Date(new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
-    date = date.setMonth((date.getMonth() + 1 - 2)); // Exctract data from two month ago to now.
+    let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    console.log(date.setMonth((date.getMonth() + 1 - 2)));
+    date = new Date(date.setMonth((date.getMonth() + 1 - 2))); // Exctract data from two month ago to now.
+    console.log(date);
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
