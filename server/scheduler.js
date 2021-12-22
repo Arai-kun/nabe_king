@@ -99,6 +99,7 @@ async function dataUpdate(access_token, refresh_token) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
+        console.log(result);
         let orderList = [];
         orderList = result.Orders;
         console.log(orderList);
