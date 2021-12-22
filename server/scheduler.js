@@ -115,6 +115,7 @@ async function dataUpdate(access_token, refresh_token) {
             });
             console.log(result);
         }
+        return;
 
 
 
