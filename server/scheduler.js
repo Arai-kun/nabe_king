@@ -89,7 +89,7 @@ async function dataUpdate(access_token, refresh_token) {
      * Considering to dulation of Config, it will be 2 month  
      */
 
-    date = new Date(date.setMonth((date.getMonth() + 1 - 1)));
+    date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
