@@ -44,27 +44,26 @@ let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
 
 const job = schedule.scheduleJob('*/10 * * * * *', () => {
-    console.log('Start the scheduler');
-    try{
-        main();
-    }
-    catch(e){
-        const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-        fs.appendFile(filepath, now +': '+ e + '\n');
-    }
+    console.log('Start the scheduler program');
+    main();
 });
 
 function main() {
     User.find({}, (error, users) => {
-        //if(error) throw error;
-        throw 'error occured!';
+        if(error){
+            log(error);
+            return;
+        }
         users.forEach(user => {
             Config.findOne({email: user.email}, (error, config) => {
-                if(error) throw error;
+                if(error){
+                    log(error);
+                    return;
+                }
                 dataUpdate(user.access_token, user.refresh_token)
                     .then(()=> console.log('Success!'))
                     .catch(error => {
-                        throw error;
+                        console.log(error);
                     })
             }); 
         });
@@ -88,6 +87,7 @@ async function dataUpdate(access_token, refresh_token) {
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     date = new Date(date.setMonth((date.getMonth() + 1 - 2))); // Exctract data from two month ago to now.
     try {
+        throw 'Error!';
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
             method: 'GET',
@@ -104,5 +104,9 @@ async function dataUpdate(access_token, refresh_token) {
     }
 }
 
+function log(str) {
+    const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    fs.appendFile(filepath, now +': '+ str + '\n');
+}
 
 
