@@ -96,6 +96,7 @@ async function dataUpdate(access_token, refresh_token) {
             orderList.forEach(order => {
                 getBuyerInfo(sellingPartner, order.AmazonOrderId).then(result => {
                     console.log(result);
+                    throw 'Error';
                 })
             })
         })
