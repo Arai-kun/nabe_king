@@ -108,7 +108,7 @@ async function dataUpdate(access_token, refresh_token) {
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(10);
+            await _sleep(100);
         }));
 
         await Promise.all(orderList.map(async order => {
@@ -119,7 +119,7 @@ async function dataUpdate(access_token, refresh_token) {
             const itemName = result.OrderItems[0].Title;
             console.log(itemName);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(10);
+            await _sleep(100);
         }));
 
         
