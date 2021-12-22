@@ -82,15 +82,24 @@ async function dataUpdate(access_token, refresh_token) {
         }
     });
 
-    let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    //let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     /**
      * How dulation is decided?
      * For test, set 1 month.
      * Considering to dulation of Config, it will be 2 month  
      */
 
-    date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    //date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
+        getOrders(sellingPartner).then(result => {
+            let orderList = result.Orders;
+            orderList.forEach(order => {
+                getBuyerInfo(sellingPartner, order.AmazonOrderId).then(result => {
+                    console.log(result);
+                })
+            })
+        })
+        /*
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
             method: 'GET',
@@ -106,7 +115,7 @@ async function dataUpdate(access_token, refresh_token) {
                 method: 'GET',
             });
             console.log(result);
-        });
+        });*/
 
 
 
@@ -135,6 +144,36 @@ async function dataUpdate(access_token, refresh_token) {
         throw e;
     }
 }
+
+async function getOrders(sellingPartner){
+    let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    /**
+     * How dulation is decided?
+     * For test, set 1 month.
+     * Considering to dulation of Config, it will be 2 month  
+     */
+
+    date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    let result = await sellingPartner.callAPI({
+        api_path: '/orders/v0/orders',
+        method: 'GET',
+        query: {
+            CreatedAfter: date.toISOString(),
+            MarketplaceIds: MACKETPLACEID
+        }
+    });
+    return result;
+}
+
+async function getBuyerInfo(sellingPartner, id){
+    let result = await sellingPartner.callAPI({
+        api_path: `/orders/v0/orders/${id}/buyerInfo`,
+        method: 'GET',
+    });
+    return result;
+}
+
+
 
 function log(str) {
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
