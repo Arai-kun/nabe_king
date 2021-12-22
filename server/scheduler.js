@@ -62,7 +62,7 @@ function main() {
                 }
                 dataUpdate(user.access_token, user.refresh_token)
                     .then(()=> console.log('Success!'))
-                    .catch(error => log(error))
+                    .catch(error => log(error));
             }); 
         });
     });
@@ -103,7 +103,12 @@ async function dataUpdate(access_token, refresh_token) {
 
 function log(str) {
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    fs.appendFile(filepath, now +': '+ str + '\n');
+    fs.appendFile(filepath, now +': '+ str + '\n', error => {
+        if(error){
+            console.log('File write failed');
+            exit(1);
+        }
+    });
 }
 
 
