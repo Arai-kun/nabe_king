@@ -91,11 +91,11 @@ async function dataUpdate(access_token, refresh_token) {
 
     //date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
     try {
-        await getOrders(sellingPartner)
-        let orderList = result.Orders;
+        let ordersData = await getOrders(sellingPartner);
+        let orderList = ordersData.Orders;
         for (let i=0; i<orderList.length; i++){
-            await getBuyerInfo(sellingPartner, order.AmazonOrderId);
-            console.log(result);
+            let buyerData = await getBuyerInfo(sellingPartner, orderList[i].AmazonOrderId);
+            console.log(buyerData);
             throw 'Error!';
         }
         /*
