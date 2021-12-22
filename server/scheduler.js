@@ -90,6 +90,7 @@ async function dataUpdate(access_token, refresh_token) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    console.log(date);
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
@@ -102,7 +103,7 @@ async function dataUpdate(access_token, refresh_token) {
         console.log(result);
         let orderList = [];
         orderList = result.Orders;
-        console.log(orderList);
+        /*console.log(orderList);
         while(NextToken in result){
             if(result.NextToken !== ''){
                 result = await sellingPartner.callAPI({
@@ -120,7 +121,7 @@ async function dataUpdate(access_token, refresh_token) {
                 break;
             }
         }
-        console.log(orderList.length);
+        console.log(orderList.length);*/
     }
     catch(e){
         throw e;
