@@ -100,13 +100,14 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = result.Orders;
-        let result = await Promise.all(orderList.map(order => {
-            sellingPartner.callAPI({
+        await Promise.all(orderList.map(order => {
+            let result= await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
             });
+            console.log(result);
         }));
-        console.log(result);
+
         
 
 
