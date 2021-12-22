@@ -62,9 +62,7 @@ function main() {
                 }
                 dataUpdate(user.access_token, user.refresh_token)
                     .then(()=> console.log('Success!'))
-                    .catch(error => {
-                        console.log(error);
-                    })
+                    .catch(error => log(error))
             }); 
         });
     });
@@ -99,7 +97,6 @@ async function dataUpdate(access_token, refresh_token) {
         console.log(result);
     }
     catch(e){
-        console.log(e);
         throw e;
     }
 }
