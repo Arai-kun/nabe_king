@@ -111,7 +111,7 @@ async function dataUpdate(access_token, refresh_token) {
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(6000);
+            await _sleep(60000);
         }));
 
         /*
