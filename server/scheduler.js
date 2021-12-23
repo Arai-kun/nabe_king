@@ -111,14 +111,14 @@ async function dataUpdate(access_token, refresh_token) {
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
                 options: {
-                    raw_result: true
+                    raw_result: false
                 }
             });
-            console.log(result);
-            console.log(Date.now() - before);
+            //console.log(result);
+            //console.log(Date.now() - before);
             count++;
-            //const buyerEmail = result.BuyerEmail;
-            //console.log(buyerEmail);
+            const buyerEmail = result.BuyerEmail;
+            console.log(count + ',' + buyerEmail);
             //const beforeT = Date.now();
             //const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             //await _sleep(6000);
@@ -163,6 +163,7 @@ async function dataUpdate(access_token, refresh_token) {
         //console.log(orderList.length);
     }
     catch(e){
+        console.log(e);
         throw e;
     }
 }
