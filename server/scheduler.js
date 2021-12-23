@@ -110,8 +110,10 @@ async function dataUpdate(access_token, refresh_token) {
             console.log(Date.now() - before);
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
+            const beforeT = Date.now();
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(60000);
+            await _sleep(6000);
+            console.log('T' + Date.now - beforeT);
         }));
 
         /*
