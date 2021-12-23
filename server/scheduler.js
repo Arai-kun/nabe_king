@@ -42,6 +42,7 @@ let Data = require('./models/data');
 let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
+const { addAbortSignal } = require('stream');
 
 
 //const job = schedule.scheduleJob('*/40 * * * * *', () => {
@@ -82,6 +83,9 @@ async function dataUpdate(access_token, refresh_token) {
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
         }
     });
+
+    let token = await sellingPartner.refreshAccessToken();
+    console.log(token);
 
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     /**
