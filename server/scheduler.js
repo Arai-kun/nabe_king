@@ -42,7 +42,6 @@ let Data = require('./models/data');
 let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
-const { addAbortSignal } = require('stream');
 
 
 //const job = schedule.scheduleJob('*/40 * * * * *', () => {
@@ -110,10 +109,14 @@ async function dataUpdate(access_token, refresh_token) {
             let result = await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                 method: 'GET',
+                options: {
+                    raw_result: true
+                }
             });
+            console.log(result);
             console.log(Date.now() - before);
-            const buyerEmail = result.BuyerEmail;
-            console.log(buyerEmail);
+            //const buyerEmail = result.BuyerEmail;
+            //console.log(buyerEmail);
             //const beforeT = Date.now();
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             await _sleep(6000);
