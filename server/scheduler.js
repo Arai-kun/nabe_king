@@ -43,10 +43,11 @@ let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
 const { exit } = require('process');
 
-const job = schedule.scheduleJob('*/40 * * * * *', () => {
+
+//const job = schedule.scheduleJob('*/40 * * * * *', () => {
     console.log('Start the scheduler program');
     main();
-});
+//});
 
 function main() {
     User.find({}, (error, users) => {
@@ -110,9 +111,10 @@ async function dataUpdate(access_token, refresh_token) {
             const buyerEmail = result.BuyerEmail;
             console.log(buyerEmail);
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(10);
+            await _sleep(6000);
         }));
 
+        /*
         await Promise.all(orderList.map(async order => {
             let result = await sellingPartner.callAPI({
                 api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
@@ -123,7 +125,7 @@ async function dataUpdate(access_token, refresh_token) {
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             await _sleep(10);
         }));
-
+        */
         
 
 
