@@ -104,6 +104,7 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = result.Orders;
+        let count = 0;
         await Promise.all(orderList.map(async order => {
             const before = Date.now();
             let result = await sellingPartner.callAPI({
@@ -115,14 +116,15 @@ async function dataUpdate(access_token, refresh_token) {
             });
             console.log(result);
             console.log(Date.now() - before);
+            count++;
             //const buyerEmail = result.BuyerEmail;
             //console.log(buyerEmail);
             //const beforeT = Date.now();
-            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(6000);
+            //const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            //await _sleep(6000);
             //console.log('T' + Date.now - beforeT);
         }));
-
+        console.log(count);
         /*
         await Promise.all(orderList.map(async order => {
             let result = await sellingPartner.callAPI({
