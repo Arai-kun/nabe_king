@@ -81,11 +81,11 @@ async function dataUpdate(access_token, refresh_token) {
             AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
             AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY,
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
+        },
+        options: {
+            auto_request_throttled: false
         }
     });
-
-    let token = await sellingPartner.refreshAccessToken();
-    console.log(token);
 
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     /**
