@@ -54,6 +54,18 @@ async function main() {
         await _sleep(10000);
         log('Active main()');
 
+        try{
+            let users = await User.find({}).exec();
+            for(let user of users){
+                let config = await Config.findOne({email: user.email}).exec();
+                await dataUpdate(user);
+            }
+        }
+        catch(error){
+            log(error);
+        }
+
+        /*
         User.find({}, (error, users) => {
             if(error){
                 log(error);
@@ -68,7 +80,7 @@ async function main() {
                     await dataUpdate(user);
                 });
             }
-        });
+        });*/
     }
 }
 
@@ -157,7 +169,7 @@ async function dataUpdate(user) {
                 const rate2 = result3.headers['x-amzn-ratelimit-limit'];
                 console.log(rate2);
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                await _sleep(10000);
+                await _sleep(100000);
             }
             catch(error){
                 log(error);
