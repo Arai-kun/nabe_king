@@ -129,13 +129,12 @@ async function dataUpdate(user) {
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                     method: 'GET',
                     options: {
-                        raw_result: true,
-                        auto_request_throttled: false
+                        raw_result: true
                     }
                 });
                 //console.log(result);
                 let buyerEmail =''
-                if('BuyerEmail' in JSON.parse(result2.body).payload){
+                if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                     buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
                 }
                 console.log(buyerEmail);
@@ -145,8 +144,7 @@ async function dataUpdate(user) {
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                     method: 'GET',
                     options: {
-                        raw_result: true,
-                        auto_request_throttled: false
+                        raw_result: true
                     }
                 });
                 //console.log(result2);
