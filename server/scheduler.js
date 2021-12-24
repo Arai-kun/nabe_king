@@ -110,7 +110,7 @@ async function dataUpdate(user) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    let data_arr = [];
+    //let data_arr = [];
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
@@ -147,7 +147,10 @@ async function dataUpdate(user) {
                 //console.log(result2);
                 const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
                 console.log(itemName);
-            
+                
+                let data = await Data.findOne({email: user.email}).exec();
+                let data_arr = [];
+                let data_arr = data.data_arr;
 
                 data_arr.push({
                     orderId: order.AmazonOrderId,
@@ -162,29 +165,22 @@ async function dataUpdate(user) {
                     sendTarget: false
                 });
 
-                console.log(data_arr);
+                //console.log(data_arr);
+                await Data.updateOne({email: user.email}, {
+                    data_arr: data_arr
+                }).exec();
 
-                const rate = result2.headers['x-amzn-ratelimit-limit'];
-                console.log(rate);
-                const rate2 = result3.headers['x-amzn-ratelimit-limit'];
-                console.log(rate2);
+                let rate = result2.headers['x-amzn-ratelimit-limit'];
+                rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
+                console.log(1 / Number(rate));
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                await _sleep(100000);
+                await _sleep(1 / Number(rate));
             }
             catch(error){
                 log(error);
             }
         }
-
-        Data.updateOne({email: user.email}, {
-            data_arr: data_arr
-        }, error => {
-            if(error){
-                log(error);
-                return;
-            }
-        });
-
+        
         //console.log(orderList);
         /*while('NextToken' in result){
             if(result.NextToken !== ''){
