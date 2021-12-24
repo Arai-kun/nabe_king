@@ -126,9 +126,7 @@ async function dataUpdate(user) {
             
             
             let orderData = await Data.findOne({email: user.email, data_arr:{ orderId: order.AmazonOrderId }}).exec();
-            if(orderData){
                 console.log(orderData);
-            }
             
             
             try{
