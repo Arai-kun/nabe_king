@@ -60,7 +60,7 @@ async function main() {
                 return;
             }
             for(let user of users){
-                Config.findOne({email: user.email}, (error, config) => {
+                Config.findOne({email: user.email}, async (error, config) => {
                     if(error){
                         log(error);
                         return;
