@@ -125,7 +125,7 @@ async function dataUpdate(user) {
         for(let order of orderList){
             
             
-            let orderData = await Data.findOne({email: user.email, data_arr:{ orderId: order.AmazonOrderId }}).exec();
+            let orderData = await Data.findOne({email: user.email, data_arr:[{ orderId: order.AmazonOrderId }]}).exec();
                 console.log(orderData);
             
             
