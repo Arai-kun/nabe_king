@@ -132,7 +132,7 @@ async function dataUpdate(user) {
                         raw_result: true
                     }
                 });
-                //console.log(result);
+                console.log(result);
                 let buyerEmail =''
                 if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                     buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
