@@ -123,7 +123,7 @@ async function dataUpdate(user) {
                     }
                 });
                 console.log(result);
-                const buyerEmail = result.Body.BuyerEmail;
+                const buyerEmail = JSON.parse(result.body).BuyerEmail;
 
                 /* Get item name */
                 let result2 = await sellingPartner.callAPI({
@@ -134,7 +134,7 @@ async function dataUpdate(user) {
                     }
                 });
                 console.log(result2);
-                const itemName = result2.Body.OrderItems[0].Title;
+                const itemName = JSON.parse(result2.body).OrderItems[0].Title;
             
 
                 data_arr.push({
@@ -152,7 +152,8 @@ async function dataUpdate(user) {
 
                 console.log(data_arr);
 
-                rate = result.headers.x-amzn-RateLimit-Limit;
+                rate = result.headers['x-amzn-ratelimit-limit'];
+                console.log(rate);
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 await _sleep(100000);
             }
