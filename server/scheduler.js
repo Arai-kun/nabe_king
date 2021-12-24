@@ -123,7 +123,7 @@ async function dataUpdate(user) {
                     }
                 });
                 console.log(result);
-                const buyerEmail = JSON.parse(result.body).BuyerEmail;
+                const buyerEmail = JSON.parse(result.body).payload.BuyerEmail;
 
                 /* Get item name */
                 let result2 = await sellingPartner.callAPI({
@@ -134,7 +134,7 @@ async function dataUpdate(user) {
                     }
                 });
                 console.log(result2);
-                const itemName = JSON.parse(result2.body).OrderItems[0].Title;
+                const itemName = JSON.parse(result2.body).payload.OrderItems[0].Title;
             
 
                 data_arr.push({
