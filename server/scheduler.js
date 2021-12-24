@@ -113,7 +113,7 @@ async function dataUpdate(user) {
         for(let order of orderList){
             try{
                 /* Get buyer email */
-                let result = await sellingPartner.callAPI({
+                let result2 = await sellingPartner.callAPI({
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                     method: 'GET',
                     options: {
@@ -121,11 +121,11 @@ async function dataUpdate(user) {
                     }
                 });
                 //console.log(result);
-                const buyerEmail = JSON.parse(result.body).payload.BuyerEmail;
+                const buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
                 console.log(buyerEmail);
 
                 /* Get item name */
-                let result2 = await sellingPartner.callAPI({
+                let result3 = await sellingPartner.callAPI({
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                     method: 'GET',
                     options: {
@@ -133,8 +133,8 @@ async function dataUpdate(user) {
                     }
                 });
                 //console.log(result2);
-                const itemName = JSON.parse(result2.body).payload.OrderItems[0].Title;
-                console.log(itemName)
+                const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
+                console.log(itemName);
             
 
                 data_arr.push({
@@ -152,12 +152,12 @@ async function dataUpdate(user) {
 
                 console.log(data_arr);
 
-                const rate = result.headers['x-amzn-ratelimit-limit'];
+                const rate = result2.headers['x-amzn-ratelimit-limit'];
                 console.log(rate);
-                const rate2 = result2.headers['x-amzn-ratelimit-limit'];
+                const rate2 = result3.headers['x-amzn-ratelimit-limit'];
                 console.log(rate2);
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                await _sleep(100000);
+                await _sleep(10000);
             }
             catch(error){
                 log(error);
