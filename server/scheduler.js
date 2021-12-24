@@ -133,7 +133,10 @@ async function dataUpdate(user) {
                     }
                 });
                 //console.log(result);
-                const buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
+                let buyerEmail =''
+                if('BuyerEmail' in JSON.parse(result2.body).payload){
+                    buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
+                }
                 console.log(buyerEmail);
 
                 /* Get item name */
