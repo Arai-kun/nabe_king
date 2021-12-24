@@ -132,7 +132,9 @@ async function dataUpdate(user) {
                         raw_result: true
                     }
                 });
-                console.log(result2);
+                if(Number(result2.statusCode) !== 200){
+                    throw (order.AmazonOrderId + ' ' + result2.body);
+                }
                 let buyerEmail =''
                 if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                     buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
@@ -147,7 +149,9 @@ async function dataUpdate(user) {
                         raw_result: true
                     }
                 });
-                //console.log(result2);
+                if(Number(result3.statusCode) !== 200){
+                    throw (order.AmazonOrderId + ' ' + result3.body);
+                }
                 const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
                 console.log(itemName);
                 
