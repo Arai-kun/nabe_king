@@ -54,7 +54,7 @@ async function main() {
         await _sleep(10000);
         log('Active main()');
 
-        User.find({}, (error, users) => {
+        await User.find({}, (error, users) => {
             if(error){
                 log(error);
                 return;
