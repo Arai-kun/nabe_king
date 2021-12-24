@@ -1,10 +1,10 @@
 let mongoose = require('mongoose');
 const sendgrid = require('@sendgrid/mail');
-const schedule = require('node-schedule');
 let fs = require('fs');
-const SellingPartnerAPI = require('amazon-sp-api');
+let SellingPartnerAPI = require('amazon-sp-api');
+const { exit } = require('process');
 
-const filepath = './error.txt';
+const filepath = './log.txt';
 const SELLING_PARTNER_APP_CLIENT_ID = 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449';
 const SELLING_PARTNER_APP_CLIENT_SECRET = '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a';
 const AWS_ACCESS_KEY_ID = 'AKIAWECJIQCPBTLTQXVD';
@@ -12,6 +12,7 @@ const AWS_SECRET_ACCESS_KEY = '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';
 const AWS_SELLING_PARTNER_ROLE = 'arn:aws:iam::421060444318:role/Role-SP-API';
 const MACKETPLACEID = 'A1VC38T7YXB528'  // Japan
 
+console.log('Start the scheduler program');
 
 mongoose.connect(
     "mongodb://localhost:27017/nabe_king?authSource=admin",
@@ -29,9 +30,10 @@ db.once("open", () => {
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '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');
 
+/* Reset every time for saving storage */
 fs.writeFile(filepath, '', error => {
     if(error){
-        console.log('Error: Write file failed. Aborting...');
+        console.log('Write file failed. Abort');
         exit(1);
     }
 });
@@ -41,39 +43,42 @@ let Config = require('./models/config');
 let Data = require('./models/data');
 let Mail = require('./models/mail');
 let mailDesign = require('./models/mailDesign');
-const { exit } = require('process');
 
+main();
 
-//const job = schedule.scheduleJob('*/40 * * * * *', () => {
-    console.log('Start the scheduler program');
-    main();
-//});
+async function main() {
+    while(1){
 
-function main() {
-    User.find({}, (error, users) => {
-        if(error){
-            log(error);
-            return;
-        }
-        users.forEach(user => {
-            Config.findOne({email: user.email}, (error, config) => {
-                if(error){
-                    log(error);
-                    return;
-                }
-                dataUpdate(user.access_token, user.refresh_token)
-                    .then(()=> console.log('Success!'))
-                    .catch(error => log(error));
-            }); 
+        /* Set interval as scheduler */
+        const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        await _sleep(10000);
+        log('Active main()');
+
+        User.find({}, (error, users) => {
+            if(error){
+                log(error);
+                return;
+            }
+            for(let user of users){
+                Config.findOne({email: user.email}, (error, config) => {
+                    if(error){
+                        log(error);
+                        return;
+                    }
+                    await dataUpdate(user)
+                        .then(()=> console.log('Success!'))
+                        .catch(error => log(error));
+                });
+            }
         });
-    });
+    }
 }
 
-async function dataUpdate(access_token, refresh_token) {
+async function dataUpdate(user) {
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
-        access_token: access_token,
-        refresh_token: refresh_token,
+        access_token: user.access_token,
+        refresh_token: user.refresh_token,
         credentials: {
             SELLING_PARTNER_APP_CLIENT_ID: SELLING_PARTNER_APP_CLIENT_ID,
             SELLING_PARTNER_APP_CLIENT_SECRET: SELLING_PARTNER_APP_CLIENT_SECRET,
@@ -82,11 +87,12 @@ async function dataUpdate(access_token, refresh_token) {
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
         },
         options: {
-            auto_request_throttled: false
+            auto_request_throttled: false  // Catch rate restrict
         }
     });
 
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    
     /**
      * How dulation is decided?
      * For test, set 1 month.
@@ -94,6 +100,7 @@ async function dataUpdate(access_token, refresh_token) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    let data_arr = [];
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
@@ -104,42 +111,63 @@ async function dataUpdate(access_token, refresh_token) {
             }
         });
         let orderList = result.Orders;
-        let count = 0;
-        await Promise.all(orderList.map(async order => {
-            const before = Date.now();
-            let result = await sellingPartner.callAPI({
-                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
-                method: 'GET',
-                options: {
-                    raw_result: false
-                }
+
+        for(let order of orderList){
+            try{
+                /* Get buyer email */
+                let result = await sellingPartner.callAPI({
+                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                    method: 'GET',
+                    options: {
+                        raw_result: true
+                    }
+                });
+                console.log(result);
+                const buyerEmail = result.Body.BuyerEmail;
+
+                /* Get item name */
+                let result2 = await sellingPartner.callAPI({
+                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                    method: 'GET',
+                    options: {
+                        raw_result: true
+                    }
+                });
+                console.log(result2);
+                const itemName = result2.Body.OrderItems[0].Title;
+            }
+            catch(error){
+                log(error);
+            }
+
+            data_arr.push({
+                orderId: order.AmazonOrderId,
+                purchaseDate: new Date(order.PurchaseDate),
+                orderStatus: order.OrderStatus,
+                shippedDate: null,
+                buyerEmail: buyerEmail,
+                buyerName: '',
+                itemName: itemName,
+                isSent: false,
+                unSend: false,
+                sendTarget: false
             });
-            //console.log(result);
-            //console.log(Date.now() - before);
-            count++;
-            const buyerEmail = result.BuyerEmail;
-            console.log(count + ',' + buyerEmail);
-            //const beforeT = Date.now();
-            //const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            //await _sleep(6000);
-            //console.log('T' + Date.now - beforeT);
-        }));
-        console.log(count);
-        /*
-        await Promise.all(orderList.map(async order => {
-            let result = await sellingPartner.callAPI({
-                api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
-                method: 'GET',
-            });
-            const itemName = result.OrderItems[0].Title;
-            console.log(itemName);
+
+            console.log(data_arr);
+
+            rate = result.headers.x-amzn-RateLimit-Limit;
             const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(10);
-        }));
-        */
-        
+            await _sleep(100000);
+        }
 
-
+        Data.updateOne({email: user.email}, {
+            data_arr: data_arr
+        }, error => {
+            if(error){
+                log(error);
+                return;
+            }
+        });
 
         //console.log(orderList);
         /*while('NextToken' in result){
@@ -162,9 +190,8 @@ async function dataUpdate(access_token, refresh_token) {
         }*/
         //console.log(orderList.length);
     }
-    catch(e){
-        console.log(e);
-        throw e;
+    catch(error){
+        log(error);
     }
 }
 
@@ -202,7 +229,7 @@ function log(str) {
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     fs.appendFile(filepath, now +': '+ str + '\n', error => {
         if(error){
-            console.log('Error: Append file failed. Aborting...');
+            console.log('Append file failed. Abort');
             exit(1);
         }
     });
