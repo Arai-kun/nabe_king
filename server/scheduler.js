@@ -176,8 +176,8 @@ async function dataUpdate(user) {
                 let rate = result2.headers['x-amzn-ratelimit-limit'];
                 rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
                 console.log(1 / Number(rate));
-                const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                await _sleep(1 / Number(rate));
+                //const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                //await _sleep(1 / Number(rate));
             }
             catch(error){
                 log(error);
