@@ -150,7 +150,7 @@ async function dataUpdate(user) {
                 
                 let data = await Data.findOne({email: user.email}).exec();
                 let data_arr = [];
-                let data_arr = data.data_arr;
+                data_arr = data.data_arr;
 
                 data_arr.push({
                     orderId: order.AmazonOrderId,
@@ -180,7 +180,7 @@ async function dataUpdate(user) {
                 log(error);
             }
         }
-        
+
         //console.log(orderList);
         /*while('NextToken' in result){
             if(result.NextToken !== ''){
