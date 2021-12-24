@@ -135,29 +135,30 @@ async function dataUpdate(user) {
                 });
                 console.log(result2);
                 const itemName = result2.Body.OrderItems[0].Title;
+            
+
+                data_arr.push({
+                    orderId: order.AmazonOrderId,
+                    purchaseDate: new Date(order.PurchaseDate),
+                    orderStatus: order.OrderStatus,
+                    shippedDate: null,
+                    buyerEmail: buyerEmail,
+                    buyerName: '',
+                    itemName: itemName,
+                    isSent: false,
+                    unSend: false,
+                    sendTarget: false
+                });
+
+                console.log(data_arr);
+
+                rate = result.headers.x-amzn-RateLimit-Limit;
+                const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                await _sleep(100000);
             }
             catch(error){
                 log(error);
             }
-
-            data_arr.push({
-                orderId: order.AmazonOrderId,
-                purchaseDate: new Date(order.PurchaseDate),
-                orderStatus: order.OrderStatus,
-                shippedDate: null,
-                buyerEmail: buyerEmail,
-                buyerName: '',
-                itemName: itemName,
-                isSent: false,
-                unSend: false,
-                sendTarget: false
-            });
-
-            console.log(data_arr);
-
-            rate = result.headers.x-amzn-RateLimit-Limit;
-            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            await _sleep(100000);
         }
 
         Data.updateOne({email: user.email}, {
