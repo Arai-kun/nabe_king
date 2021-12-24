@@ -133,6 +133,7 @@ async function dataUpdate(user) {
                     }
                 });
                 if(Number(result2.statusCode) !== 200){
+                    console.log('API failed: buyerInfo');
                     throw (order.AmazonOrderId + ' ' + result2.body);
                 }
                 let buyerEmail =''
@@ -150,6 +151,7 @@ async function dataUpdate(user) {
                     }
                 });
                 if(Number(result3.statusCode) !== 200){
+                    console.log('API failed: orderItems');
                     throw (order.AmazonOrderId + ' ' + result3.body);
                 }
                 const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
