@@ -129,7 +129,8 @@ async function dataUpdate(user) {
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                     method: 'GET',
                     options: {
-                        raw_result: true
+                        raw_result: true,
+                        auto_request_throttled: false
                     }
                 });
                 //console.log(result);
@@ -144,7 +145,8 @@ async function dataUpdate(user) {
                     api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                     method: 'GET',
                     options: {
-                        raw_result: true
+                        raw_result: true,
+                        auto_request_throttled: false
                     }
                 });
                 //console.log(result2);
