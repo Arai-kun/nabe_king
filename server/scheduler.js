@@ -54,7 +54,7 @@ async function main() {
         await _sleep(10000);
         log('Active main()');
 
-        await User.find({}, (error, users) => {
+        User.find({}, (error, users) => {
             if(error){
                 log(error);
                 return;
@@ -65,9 +65,7 @@ async function main() {
                         log(error);
                         return;
                     }
-                    await dataUpdate(user)
-                        .then(()=> console.log('Success!'))
-                        .catch(error => log(error));
+                    await dataUpdate(user);
                 });
             }
         });
