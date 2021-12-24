@@ -123,6 +123,14 @@ async function dataUpdate(user) {
         let orderList = result.Orders;
 
         for(let order of orderList){
+            
+            
+            let orderData = await Data.findOne({email: user.email, data_arr:{ orderId: order.AmazonOrderId }}).exec();
+            if(orderData){
+                console.log(orderData);
+            }
+            
+            
             try{
                 /* Get buyer email */
                 let result2 = await sellingPartner.callAPI({
