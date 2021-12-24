@@ -46,9 +46,14 @@ async function update() {
         }
     ];
     for(x of orders){
-        const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-        await _sleep(1000);
-        console.log(x.orderId);      
+        try{
+            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            await _sleep(1000);
+            console.log(x.orderId);
+        }
+        catch(e){
+
+        }      
     }
     console.log('Escape in update()');
 }
