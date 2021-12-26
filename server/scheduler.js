@@ -85,6 +85,7 @@ async function main() {
 }
 
 async function dataUpdate(user) {
+    log('Enter in dataUpdate()');
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
         access_token: user.access_token,
@@ -110,7 +111,7 @@ async function dataUpdate(user) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    //let data_arr = [];
+    let orderList = [];
     try {
         let result = await sellingPartner.callAPI({
             api_path: '/orders/v0/orders',
@@ -120,79 +121,116 @@ async function dataUpdate(user) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
-        let orderList = result.Orders;
+        orderList.push(result.Orders);
 
+        while('NextToken' in result){
+            if(result.NextToken !== ''){
+                console.log('Has NextToken');
+                result = await sellingPartner.callAPI({
+                    api_path: '/orders/v0/orders',
+                    method: 'GET',
+                    query: {
+                        CreatedAfter: date.toISOString(),
+                        MarketplaceIds: MACKETPLACEID,
+                        NextToken: result.NextToken
+                    }
+                });
+                orderList.push(result.Orders);
+            }
+            else{
+                break;
+            }
+        }
+        console.log(`Get number of data: ${orderList.length}`);
+
+        let newDataList = [];
         for(let order of orderList){
-            
-            
-            let orderData = await Data.findOne({email: user.email, data_arr:[{ orderId: order.AmazonOrderId }]}).exec();
-                console.log(orderData);
-            
-            
-            try{
-                /* Get buyer email */
-                let result2 = await sellingPartner.callAPI({
-                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
-                    method: 'GET',
-                    options: {
-                        raw_result: true
-                    }
-                });
-                if(Number(result2.statusCode) !== 200){
-                    console.log('API failed: buyerInfo');
-                    throw (order.AmazonOrderId + ' ' + result2.body);
-                }
-                let buyerEmail =''
-                if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
-                    buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
-                }
-                console.log(buyerEmail);
-
-                /* Get item name */
-                let result3 = await sellingPartner.callAPI({
-                    api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
-                    method: 'GET',
-                    options: {
-                        raw_result: true
-                    }
-                });
-                if(Number(result3.statusCode) !== 200){
-                    console.log('API failed: orderItems');
-                    throw (order.AmazonOrderId + ' ' + result3.body);
-                }
-                const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
-                console.log(itemName);
-                
-                let data = await Data.findOne({email: user.email}).exec();
-                let data_arr = [];
-                data_arr = data.data_arr;
-
-                data_arr.push({
-                    orderId: order.AmazonOrderId,
-                    purchaseDate: new Date(order.PurchaseDate),
+            let data = await Data.findOne({email: user.email}).exec();
+            let findData = data.data_arr.find(d => d.orderId === order.orderId);
+            if(findData !== undefined){
+                /* Need update the data */
+                newDataList.push({
+                    orderId: findData.AmazonOrderId,
+                    purchaseDate: findData.purchaseDate,
                     orderStatus: order.OrderStatus,
-                    shippedDate: null,
-                    buyerEmail: buyerEmail,
-                    buyerName: '',
-                    itemName: itemName,
-                    isSent: false,
-                    unSend: false,
-                    sendTarget: false
+                    shippedDate: findData.shippedDate,
+                    buyerEmail: findData.buyerEmail,
+                    buyerName: findData.buyerName,
+                    itemName: findData.itemName,
+                    isSent: findData.isSent,
+                    unSend: findData.unSend,
+                    sendTarget: findData.sendTarget
                 });
-
-                //console.log(data_arr);
-                await Data.updateOne({email: user.email}, {
-                    data_arr: data_arr
-                }).exec();
-
-                let rate = result2.headers['x-amzn-ratelimit-limit'];
-                rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
-                const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                await _sleep((1 / Number(rate)) * 1000);
+                
             }
-            catch(error){
-                log(error);
+            else{
+                /* New data */
+                try{
+                    /* Get buyer email */
+                    let result2 = await sellingPartner.callAPI({
+                        api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                        method: 'GET',
+                        options: {
+                            raw_result: true
+                        }
+                    });
+                    if(Number(result2.statusCode) !== 200){
+                        console.log('API failed: buyerInfo');
+                        throw (order.AmazonOrderId + ' ' + result2.body);
+                    }
+                    let buyerEmail =''
+                    if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
+                        buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
+                    }
+                    console.log(buyerEmail);
+
+                    /* Get item name */
+                    let result3 = await sellingPartner.callAPI({
+                        api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                        method: 'GET',
+                        options: {
+                            raw_result: true
+                        }
+                    });
+                    if(Number(result3.statusCode) !== 200){
+                        console.log('API failed: orderItems');
+                        throw (order.AmazonOrderId + ' ' + result3.body);
+                    }
+                    const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
+                    console.log(itemName);
+
+                    newDataList.push({
+                        orderId: order.AmazonOrderId,
+                        purchaseDate: new Date(order.PurchaseDate),
+                        orderStatus: order.OrderStatus,
+                        shippedDate: null,
+                        buyerEmail: buyerEmail,
+                        buyerName: '',
+                        itemName: itemName,
+                        isSent: false,
+                        unSend: false,
+                        sendTarget: false
+                    });
+
+                    let rate = result2.headers['x-amzn-ratelimit-limit'];
+                    rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
+                    const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                    await _sleep((1 / Number(rate)) * 1000);
+                }
+                catch(error){
+                    log(error);
+                }
             }
+
+            /* Save to DB */
+            await Data.findOneAndUpdate({email: user.email}, {
+                email: user.email,
+                data_arr: newDataList
+            },{
+                overwrite: true,
+                upsert: true
+            }).exec();
+            log('Exit dataUpdate()');
         }
 
         //console.log(orderList);
