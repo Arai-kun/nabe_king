@@ -122,9 +122,9 @@ async function dataUpdate(user, config) {
                 raw_result: true
             }
         });
+        console.log(result);
         const limit = result.headers['x-amzn-ratelimit-limit'];
         result = parse(result.body);
-        //console.log(result);
         for(let order of result.payload.Orders){
             orderList.push(order);
         }
