@@ -70,6 +70,10 @@ export class DataComponent implements OnInit {
     this.dbService.get<data>('data')
     .subscribe(data => {
       this.data = data['data_arr'];
+      if(!this.data){
+        this.overlaySpinnerService.detach();
+        return;
+      }
       let bufOrderStatus: string;
       let bufIsSent: string;
       let bufData: displayData[] = [];
