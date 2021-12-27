@@ -102,15 +102,21 @@ async function dataUpdate(user, config) {
             method: 'GET',
             query: {
                 CreatedAfter: date.toISOString(),
-                MarketplaceIds: MACKETPLACEID
+                MarketplaceIds: MACKETPLACEID,
+                raw_result: true
             }
         });
-        log(result);
+        const limit = result.headers['x-amzn-ratelimit-limit'];
+        result = JSON.parse(result.body).payload;
         orderList.push(result.Orders);
 
         while('NextToken' in result){
             if(result.NextToken !== ''){
                 log('Has NextToken');
+                log(`[/orders/v0/orders] Wait ${(1 / Number(limit)) * 1000} ms...`);
+                const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                await _sleep((1 / Number(limit)) * 1000);
+
                 let nextResult = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
                     method: 'GET',
@@ -224,6 +230,7 @@ async function dataUpdate(user, config) {
 
                     let rate = result2.headers['x-amzn-ratelimit-limit'];
                     rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
+                    log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
                     const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     await _sleep((1 / Number(rate)) * 1000);
                 }
