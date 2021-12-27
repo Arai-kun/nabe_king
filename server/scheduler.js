@@ -82,6 +82,7 @@ async function dataUpdate(user, config) {
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
         },
         options: {
+            auto_request_tokens: true,
             auto_request_throttled: false  // Catch rate restrict
         }
     });
