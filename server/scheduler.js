@@ -123,9 +123,9 @@ async function dataUpdate(user, config) {
             }
         });
         const limit = result.headers['x-amzn-ratelimit-limit'];
-        //result = JSON.parse(result.body).payload;
+        result = parse(result.body);
         //console.log(result);
-        for(let order of (JSON.parse(result.body)).payload.Orders){
+        for(let order of result.payload.Orders){
             orderList.push(order);
         }
 
@@ -391,6 +391,9 @@ function getSendTarget(data, config){
     }
 }
 
+function parse(data){
+    return JSON.parse(data);
+}
 function log(str) {
     console.log(str);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
