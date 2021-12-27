@@ -66,7 +66,7 @@ async function main() {
             for(let user of users){
                 let config = await Config.findOne({email: user.email}).exec();
                 await dataUpdate(user, config);
-                await sendEmail(user, config);
+                //await sendEmail(user, config);
             }
         }
         catch(error){
