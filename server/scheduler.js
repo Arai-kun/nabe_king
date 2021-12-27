@@ -225,7 +225,7 @@ async function dataUpdate(user, config) {
                         condition: result3.ConditionId,
                         subCondition: result3.ConditionSubtypeId,
                         fullfillment: order.FulfillmentChannel
-                    }. config);
+                    }, config);
 
                     /* When it is already something like Shipped for some reason, unSend will be true */
                     let unSend = false;
