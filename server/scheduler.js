@@ -250,8 +250,8 @@ async function dataUpdate(user, config) {
                         subCondition: result3.ConditionSubtypeId,
                         fullfillment: order.FulfillmentChannel
                     });
-                    log('[result2]: ' + result2);
-                    log('[result3]: ' + result3);
+                    console.log('[result2]: ' + result2);
+                    console.log('[result3]: ' + result3);
                     let rate = result2.headers['x-amzn-ratelimit-limit'];
                     rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
                     log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
