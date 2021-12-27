@@ -219,6 +219,7 @@ async function dataUpdate(user, config) {
                         console.log('API failed: orderItems');
                         throw (order.AmazonOrderId + ' ' + result3.body);
                     }
+                    let rate = result3.headers['x-amzn-ratelimit-limit'];
                     result3 = JSON.parse(result3.body).payload.OrderItems[0];
 
                     let sendTarget = getSendTarget({
@@ -250,10 +251,7 @@ async function dataUpdate(user, config) {
                         subCondition: result3.ConditionSubtypeId,
                         fullfillment: order.FulfillmentChannel
                     });
-                    console.log(result2);
-                    console.log(result3);
-                    let rate = result2.headers['x-amzn-ratelimit-limit'];
-                    rate = rate < result3.headers['x-amzn-ratelimit-limit'] ? rate : result3.headers['x-amzn-ratelimit-limit'];
+                    rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
                     log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
                     const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     await _sleep((1 / Number(rate)) * 1000);
