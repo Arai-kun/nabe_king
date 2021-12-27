@@ -4,7 +4,7 @@ let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
 const { exit } = require('process');
 let handlebars = require('handlebars');
-//const schedule = require('node-schedule'); 
+const schedule = require('node-schedule'); 
 
 const filepath = './log.txt';
 const SELLING_PARTNER_APP_CLIENT_ID = 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449';
@@ -57,9 +57,9 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    //const job = schedule.scheduleJob('* */15 * * * * ', function(){
-    //    sendEmailJob();
-    //});
+    const job = schedule.scheduleJob('* */15 * * * * ', function(){
+        sendEmailJob();
+    });
 
     while(1){
 
@@ -123,9 +123,9 @@ async function dataUpdate(user, config) {
             }
         });
         const limit = result.headers['x-amzn-ratelimit-limit'];
-        result = JSON.parse(result.body).payload;
-        console.log(result);
-        for(let order of result.Orders){
+        //result = JSON.parse(result.body).payload;
+        //console.log(result);
+        for(let order of (JSON.parse(result.body)).payload.Orders){
             orderList.push(order);
         }
 
