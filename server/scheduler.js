@@ -105,6 +105,7 @@ async function dataUpdate(user, config) {
                 MarketplaceIds: MACKETPLACEID
             }
         });
+        log(result);
         orderList.push(result.Orders);
 
         while('NextToken' in result){
@@ -119,6 +120,7 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
+                log(nextResult);
                 orderList.push(nextResult.Orders);
             }
             else{
