@@ -43,7 +43,6 @@ let User = require('./models/user');
 let Config = require('./models/config');
 let Data = require('./models/data');
 let Mail = require('./models/mail');
-let mailDesign = require('./models/mailDesign');
 
 main();
 
@@ -59,39 +58,13 @@ async function main() {
             let users = await User.find({}).exec();
             for(let user of users){
                 let config = await Config.findOne({email: user.email}).exec();
-                //await dataUpdate(user, config);
-                await Data.updateOne({email: user.email}, {
-                    $set: {
-                        data_arr:[
-                            {
-                                orderId: '250-8518387-7582213',
-                                isSent: true
-                            }
-                        ]
-                    }
-                }).exec();
+                await dataUpdate(user, config);
+                await sendEmail(user, config);
             }
         }
         catch(error){
             log(error);
         }
-
-        /*
-        User.find({}, (error, users) => {
-            if(error){
-                log(error);
-                return;
-            }
-            for(let user of users){
-                Config.findOne({email: user.email}, async (error, config) => {
-                    if(error){
-                        log(error);
-                        return;
-                    }
-                    await dataUpdate(user);
-                });
-            }
-        });*/
     }
 }
 
@@ -299,7 +272,7 @@ async function sendEmail(user, config){
     }
     else{
         try{
-            const data = await Data.findOne({email: user.email}).exec();
+            let data = await Data.findOne({email: user.email}).exec();
             const sendList = data.data_arr.find(d => 
                 d.isSent === false && 
                 d.unSend === false && 
@@ -329,10 +302,13 @@ async function sendEmail(user, config){
                         subject: subject,
                         html: html
                     });
-
+                    const index = data.data_arr.findIndex(d => d.orderId === sendData.orderId);
+                    data.data_arr[index].isSent = true;
                     log('Success send email to ' + sendData.buyerEmail);
                 }
             }
+            await Data.updateOne({email: user.email}, data).exec();
+            log('Reflect send status');
         }
         catch(error){
             log(error);
@@ -360,36 +336,6 @@ function getSendTarget(data, config){
         return false;
     }
 }
-
-async function getOrder(sellingPartner){
-    let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    /**
-     * How dulation is decided?
-     * For test, set 1 month.
-     * Considering to dulation of Config, it will be 2 month  
-     */
-
-    date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    let result = await sellingPartner.callAPI({
-        api_path: '/orders/v0/orders',
-        method: 'GET',
-        query: {
-            CreatedAfter: date.toISOString(),
-            MarketplaceIds: MACKETPLACEID
-        }
-    });
-    return result;
-}
-
-async function getBuyerInfo(sellingPartner, id){
-    let result = await sellingPartner.callAPI({
-        api_path: `/orders/v0/orders/${id}/buyerInfo`,
-        method: 'GET',
-    });
-    return result;
-}
-
-
 
 function log(str) {
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
