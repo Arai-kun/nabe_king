@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 const sendgrid = require('@sendgrid/mail');
 let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
-const { exit, send } = require('process');
+const { exit } = require('process');
 let handlebars = require('handlebars');
 const schedule = require('node-schedule'); 
 
@@ -50,7 +50,9 @@ main();
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('* */15 * * * * ', sendEmailJob());
+    const job = schedule.scheduleJob('* */15 * * * * ', function(){
+        sendEmailJob();
+    });
 
     while(1){
 
