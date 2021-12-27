@@ -11,7 +11,10 @@ let mongoose = require("mongoose"),
         itemName: String,
         isSent: Boolean,
         unSend: Boolean,
-        sendTarget: Boolean
+        sendTarget: Boolean,
+        condition: String,
+        subCondition: String,
+        fullfillment: String
     }]
 
   });

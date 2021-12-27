@@ -57,8 +57,12 @@ async function main() {
         try{
             let users = await User.find({}).exec();
             for(let user of users){
+                //await dataUpdate(user);
+                let res = await Data.findOne({email: user.email, data_arr:[{orderId: '250-8518387-7582213'}]});
+                console.log(res);
                 let config = await Config.findOne({email: user.email}).exec();
-                await dataUpdate(user);
+                await configSet(config);
+
             }
         }
         catch(error){
@@ -141,7 +145,7 @@ async function dataUpdate(user) {
                 break;
             }
         }
-        console.log(`Get number of data: ${orderList.length}`);
+        console.log(`Get number of all data: ${orderList.length}`);
 
         let newDataList = [];
         for(let order of orderList){
@@ -159,7 +163,10 @@ async function dataUpdate(user) {
                     itemName: findData.itemName,
                     isSent: findData.isSent,
                     unSend: findData.unSend,
-                    sendTarget: findData.sendTarget
+                    sendTarget: findData.sendTarget,
+                    condition: findData.condition,
+                    subCondition: findData.subCondition,
+                    fullfillment: findData.fullfillment
                 });
                 
             }
@@ -196,8 +203,7 @@ async function dataUpdate(user) {
                         console.log('API failed: orderItems');
                         throw (order.AmazonOrderId + ' ' + result3.body);
                     }
-                    const itemName = JSON.parse(result3.body).payload.OrderItems[0].Title;
-                    console.log(itemName);
+                    result3 = JSON.parse(result3.body).payload.OrderItems[0];
 
                     newDataList.push({
                         orderId: order.AmazonOrderId,
@@ -205,11 +211,14 @@ async function dataUpdate(user) {
                         orderStatus: order.OrderStatus,
                         shippedDate: null,
                         buyerEmail: buyerEmail,
-                        buyerName: '',
-                        itemName: itemName,
+                        buyerName: 'ご購入者', // Cannot get buyerName because of PII in Amazon
+                        itemName: result3.Title,
                         isSent: false,
                         unSend: false,
-                        sendTarget: false
+                        sendTarget: false,
+                        condition: result3.ConditionId,
+                        subCondition: result3.ConditionSubtypeId,
+                        fullfillment: order.FulfillmentChannel
                     });
 
                     let rate = result2.headers['x-amzn-ratelimit-limit'];
@@ -224,7 +233,6 @@ async function dataUpdate(user) {
 
             /* Save to DB */
             await Data.findOneAndUpdate({email: user.email}, {
-                email: user.email,
                 data_arr: newDataList
             },{
                 overwrite: true,
@@ -257,6 +265,10 @@ async function dataUpdate(user) {
     catch(error){
         log(error);
     }
+}
+
+async function configSet(config){
+
 }
 
 async function getOrder(sellingPartner){
