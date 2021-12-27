@@ -109,8 +109,8 @@ async function dataUpdate(user, config) {
 
         while('NextToken' in result){
             if(result.NextToken !== ''){
-                console.log('Has NextToken');
-                result = await sellingPartner.callAPI({
+                log('Has NextToken');
+                let nextResult = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
                     method: 'GET',
                     query: {
@@ -119,13 +119,13 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
-                orderList.push(result.Orders);
+                orderList.push(nextResult.Orders);
             }
             else{
                 break;
             }
         }
-        console.log(`Get number of all data: ${orderList.length}`);
+        log(`Get number of all data: ${orderList.length}`);
 
         let newDataList = [];
         for(let order of orderList){
@@ -231,13 +231,15 @@ async function dataUpdate(user, config) {
             }
 
             /* Save to DB */
+            /*
             await Data.findOneAndUpdate({email: user.email}, {
                 data_arr: newDataList
             },{
                 overwrite: true,
                 upsert: true
-            }).exec();
-            log('Exit dataUpdate()');
+            }).exec();*/
+            log(newDataList);
+            log('Save update data');
         }
 
         //console.log(orderList);
@@ -264,9 +266,11 @@ async function dataUpdate(user, config) {
     catch(error){
         log(error);
     }
+    log('Exit dataUpdate()');
 }
 
 async function sendEmail(user, config){
+    log('Enter in sendEmail()');
     if(!config.status){
         return;
     }
@@ -314,6 +318,7 @@ async function sendEmail(user, config){
             log(error);
         }
     }
+    log('Exit sendEmail()');
 }
 
 function getSendTarget(data, config){
@@ -338,6 +343,7 @@ function getSendTarget(data, config){
 }
 
 function log(str) {
+    console.log(str);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     fs.appendFile(filepath, now +': '+ str + '\n', error => {
         if(error){
