@@ -39,6 +39,13 @@ authRouter.post('/exchange', function(req, res, next){
    */
   User.findOne({seller_partner_id: req.body['id']}, (error, user) => {
     if(error) next(error);
+
+
+    
+    user = null;  // For test
+    
+    
+    
     if(user){
       /* Already exist */
       User.deleteOne({email: req.user['email']}, error => {

@@ -82,7 +82,6 @@ async function dataUpdate(user, config) {
             AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
         },
         options: {
-            auto_request_tokens: true,
             auto_request_throttled: false  // Catch rate restrict
         }
     });
@@ -141,7 +140,10 @@ async function dataUpdate(user, config) {
         let newDataList = [];
         for(let order of orderList){
             let data = await Data.findOne({email: user.email}).exec();
-            let findData = data.data_arr.find(d => d.orderId === order.orderId);
+            let findData = undefined;
+            if(data.data_arr !== null){
+                findData = data.data_arr.find(d => d.orderId === order.orderId);
+            }
             if(findData !== undefined){
                 /* Update the data */
                 let sendTarget = getSendTarget(findData, config);

@@ -66,42 +66,31 @@ dbRouter.get('/init', function(req, res, next){
         acceptable: false
     }, error => {
         if(error) next(error);
-        // テスト用 -> 実際はここでデータを取らない
-        User.findOne({email: req.user['email']}, (error, user) => {
+        Data.create({
+            email: mail,
+            data_arr: null
+        }, error => {
             if(error) next(error);
-            getOrders(user.access_token, user.refresh_token)
-            .then(() => {
-                Data.create({
+            Mail.findOne({email: 'metadata'}, (error, initMail) => {
+                if(error) next(error);
+                Mail.create({
                     email: mail,
-                    data_arr: data_arr
+                    html: initMail['html'],
+                    subject: initMail['subject']
                 }, error => {
                     if(error) next(error);
-                    Mail.findOne({email: 'metadata'}, (error, initMail) => {
+                    MailDesign.findOne({email: 'metadata'}, (error, initMailDesign) => {
                         if(error) next(error);
-                        Mail.create({
+                        MailDesign.create({
                             email: mail,
-                            html: initMail['html'],
-                            subject: initMail['subject']
+                            design: initMailDesign['design']
                         }, error => {
                             if(error) next(error);
-                            MailDesign.findOne({email: 'metadata'}, (error, initMailDesign) => {
-                                if(error) next(error);
-                                MailDesign.create({
-                                    email: mail,
-                                    design: initMailDesign['design']
-                                }, error => {
-                                    if(error) next(error);
-                                    res.json({result: 'success'});
-                                });
-                            });
+                            res.json({result: 'success'});
                         });
                     });
                 });
-            })
-            .catch(error =>{
-                console.log(error);
-                next(error);
-            })
+            });
         });
     });
 });
