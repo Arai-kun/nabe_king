@@ -86,7 +86,7 @@ async function dataUpdate(user, config) {
     log('Enter in dataUpdate()');
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
-        access_token: user.access_token,
+        //access_token: user.access_token,
         refresh_token: user.refresh_token,
         credentials: {
             SELLING_PARTNER_APP_CLIENT_ID: SELLING_PARTNER_APP_CLIENT_ID,
