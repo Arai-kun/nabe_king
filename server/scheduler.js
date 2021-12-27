@@ -58,7 +58,7 @@ async function main() {
             let users = await User.find({}).exec();
             for(let user of users){
                 //await dataUpdate(user);
-                let res = await Data.findOne({email: user.email, data_arr:[{orderId: '250-8518387-7582213'}]});
+                let res = await Data.findOne({email: user.email, data_arr:{orderId: '250-8518387-7582213'}});
                 console.log(res);
                 let config = await Config.findOne({email: user.email}).exec();
                 await configSet(config);
