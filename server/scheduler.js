@@ -119,7 +119,7 @@ async function dataUpdate(user, config) {
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 await _sleep((1 / Number(limit)) * 1000);
 
-                let nextResult = await sellingPartner.callAPI({
+                result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
                     method: 'GET',
                     query: {
@@ -128,7 +128,7 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
-                orderList.push(nextResult.Orders);
+                orderList.push(result.Orders);
             }
             else{
                 break;
