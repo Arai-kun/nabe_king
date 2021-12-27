@@ -47,6 +47,13 @@ let Mail = require('./models/mail');
 
 main();
 
+process.on('SIGINT', function () { 
+    schedule.gracefulShutdown().then(() => {
+        console.log('Exit');
+        process.exit(0);
+    })
+});
+
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
