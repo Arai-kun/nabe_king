@@ -3,6 +3,7 @@ const sendgrid = require('@sendgrid/mail');
 let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
 const { exit } = require('process');
+let handlebars = require('handlebars');
 
 const filepath = './log.txt';
 const SELLING_PARTNER_APP_CLIENT_ID = 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449';
@@ -57,12 +58,18 @@ async function main() {
         try{
             let users = await User.find({}).exec();
             for(let user of users){
-                //await dataUpdate(user);
-                let res = await Data.findOne({email: user.email, data_arr:{orderId: '250-8518387-7582213'}});
-                console.log(res);
                 let config = await Config.findOne({email: user.email}).exec();
-                await configSet(config);
-
+                //await dataUpdate(user, config);
+                await Data.updateOne({email: user.email}, {
+                    $set: {
+                        data_arr:[
+                            {
+                                orderId: '250-8518387-7582213',
+                                isSent: true
+                            }
+                        ]
+                    }
+                }).exec();
             }
         }
         catch(error){
@@ -88,7 +95,7 @@ async function main() {
     }
 }
 
-async function dataUpdate(user) {
+async function dataUpdate(user, config) {
     log('Enter in dataUpdate()');
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
@@ -152,7 +159,12 @@ async function dataUpdate(user) {
             let data = await Data.findOne({email: user.email}).exec();
             let findData = data.data_arr.find(d => d.orderId === order.orderId);
             if(findData !== undefined){
-                /* Need update the data */
+                /* Update the data */
+                let sendTarget = getSendTarget(findData, config);
+                if(findData.shippedDate === null && (order.orderStatus === 'Shipped' || order.orderStatus === 'InvoiceUnconfirmed')){
+                    findData.shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+                }
+
                 newDataList.push({
                     orderId: findData.AmazonOrderId,
                     purchaseDate: findData.purchaseDate,
@@ -163,12 +175,12 @@ async function dataUpdate(user) {
                     itemName: findData.itemName,
                     isSent: findData.isSent,
                     unSend: findData.unSend,
-                    sendTarget: findData.sendTarget,
+                    sendTarget: sendTarget,
                     condition: findData.condition,
                     subCondition: findData.subCondition,
                     fullfillment: findData.fullfillment
                 });
-                
+
             }
             else{
                 /* New data */
@@ -205,17 +217,31 @@ async function dataUpdate(user) {
                     }
                     result3 = JSON.parse(result3.body).payload.OrderItems[0];
 
+                    let sendTarget = getSendTarget({
+                        condition: result3.ConditionId,
+                        subCondition: result3.ConditionSubtypeId,
+                        fullfillment: order.FulfillmentChannel
+                    }. config);
+
+                    /* When it is already something like Shipped for some reason, unSend will be true */
+                    let unSend = false;
+                    let shippedDate = null;
+                    if(order.orderStatus === 'Shipped' || order.orderStatus === 'InvoiceUnconfirmed'){
+                        shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+                        unSend = true;
+                    }
+
                     newDataList.push({
                         orderId: order.AmazonOrderId,
                         purchaseDate: new Date(order.PurchaseDate),
                         orderStatus: order.OrderStatus,
-                        shippedDate: null,
+                        shippedDate: shippedDate,
                         buyerEmail: buyerEmail,
                         buyerName: 'ご購入者', // Cannot get buyerName because of PII in Amazon
                         itemName: result3.Title,
                         isSent: false,
-                        unSend: false,
-                        sendTarget: false,
+                        unSend: unSend,
+                        sendTarget: sendTarget,
                         condition: result3.ConditionId,
                         subCondition: result3.ConditionSubtypeId,
                         fullfillment: order.FulfillmentChannel
@@ -267,8 +293,72 @@ async function dataUpdate(user) {
     }
 }
 
-async function configSet(config){
+async function sendEmail(user, config){
+    if(!config.status){
+        return;
+    }
+    else{
+        try{
+            const data = await Data.findOne({email: user.email}).exec();
+            const sendList = data.data_arr.find(d => 
+                d.isSent === false && 
+                d.unSend === false && 
+                d.sendTarget === true &&
+                d.shippedDate !== null &&
+                (d.orderStatus === 'Shipped' || d.orderStatus === 'InvoiceUnconfirmed'));
+            log('SendList: ' + sendList);
+            for(sendData of sendList){            
+                const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
+                const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
+                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - 1)}<${new Date(time)}<=${new Date(now)}`);
+                if(now - 1 < time && time <= now){
+                    let result = await Mail.findOne({email: user.email}).exec();
+                    const mailValue = {
+                        name: sendData.buyerName,
+                        orderId: sendData.orderId,
+                        itemName: sendData.itemName
+                    }
+                    let templete = handlebars.compile(result.html);
+                    let html = templete(mailValue);
+                    let templeteSub = handlebars.compile(result.subject);
+                    let subject = templeteSub(mailValue);
+                    await sendgrid.send({
+                        //to: sendData.buyerEmail,
+                        to: 'koki.alright@gmail.com',
+                        from: 'noreply@enginestarter.nl',
+                        subject: subject,
+                        html: html
+                    });
 
+                    log('Success send email to ' + sendData.buyerEmail);
+                }
+            }
+        }
+        catch(error){
+            log(error);
+        }
+    }
+}
+
+function getSendTarget(data, config){
+    if(
+        (data.fullfillment === 'AFN' && config.fba === true) ||
+        (data.fullfillment === 'MFN' && config.mba === true) ||
+        (data.condition === 'New' && config.new === true) ||
+        (data.condition === 'Used' && 
+            (
+                (data.subCondition === 'Mint' && config.mint === true) ||
+                (data.subCondition === 'Very Good' && config.verygood === true) ||
+                (data.subCondition === 'Good' && config.good === true) ||
+                (data.subCondition === 'Acceptable' && config.acceptable === true)
+            )
+        )
+    ){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 async function getOrder(sellingPartner){
