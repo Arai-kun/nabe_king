@@ -49,7 +49,7 @@ main();
 
 process.on('SIGINT', function () { 
     schedule.gracefulShutdown().then(() => {
-        console.log('Exit');
+        console.log('\nExit');
         process.exit(0);
     })
 });
@@ -57,9 +57,9 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('* */15 * * * * ', function(){
-        sendEmailJob();
-    });
+    //const job = schedule.scheduleJob('* */15 * * * * ', function(){
+    //    sendEmailJob();
+    //});
 
     while(1){
 
