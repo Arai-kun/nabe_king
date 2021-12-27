@@ -106,6 +106,7 @@ async function dataUpdate(user, config) {
                 raw_result: true
             }
         });
+        console.log(result);
         const limit = result.headers['x-amzn-ratelimit-limit'];
         result = JSON.parse(result.body).payload;
         orderList.push(result.Orders);
