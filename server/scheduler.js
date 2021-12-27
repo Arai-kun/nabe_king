@@ -2,8 +2,9 @@ let mongoose = require('mongoose');
 const sendgrid = require('@sendgrid/mail');
 let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
-const { exit } = require('process');
+const { exit, send } = require('process');
 let handlebars = require('handlebars');
+const schedule = require('node-schedule'); 
 
 const filepath = './log.txt';
 const SELLING_PARTNER_APP_CLIENT_ID = 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449';
@@ -47,12 +48,16 @@ let Mail = require('./models/mail');
 main();
 
 async function main() {
+
+    /* Enable job for send email per 15 min as another thread */
+    const job = schedule.scheduleJob('*/15 * * * * ', sendEmailJob());
+
     while(1){
 
-        /* Set interval as scheduler */
+        /* Set interval 60s for amz rate restrict */
         const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         await _sleep(10000);
-        log('Active main()');
+        log('Active while');
 
         try{
             let users = await User.find({}).exec();
@@ -110,7 +115,9 @@ async function dataUpdate(user, config) {
         });
         const limit = result.headers['x-amzn-ratelimit-limit'];
         result = JSON.parse(result.body).payload;
-        orderList.push(result.Orders);
+        for(let order of result.Orders){
+            orderList.push(order);
+        }
 
         while('NextToken' in result){
             if(result.NextToken !== ''){
@@ -128,7 +135,9 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
-                orderList.push(result.Orders);
+                for(let order of result.Orders){
+                    orderList.push(order);
+                }
             }
             else{
                 break;
@@ -290,6 +299,9 @@ async function sendEmail(user, config){
     else{
         try{
             let data = await Data.findOne({email: user.email}).exec();
+            if(data.data_arr === null){
+                return;
+            }
             const sendList = data.data_arr.find(d => 
                 d.isSent === false && 
                 d.unSend === false && 
@@ -297,7 +309,7 @@ async function sendEmail(user, config){
                 d.shippedDate !== null &&
                 (d.orderStatus === 'Shipped' || d.orderStatus === 'InvoiceUnconfirmed'));
             log('SendList: ' + sendList);
-            for(sendData of sendList){            
+            for(let sendData of sendList){            
                 const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
                 const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
                 log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - 1)}<${new Date(time)}<=${new Date(now)}`);
@@ -332,6 +344,20 @@ async function sendEmail(user, config){
         }
     }
     log('Exit sendEmail()');
+}
+
+async function sendEmailJob(){
+    log('Active sendEMailJob()');
+    try{
+        let users = await User.find({}).exec();
+        for(let user of users){
+            let config = await Config.findOne({email: user.email}).exec();
+            await sendEmail(user, config);
+        }
+    }
+    catch(error){
+        log(error);
+    }
 }
 
 function getSendTarget(data, config){
