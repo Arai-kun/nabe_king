@@ -57,8 +57,8 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('* /15 * * * * ', async function(){
-        await sendEmailJob();
+    const job = schedule.scheduleJob('*/15 * * * *', function(){
+        sendEmailJob();
     });
 
     while(1){
@@ -248,6 +248,8 @@ async function dataUpdate(user, config) {
                         shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
                         unSend = true;
                     }
+
+                    console.log(result3);
 
                     newDataList.push({
                         orderId: order.AmazonOrderId,
