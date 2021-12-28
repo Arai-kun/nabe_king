@@ -57,8 +57,8 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('* */15 * * * * ', function(){
-        sendEmailJob();
+    const job = schedule.scheduleJob('* */15 * * * * ', async function(){
+        await sendEmailJob();
     });
 
     while(1){
@@ -100,6 +100,7 @@ async function dataUpdate(user, config) {
         }
     });
 
+    const startTime = Date.now();
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     
     /**
@@ -136,6 +137,10 @@ async function dataUpdate(user, config) {
                 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 await _sleep((1 / Number(limit)) * 1000);
 
+                /* Refresh credential role if spent 1 hour */
+                if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                    await sellingPartner.refreshRoleCredentials();
+                }
                 result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
                     method: 'GET',
@@ -190,6 +195,10 @@ async function dataUpdate(user, config) {
                 /* New data */
                 try{
                     /* Get buyer email */
+                    /* Refresh credential role if spent 1 hour */
+                    if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                        await sellingPartner.refreshRoleCredentials();
+                    }
                     let result2 = await sellingPartner.callAPI({
                         api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
                         method: 'GET',
@@ -208,6 +217,10 @@ async function dataUpdate(user, config) {
                     console.log(buyerEmail);
 
                     /* Get item name */
+                    /* Refresh credential role if spent 1 hour */
+                    if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                        await sellingPartner.refreshRoleCredentials();
+                    }
                     let result3 = await sellingPartner.callAPI({
                         api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
                         method: 'GET',
