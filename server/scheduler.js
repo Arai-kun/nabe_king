@@ -100,7 +100,7 @@ async function dataUpdate(user, config) {
         }
     });
 
-    const startTime = Date.now();
+    let startTime = Date.now();
     let date = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     
     /**
@@ -139,7 +139,10 @@ async function dataUpdate(user, config) {
 
                 /* Refresh credential role if spent 1 hour */
                 if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                    await sellingPartner.refreshAccessToken();
                     await sellingPartner.refreshRoleCredentials();
+                    log('Refresh token and credential role');
+                    startTime = Date.now();
                 }
                 result = await sellingPartner.callAPI({
                     api_path: '/orders/v0/orders',
@@ -197,7 +200,10 @@ async function dataUpdate(user, config) {
                     /* Get buyer email */
                     /* Refresh credential role if spent 1 hour */
                     if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                        await sellingPartner.refreshAccessToken();
                         await sellingPartner.refreshRoleCredentials();
+                        log('Refresh token and credential role');
+                        startTime = Date.now();
                     }
                     let result2 = await sellingPartner.callAPI({
                         api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
@@ -219,7 +225,10 @@ async function dataUpdate(user, config) {
                     /* Get item name */
                     /* Refresh credential role if spent 1 hour */
                     if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                        await sellingPartner.refreshAccessToken();
                         await sellingPartner.refreshRoleCredentials();
+                        log('Refresh token and credential role');
+                        startTime = Date.now();
                     }
                     let result3 = await sellingPartner.callAPI({
                         api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
@@ -250,6 +259,14 @@ async function dataUpdate(user, config) {
                     }
 
                     console.log(result3);
+                    let conditionId = '';
+                    let conditionSubId = '';
+                    if('ConditionId' in result3){
+                        conditionId = result3.ConditionId;
+                    }
+                    if('ConditionSubtypeId' in result3){
+                        conditionSubId = result3.ConditionSubtypeId;
+                    }
 
                     newDataList.push({
                         orderId: order.AmazonOrderId,
@@ -262,8 +279,8 @@ async function dataUpdate(user, config) {
                         isSent: false,
                         unSend: unSend,
                         sendTarget: sendTarget,
-                        condition: result3.ConditionId,
-                        subCondition: result3.ConditionSubtypeId,
+                        condition: conditionId,
+                        subCondition: conditionSubId,
                         fullfillment: order.FulfillmentChannel
                     });
                     rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
