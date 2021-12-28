@@ -57,7 +57,7 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('* */15 * * * * ', async function(){
+    const job = schedule.scheduleJob('* /15 * * * * ', async function(){
         await sendEmailJob();
     });
 
