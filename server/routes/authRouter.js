@@ -5,6 +5,7 @@ let request = require('request');
 let User = require('../models/user');
 let crypto = require('crypto');
 const sendgrid = require('@sendgrid/mail');
+require('dotenv').config();
 
 let tokens = { access_token: "", refresh_token: "" };
 
@@ -42,7 +43,7 @@ authRouter.post('/exchange', function(req, res, next){
 
 
     
-    user = null;  // For test
+    user = null;  // For test for dupulicating same account
     
     
     
@@ -108,7 +109,7 @@ authRouter.post('/reset', function(req, res, next){
 async function sendMail(to, subject, html) {
   await sendgrid.send({
     to: to,
-    from: 'noreply@enginestarter.nl',
+    from: process.env.EMAILFROM,
     subject: subject,
     html: html
   });

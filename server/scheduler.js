@@ -5,14 +5,7 @@ let SellingPartnerAPI = require('amazon-sp-api');
 const { exit } = require('process');
 let handlebars = require('handlebars');
 const schedule = require('node-schedule'); 
-
-const filepath = './log.txt';
-const SELLING_PARTNER_APP_CLIENT_ID = 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449';
-const SELLING_PARTNER_APP_CLIENT_SECRET = '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a';
-const AWS_ACCESS_KEY_ID = 'AKIAWECJIQCPBTLTQXVD';
-const AWS_SECRET_ACCESS_KEY = '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';
-const AWS_SELLING_PARTNER_ROLE = 'arn:aws:iam::421060444318:role/Role-SP-API';
-const MACKETPLACEID = 'A1VC38T7YXB528'  // Japan
+require('dotenv').config();
 
 console.log('Start the scheduler program');
 
@@ -21,7 +14,7 @@ mongoose.connect(
     {
         useNewUrlParser: true,
         user: "admin",
-        pass: "Bach01070202"
+        pass: process.env.DB_ADMINPW
     }
 );
 
@@ -30,10 +23,10 @@ db.once("open", () => {
   console.log("Successfully connected to MongoDB using Mongoose!");
 });
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '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');
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* Reset every time for saving storage */
-fs.writeFile(filepath, '', error => {
+fs.writeFile(process.env.LOGFILE_PATH, '', error => {
     if(error){
         console.log('Write file failed. Abort');
         exit(1);
@@ -89,11 +82,11 @@ async function dataUpdate(user, config) {
         //access_token: user.access_token,
         refresh_token: user.refresh_token,
         credentials: {
-            SELLING_PARTNER_APP_CLIENT_ID: SELLING_PARTNER_APP_CLIENT_ID,
-            SELLING_PARTNER_APP_CLIENT_SECRET: SELLING_PARTNER_APP_CLIENT_SECRET,
-            AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
-            AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY,
-            AWS_SELLING_PARTNER_ROLE: AWS_SELLING_PARTNER_ROLE
+            SELLING_PARTNER_APP_CLIENT_ID: process.env.SELLING_PARTNER_APP_CLIENT_ID,
+            SELLING_PARTNER_APP_CLIENT_SECRET: process.env.SELLING_PARTNER_APP_CLIENT_SECRET,
+            AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+            AWS_SELLING_PARTNER_ROLE: process.env.AWS_SELLING_PARTNER_ROLE
         },
         options: {
             auto_request_throttled: false  // Catch rate restrict
@@ -117,7 +110,7 @@ async function dataUpdate(user, config) {
             method: 'GET',
             query: {
                 CreatedAfter: date.toISOString(),
-                MarketplaceIds: MACKETPLACEID,
+                MarketplaceIds: process.env.MACKETPLACEID,
             },
             options: {
                 raw_result: true
@@ -149,7 +142,7 @@ async function dataUpdate(user, config) {
                     method: 'GET',
                     query: {
                         CreatedAfter: date.toISOString(),
-                        MarketplaceIds: MACKETPLACEID,
+                        MarketplaceIds: process.env.MACKETPLACEID,
                         NextToken: result.NextToken
                     }
                 });
@@ -346,7 +339,7 @@ async function sendEmail(user, config){
                     await sendgrid.send({
                         //to: sendData.buyerEmail,
                         to: 'koki.alright@gmail.com',
-                        from: 'noreply@enginestarter.nl',
+                        from: process.env.EMAILFROM,
                         subject: subject,
                         html: html
                     });

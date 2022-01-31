@@ -2,12 +2,13 @@ let express = require('express');
 let mailRouter = express.Router();
 const sendgrid = require('@sendgrid/mail');
 let handlebars = require('handlebars');
+require('dotenv').config();
 
 mailRouter.post('/send', function(req, res, next){
   const testValue = {
-    name: '鈴木太郎',
-    orderId: 'ABCDE012345',
-    itemName: 'バナナ'
+    name: '北海太郎',
+    orderId: 'ABCDEF123456',
+    itemName: 'スルメイカ2杯'
   }
   let templete = handlebars.compile(req.body['html']);
   let html = templete(testValue);
@@ -24,7 +25,7 @@ mailRouter.post('/send', function(req, res, next){
 async function sendMail(to, subject, html) {
     await sendgrid.send({
       to: to,
-      from: 'noreply@enginestarter.nl',
+      from: process.env.EMAILFROM,
       subject: subject,
       html: html
     });

@@ -6,29 +6,30 @@ let logger = require('morgan');
 let mongoose = require('mongoose');
 let cloudinary = require('cloudinary').v2;
 const sendgrid = require('@sendgrid/mail');
+require('dotenv').config();
 
 mongoose.connect(
     "mongodb://localhost:27017/nabe_king?authSource=admin",
     {
         useNewUrlParser: true,
         user: "admin",
-        pass: "Bach01070202"
+        pass: process.env.DB_ADMINPW
     }
 );
 
 let db = mongoose.connection;
 db.once("open", () => {
-  console.log("Successfully connected to MongoDB using Mongoose!");
+  console.log("Successfully connected to MongoDB using Mongoose");
 });
 
 cloudinary.config({ 
-  cloud_name: 'du1gt2vtq', 
-  api_key: '453981237853244', 
-  api_secret: 'YrpNlSJPjbHajBsQSUL4AcYNtVY',
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.CLOUD_API_KEY, 
+  api_secret: process.env.CLOUD_API_SECRET,
   secure: true
 });
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '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');
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -51,7 +52,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-    secret: 'nabe_king',      // クッキーの暗号化に使用するキー
+    secret: process.env.SESSION_SECRET,      // クッキーの暗号化に使用するキー
     resave: false,             // セッションチェックする領域にリクエストするたびにセッションを作り直してしまうので false
     saveUninitialized: false,  // 未認証時のセッションを保存しないようにする
     cookie: {
@@ -88,7 +89,7 @@ passport.use('local', new LocalStrategy({
         auth: true,
         email: user.email
       };
-      return done(null, authUser);　//この第二引数がsessionに保存される
+      return done(null, authUser); //この第二引数がsessionに保存される
     });
 }));
   
