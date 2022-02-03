@@ -9,7 +9,7 @@ const sendgrid = require('@sendgrid/mail');
 require('dotenv').config();
 
 mongoose.connect(
-    "mongodb://localhost:27017/nabe_king?authSource=admin",
+    "mongodb://localhost:27017/rakucomeDb?authSource=admin",
     {
         useNewUrlParser: true,
         user: "admin",
