@@ -396,7 +396,7 @@ function getSendTarget(data, config){
 function log(str) {
     console.log(str);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    fs.appendFile(filepath, now +': '+ str + '\n', error => {
+    fs.appendFile(process.env.LOGFILE_PATH, now +': '+ str + '\n', error => {
         if(error){
             console.log('Append file failed. Abort');
             exit(1);
