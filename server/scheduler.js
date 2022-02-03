@@ -10,7 +10,7 @@ require('dotenv').config();
 console.log('Start the scheduler program');
 
 mongoose.connect(
-    "mongodb://localhost:27017/nabe_king?authSource=admin",
+    "mongodb://localhost:27017/rakucomeDb?authSource=admin",
     {
         useNewUrlParser: true,
         user: "admin",
