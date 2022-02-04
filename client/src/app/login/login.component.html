@@ -1,15 +1,11 @@
-<mat-toolbar color="primary" class="app-header">
-    <span>アプリケーション</span>
-    <span class="nav-tool-items" fxLayout="row" fxFlexOffset="auto" fxLayoutGap="10px">
-      <a mat-button routerLink="/login" routerLinkActive="active">ログイン</a>
-      <a mat-button mat-raised-button routerLink="/register" routerLinkActive="active">登録</a>
-    </span>
-</mat-toolbar>
 <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
-
     <mat-card class="box">
+      <p class="img_logo">
+        <img src="https://img.icons8.com/fluency/96/000000/starfish.png"/>
+      </p>
       <mat-card-header>
-        <mat-card-title>ログイン</mat-card-title>
+        <mat-card-title>楽コメ</mat-card-title>
+        <mat-card-subtitle>～RakuComeRakuCome～</mat-card-subtitle>
       </mat-card-header>
   
       <form class="example-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
@@ -28,7 +24,10 @@
             </mat-error>
           </mat-form-field>
         </mat-card-content>
-        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">ログイン</button>
+        <span fxLayout="row" fxLayoutAlign="space-between center">
+          <a mat-button routerLink="/register" routerLinkActive="active">新規登録</a>
+          <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid">ログイン</button>
+        </span>
         <!--<a routerLink="/forgot">パスワードを再発行する</a>-->
       </form>
       <mat-card-footer class="card-footer">

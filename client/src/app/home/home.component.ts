@@ -29,10 +29,10 @@ export class HomeComponent implements OnInit {
     this.dbService.get<user>('email')
     .subscribe(user => {
       this.email = user.email;
-      this.toastrService.info(`ようこそ! ${this.email} さん`, '',{ positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true });
+      this.toastrService.info(`ようこそ!\n${this.email} さん`, '',{ positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true });
       this.overlaySpinnerService.detach();
       /* Initial display */
-      this.router.navigate(['/home/config']);
+      this.router.navigate(['/home/mail']);
     });
   }
 

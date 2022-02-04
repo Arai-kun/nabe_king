@@ -237,11 +237,12 @@ async function dataUpdate(user, config) {
                     let rate = result3.headers['x-amzn-ratelimit-limit'];
                     result3 = JSON.parse(result3.body).payload.OrderItems[0];
 
+                    /*
                     let sendTarget = getSendTarget({
                         condition: result3.ConditionId,
                         subCondition: result3.ConditionSubtypeId,
                         fullfillment: order.FulfillmentChannel
-                    }, config);
+                    }, config);*/
 
                     /* When it is already something like Shipped for some reason, unSend will be true */
                     let unSend = false;
@@ -252,7 +253,7 @@ async function dataUpdate(user, config) {
                     }
 
                     console.log(result3);
-                    let conditionId = '';
+                    let conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
                     let conditionSubId = '';
                     if('ConditionId' in result3){
                         conditionId = result3.ConditionId;
@@ -260,6 +261,12 @@ async function dataUpdate(user, config) {
                     if('ConditionSubtypeId' in result3){
                         conditionSubId = result3.ConditionSubtypeId;
                     }
+
+                    let sendTarget = getSendTarget({
+                        condition: conditionId,
+                        subCondition: conditionSubId,
+                        fullfillment: order.FulfillmentChannel
+                    }, config);
 
                     newDataList.push({
                         orderId: order.AmazonOrderId,
@@ -308,6 +315,10 @@ async function sendEmail(user, config){
     if(!config.status){
         return;
     }
+    else if(checkRestrictDulation(config.from, config.to)){
+        log('Now is in the restricted dulation');
+        return;
+    }
     else{
         try{
             let data = await Data.findOne({email: user.email}).exec();
@@ -324,8 +335,9 @@ async function sendEmail(user, config){
             for(let sendData of sendList){            
                 const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
                 const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
-                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - 1)}<${new Date(time)}<=${new Date(now)}`);
-                if(now - 1 < time && time <= now){
+                /* Check dulation from now to before 1 day */
+                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - (60 * 60 * 1000))}<${new Date(time)}<=${new Date(now)}`);
+                if(now - (60 * 60 * 1000) < time && time <= now){
                     let result = await Mail.findOne({email: user.email}).exec();
                     const mailValue = {
                         name: sendData.buyerName,
@@ -345,11 +357,11 @@ async function sendEmail(user, config){
                     });
                     const index = data.data_arr.findIndex(d => d.orderId === sendData.orderId);
                     data.data_arr[index].isSent = true;
-                    log('Success send email to ' + sendData.buyerEmail);
+                    log('Successed for sending email to ' + sendData.buyerEmail);
                 }
             }
             await Data.updateOne({email: user.email}, data).exec();
-            log('Reflect send status');
+            log('Reflect sending status');
         }
         catch(error){
             log(error);
@@ -393,10 +405,34 @@ function getSendTarget(data, config){
     }
 }
 
+/* start end format: '12:34' */
+function checkRestrictDulation(start, end){
+    const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
+                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    console.log(startDate.toISOString());
+    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
+                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    if(startDate.getHours() < endDate.getHours() || 
+        (startDate.getHours() === endDate.getHours() && startDate.getMinutes() < endDate.getMinutes())){
+        if(startDate.getTime() <= now.getTime() && now.getTime() < endDate.getTime()){
+
+            return true;
+        }
+    }
+    else if(startDate.getHours() > endDate.getHours() ||
+        (startDate.getHours() === endDate.getHours() && startDate.getMinutes() > endDate.getMinutes())){
+        if(endDate.getTime() > now.getTime() || now.getTime() >= startDate.getTime()){
+            return true;
+        }
+    }
+    return false;
+}
+
 function log(str) {
     console.log(str);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    fs.appendFile(process.env.LOGFILE_PATH, now +': '+ str + '\n', error => {
+    fs.appendFile(process.env.LOGFILE_PATH, `${now.getFullYear()} ${now.getMonth() + 1} ${now.getHours()} ${now.getMinutes()} ${now.getSeconds()}: ` + str + '\n', error => {
         if(error){
             console.log('Append file failed. Abort');
             exit(1);
