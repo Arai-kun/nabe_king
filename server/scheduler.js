@@ -206,14 +206,14 @@ async function dataUpdate(user, config) {
                         }
                     });
                     if(Number(result2.statusCode) !== 200){
-                        console.log('API failed: buyerInfo');
+                        log('API failed: buyerInfo');
                         throw (order.AmazonOrderId + ' ' + result2.body);
                     }
                     let buyerEmail =''
                     if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                         buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
                     }
-                    console.log(buyerEmail);
+                    log(buyerEmail);
 
                     /* Get item name */
                     /* Refresh credential role if spent 1 hour */
@@ -231,7 +231,7 @@ async function dataUpdate(user, config) {
                         }
                     });
                     if(Number(result3.statusCode) !== 200){
-                        console.log('API failed: orderItems');
+                        log('API failed: orderItems');
                         throw (order.AmazonOrderId + ' ' + result3.body);
                     }
                     let rate = result3.headers['x-amzn-ratelimit-limit'];
@@ -252,7 +252,7 @@ async function dataUpdate(user, config) {
                         unSend = true;
                     }
 
-                    console.log(result3);
+                    //console.log(result3);
                     let conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
                     let conditionSubId = '';
                     if('ConditionId' in result3){
@@ -294,14 +294,14 @@ async function dataUpdate(user, config) {
             }
         }
         /* Save to DB */
-        /*
+        
         await Data.findOneAndUpdate({email: user.email}, {
             data_arr: newDataList
         },{
             overwrite: true,
             upsert: true
-        }).exec();*/
-        log(newDataList);
+        }).exec();
+        //log(newDataList);
         log('Save update data');
     }
     catch(error){
