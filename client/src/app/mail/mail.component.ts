@@ -30,7 +30,7 @@ export class MailComponent implements OnInit {
   appearance = {
     loader: {
       //html:'<div></div>'
-      url:'https://res.cloudinary.com/du1gt2vtq/image/upload/v1639719527/spinner-100px_ul6sme.svg'
+      url:'https://res.cloudinary.com/dctfqlyj9/image/upload/v1643959198/loader-1s-100px_soplk1.svg'
     }
   }
   unSaved: boolean = true;

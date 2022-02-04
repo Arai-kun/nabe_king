@@ -92,7 +92,7 @@ authRouter.post('/reset', function(req, res, next){
           pw_reset_token_expire: expire
         }, error => {
           if(error) next(error);
-          const title = '【アプリケーション】パスワード再発行';
+          const title = '【楽コメ～RakuComeRakuCome～】パスワード再発行';
           const content = `<p>以下のリンクにアクセスしてパスワード再発行手続きを進めてください。リンクの有効期限は15分です。</p><p>https://${req.headers.host}/reset/${token}</p>`;
           sendMail(email, title, content)
           .then(() => res.json({result: 0}))

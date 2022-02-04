@@ -256,7 +256,7 @@ class MailComponent {
         this.appearance = {
             loader: {
                 //html:'<div></div>'
-                url: 'https://res.cloudinary.com/du1gt2vtq/image/upload/v1639719527/spinner-100px_ul6sme.svg'
+                url: 'https://res.cloudinary.com/dctfqlyj9/image/upload/v1643959198/loader-1s-100px_soplk1.svg'
             }
         };
         this.unSaved = true;
@@ -892,7 +892,7 @@ class HomeComponent {
         this.dbService.get('email')
             .subscribe(user => {
             this.email = user.email;
-            this.toastrService.info('ようこそ', `${this.email} さん!`, { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true });
+            this.toastrService.info(`${this.email} さん!`, 'ようこそ', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true });
             this.overlaySpinnerService.detach();
             /* Initial display */
             this.router.navigate(['/home/mail']);
