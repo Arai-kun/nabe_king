@@ -64,6 +64,11 @@ async function main() {
         try{
             let users = await User.find({}).exec();
             for(let user of users){
+                /* ----- */
+                let data = await Data.findOne({email: user.email}).exec();
+                conole.log(data);
+                console.log(data.data_arr);
+                /* ----- */
                 let config = await Config.findOne({email: user.email}).exec();
                 await dataUpdate(user, config);
                 //await sendEmail(user, config);
@@ -432,7 +437,7 @@ function checkRestrictDulation(start, end){
 function log(str) {
     console.log(str);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    fs.appendFile(process.env.LOGFILE_PATH, `${now.getFullYear()} ${now.getMonth() + 1} ${now.getHours()} ${now.getMinutes()} ${now.getSeconds()}: ` + str + '\n', error => {
+    fs.appendFile(process.env.LOGFILE_PATH, `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}: ` + str + '\n', error => {
         if(error){
             console.log('Append file failed. Abort');
             exit(1);
