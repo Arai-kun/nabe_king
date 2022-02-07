@@ -64,11 +64,6 @@ async function main() {
         try{
             let users = await User.find({}).exec();
             for(let user of users){
-                /* ----- */
-                let data = await Data.findOne({email: user.email}).exec();
-                console.log(data);
-                console.log(data.data_arr);
-                /* ----- */
                 let config = await Config.findOne({email: user.email}).exec();
                 await dataUpdate(user, config);
                 //await sendEmail(user, config);
@@ -301,10 +296,11 @@ async function dataUpdate(user, config) {
         /* Save to DB */
         
         await Data.findOneAndUpdate({email: user.email}, {
-            data_arr: newDataList
+            $set: {
+                data_arr: newDataList
+            }
         },{
-            overwrite: true,
-            upsert: true
+            overwrite: true
         }).exec();
         //log(newDataList);
         log('Save update data');
