@@ -66,7 +66,7 @@ async function main() {
             for(let user of users){
                 /* ----- */
                 let data = await Data.findOne({email: user.email}).exec();
-                conole.log(data);
+                console.log(data);
                 console.log(data.data_arr);
                 /* ----- */
                 let config = await Config.findOne({email: user.email}).exec();
