@@ -162,7 +162,6 @@ async function dataUpdate(user, config) {
             let findData = undefined;
             if(data.data_arr !== null){
                 findData = data.data_arr.find(d => d.orderId === order.AmazonOrderId);
-                log(`Find data: ${findData.orderId}`);
             }
             if(findData !== undefined){
                 /* Update the data */
