@@ -161,17 +161,18 @@ async function dataUpdate(user, config) {
             let data = await Data.findOne({email: user.email}).exec();
             let findData = undefined;
             if(data.data_arr !== null){
-                findData = data.data_arr.find(d => d.orderId === order.orderId);
+                findData = data.data_arr.find(d => d.orderId === order.AmazonOrderId);
+                log(`Find data: ${findData.orderId}`);
             }
             if(findData !== undefined){
                 /* Update the data */
                 let sendTarget = getSendTarget(findData, config);
-                if(findData.shippedDate === null && (order.orderStatus === 'Shipped' || order.orderStatus === 'InvoiceUnconfirmed')){
+                if(findData.shippedDate === null && (order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed')){
                     findData.shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
                 }
 
                 newDataList.push({
-                    orderId: findData.AmazonOrderId,
+                    orderId: findData.orderId,
                     purchaseDate: findData.purchaseDate,
                     orderStatus: order.OrderStatus,
                     shippedDate: findData.shippedDate,
