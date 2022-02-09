@@ -213,7 +213,7 @@ async function dataUpdate(user, config) {
                     if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                         buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
                     }
-                    log(buyerEmail);
+                    log(`buyerEmail: ${buyerEmail}`);
 
                     /* Get item name */
                     /* Refresh credential role if spent 1 hour */
@@ -247,7 +247,7 @@ async function dataUpdate(user, config) {
                     /* When it is already something like Shipped for some reason, unSend will be true */
                     let unSend = false;
                     let shippedDate = null;
-                    if(order.orderStatus === 'Shipped' || order.orderStatus === 'InvoiceUnconfirmed'){
+                    if(order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed'){
                         shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
                         unSend = true;
                     }
@@ -337,8 +337,8 @@ async function sendEmail(user, config){
                 const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
                 const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
                 /* Check dulation from now to before 1 day */
-                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - (60 * 60 * 1000))}<${new Date(time)}<=${new Date(now)}`);
-                if(now - (60 * 60 * 1000) < time && time <= now){
+                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - (24 * 60 * 60 * 1000)).toDateString()} ${new Date(now - (24 * 60 * 60 * 1000)).toTimeString()} < ${new Date(time).toDateString()} ${new Date(time).toTimeString()} <= ${new Date(now).toDateString()} ${new Date(now).toTimeString()}`);
+                if(now - (24 * 60 * 60 * 1000) < time && time <= now){
                     let result = await Mail.findOne({email: user.email}).exec();
                     const mailValue = {
                         name: sendData.buyerName,
