@@ -326,7 +326,7 @@ async function sendEmail(user, config){
             if(data.data_arr === null){
                 return;
             }
-            const sendList = data.data_arr.find(d => 
+            const sendList = data.data_arr.filter(d => 
                 d.isSent === false && 
                 d.unSend === false && 
                 d.sendTarget === true &&
