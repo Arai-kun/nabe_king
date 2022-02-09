@@ -4,10 +4,7 @@ export interface data {
         orderId: string,
         purchaseDate: string,
         orderStatus: string,
-        buyerEmail: string,
-        buyerName: string,
         itemName: string,
-        quantityOrdered: number,
         isSent: boolean,
         unSend: boolean
     }]

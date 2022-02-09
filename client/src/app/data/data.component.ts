@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
 import { MatTableDataSource } from '@angular/material/table';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 export interface displayData {
     orderId: string,
     purchaseDate: string,
-    buyerEmail: string,
-    buyerName: string,
     itemName: string,
-    quantityOrdered: number,
     orderStatus: string,
     isSent: string,
     unSend: boolean
@@ -34,21 +33,21 @@ export interface displayData {
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css']
 })
-export class DataComponent implements OnInit {
+export class DataComponent implements OnInit, AfterViewInit{
   data!: data['data_arr']; 
   displayedColumns: string[] = [
     'orderId',
     'purchaseDate',
-    'buyerName',
-    'buyerEmail',
     'itemName',
-    'quantityOrdered',
     'orderStatus',
     'isSent',
     'notSend'
   ];
 
   dataSource = new MatTableDataSource<displayData>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private dbService: DbService,
@@ -59,6 +58,11 @@ export class DataComponent implements OnInit {
   ngOnInit(): void {
     this.overlaySpinnerService.attach();
     this.getData();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
   
   /**
@@ -95,11 +99,8 @@ export class DataComponent implements OnInit {
         let date = new Date(this.data[i].purchaseDate);
         bufData.push({
           orderId: this.data[i].orderId,
-          purchaseDate: `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}時${date.getMinutes()}分`,
-          buyerName: this.data[i].buyerName,
-          buyerEmail: this.data[i].buyerEmail,
+          purchaseDate: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/ ${date.getHours()}:${date.getMinutes()}`,
           itemName: this.data[i].itemName,
-          quantityOrdered: this.data[i].quantityOrdered,
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
           unSend: this.data[i].unSend

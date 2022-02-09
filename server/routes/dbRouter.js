@@ -7,11 +7,6 @@ let Mail = require('../models/mail');
 let MailDesign = require('../models/mailDesign');
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
-let request = require('request');
-let crypto = require('crypto-js');
-const SellingPartnerAPI = require('amazon-sp-api');
-
-let data_arr = [];
 
 dbRouter.post('/', function(req, res, next){
     bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
@@ -160,7 +155,7 @@ dbRouter.post('/mailDesign', function(req, res, next){
     }, error => {
         if(error) next(error);
         res.json({result: 'success'});
-    })
+    });
 });
 
 dbRouter.post('/mail', function(req, res, next){
@@ -177,7 +172,7 @@ dbRouter.get('/subject', function(req, res, next){
     Mail.findOne({email: req.user['email']}, (error, data) => {
         if(error) next(error);
         res.json({html: "", subject: data['subject']});
-    })
+    });
 });
 
 dbRouter.post('/reset', function(req, res, next){
@@ -191,8 +186,8 @@ dbRouter.post('/reset', function(req, res, next){
         else{
             res.json({result: 0, email: user.email});
         }
-    })
-})
+    });
+});
 
 dbRouter.post('/republish', function(req, res, next){
     bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
@@ -204,111 +199,29 @@ dbRouter.post('/republish', function(req, res, next){
         }, error => {
             if(error) next(error);
             res.json(true);
-        })
-    })
-})
-
-async function getOrders1(token){
-    const apiKey = 'AKIAWECJIQCPBTLTQXVD';
-    const serKey = 'yskXjbFw7cT1mraGypAoSe1f2Ck9RKO4ATpfzLQW';
-    const region = 'us-west-2';
-    const service = 'execute-api'
-    const now = new Date(); //new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }));
-    const date = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}T${('0' + now.getHours()).slice(-2)}${('0' + now.getMinutes()).slice(-2)}${('0' + now.getSeconds()).slice(-2)}Z`;
-    const dateStamp = `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${('0' + now.getDate()).slice(-2)}`;
-    let kDate = crypto.HmacSHA256(dateStamp, 'AWS4' + serKey);
-    let kRegion = crypto.HmacSHA256(region, kDate);
-    let kService = crypto.HmacSHA256(service, kRegion);
-    let kSigning = crypto.HmacSHA256('aws4_request', kService);
-    const options = {
-        method: 'GET',
-        url: 'https://sandbox.sellingpartnerapi-fe.amazon.com/orders/v0/orders?CreatedAfter=TEST_CASE_200&MarketplaceIds=ATVPDKIKX0DER',
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            host: 'sandbox.sellingpartnerapi-fe.amazon.com',
-            'x-amz-access-token': token,
-            'x-amz-date': date,
-            Authorization: `AWS4-HMAC-SHA256 Credential=${apiKey}/${dateStamp}/${region}/${service}/aws4_request, SignedHeaders=host;x-amz-date;x-amz-access-token, Signature=${kSigning}`
-        }
-    }
-    console.log(options);
-    await new Promise((resolve, reject) => {
-        request(options, (error, response, body) => {
-            if(error) reject(error);
-            console.log(body);
-            let orders = [{}];
-            try{
-                orders = body['Orders'];
-                for(let i = 0; i < orders.length; i++){
-                    data_arr.push({
-                        orderId: orders[i]['AmazonOrderId'],
-                        purchaseDate: new Date(orders[i]['PurchaseDate']),
-                        orderStatus: orders[i]['OrderStatus'],
-                        buyerEmail: "",
-                        buyerName: "",
-                        itemName: "",
-                        quantityOrdered: 0,
-                        isSent: false,
-                        unSend: false
-                    })
-                }
-                resolve();
-            }
-            catch(e){
-                console.log(e);
-                reject(e);
-            }
         });
     });
-}
+});
 
-async function getOrders(acToken, refToken){
-    try {
-        let sellingPartner = new SellingPartnerAPI({
-            region: 'fe',
-            access_token: acToken,
-            refresh_token: refToken,
-            credentials: {
-                SELLING_PARTNER_APP_CLIENT_ID: 'amzn1.application-oa2-client.d63eca24c26c4108af41e95cd75e9449',
-                SELLING_PARTNER_APP_CLIENT_SECRET: '7192fe26b508bc44d21a4f595e4d4b8afb44ad142d5b2cb56a2149db8070739a',
-                AWS_ACCESS_KEY_ID: 'AKIAWECJIQCPBTLTQXVD',
-                AWS_SECRET_ACCESS_KEY: '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',
-                AWS_SELLING_PARTNER_ROLE: 'arn:aws:iam::421060444318:role/Role-SP-API'
-            },
-            options: {
-                use_sandbox: true
-            }
-        });
-        let res = await sellingPartner.callAPI({
-            api_path: '/orders/v0/orders',
-            method: 'GET',
-            query: {
-                CreatedAfter: 'TEST_CASE_200',
-                MarketplaceIds: 'ATVPDKIKX0DER'
-            }
-        });
-        console.log(res);
-        let orders = [];
-        orders = res['Orders'];
-        for(let i = 0; i < orders.length; i++){
-            data_arr.push({
-                orderId: orders[i]['AmazonOrderId'],
-                purchaseDate: new Date(orders[i]['PurchaseDate']),
-                orderStatus: orders[i]['OrderStatus'],
-                buyerEmail: "",
-                buyerName: "",
-                itemName: "",
-                quantityOrdered: 0,
-                isSent: false,
-                unSend: false
+dbRouter.get('/delete', function(req, res, next){
+    const mail = req.user['email'];
+    MailDesign.deleteOne({email: mail}, error => {
+        if(error) next(error);
+        Mail.deleteOne({email: mail}, error => {
+            if(error) next(error);
+            Data.deleteOne({email: mail}, error => {
+                if(error) next(error);
+                Config.deleteOne({email: mail}, error => {
+                    if(error) next(error);
+                    User.deleteOne({email: mail}, error => {
+                        if(error) next(error);
+                        res.json(true);
+                    });
+                });
             });
-        }
-
-    }
-    catch(e){
-        console.log(e);
-    }
-}
+        });
+    });
+});
 
 
 module.exports = dbRouter;

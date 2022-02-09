@@ -115,6 +115,23 @@ export class DbService {
     );
   }
 
+  delete() : Observable<boolean> {
+    const url = 'user/delete';
+    return this.http.get(url, this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+
+  }
+
   private handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

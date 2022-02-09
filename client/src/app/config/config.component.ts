@@ -4,6 +4,8 @@ import { config } from '../config';
 import { DbService } from '../db.service';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
+import { DeleteComponent } from '../delete/delete.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-config',
@@ -55,7 +57,8 @@ export class ConfigComponent implements OnInit {
     private fb: FormBuilder,
     private dbService: DbService,
     private overlaySpinnerService: OverlaySpinnerService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -109,21 +112,6 @@ export class ConfigComponent implements OnInit {
   }
 
   onSave(): void {
-
-    console.log(this.form.value);
-    console.log(`fba:${this.fba} mba:${this.mba} new:${this.new} mint:${this.mint} verygood:${this.verygood} good:${this.good} acceptable:${this.acceptable}`);
-    if (Number(this.to.substr(0,2)) < Number(this.from.substr(0,2))){
-      console.log('hour-error');
-    }
-    else{
-      if(Number(this.to.substr(3,2)) > Number(this.from.substr(3,2))){
-        console.log('time setting valid');
-      }
-      else{
-        console.log('minute-error');
-      }
-    }
-
     this.overlaySpinnerService.attach();
     if(this.status === this.statusOptions[0]) this.config.status = false;
     if(this.status === this.statusOptions[1]) this.config.status = true;
@@ -151,6 +139,12 @@ export class ConfigComponent implements OnInit {
       }
     })
 
+  }
+
+  onDelete(): void {
+    this.dialog.open(DeleteComponent, {
+      width: '320px'
+    });
   }
 
 }
