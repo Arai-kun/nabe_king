@@ -143,7 +143,7 @@ export class ConfigComponent implements OnInit {
 
   onDelete(): void {
     this.dialog.open(DeleteComponent, {
-      width: '360px'
+      width: '380px'
     });
   }
 

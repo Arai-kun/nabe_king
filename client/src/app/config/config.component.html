@@ -72,7 +72,9 @@
             </form>
         </mat-card-content>
     </mat-card>
-    <span fxFlexOffset="80">
-        <button mat-raised-button type="button" (click)="onDelete()">アカウント削除</button>
-    </span>
+    <div fxLayout="row">
+        <span fxFlexOffset="auto">
+            <button mat-raised-button type="button" (click)="onDelete()">アカウント削除</button>
+        </span>
+    </div>
 </div>
