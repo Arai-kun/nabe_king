@@ -26,12 +26,7 @@ db.once("open", () => {
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* Reset every time for saving storage */
-fs.writeFile(process.env.LOGFILE_PATH, '', error => {
-    if(error){
-        console.log('Write file failed. Abort');
-        exit(1);
-    }
-});
+createLogFile();
 
 let User = require('./models/user');
 let Config = require('./models/config');
@@ -50,8 +45,13 @@ process.on('SIGINT', function () {
 async function main() {
 
     /* Enable job for send email per 15 min as another thread */
-    const job = schedule.scheduleJob('*/15 * * * *', function(){
+    schedule.scheduleJob('*/15 * * * *', function(){
         sendEmailJob();
+    });
+
+    /* Save log for a week */
+    schedule.scheduleJob('* * */7 * *', function() {
+        createLogFile();
     });
 
     while(1){
@@ -66,7 +66,6 @@ async function main() {
             for(let user of users){
                 let config = await Config.findOne({email: user.email}).exec();
                 await dataUpdate(user, config);
-                //await sendEmail(user, config);
             }
         }
         catch(error){
@@ -99,7 +98,7 @@ async function dataUpdate(user, config) {
     /**
      * How dulation is decided?
      * For test, set 1 month.
-     * Considering to dulation of Config, it will be 2 month  
+     * Considering to dulation of Config, it will be 2 month?
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
@@ -163,7 +162,8 @@ async function dataUpdate(user, config) {
             if(data.data_arr !== null){
                 findData = data.data_arr.find(d => d.orderId === order.AmazonOrderId);
             }
-            if(findData !== undefined){
+            /* Probably when get new data, buyeremail is not ready. Or change system? */
+            if(findData !== undefined  || findData.buyerEmail === ''){
                 /* Update the data */
                 let sendTarget = getSendTarget(findData, config);
                 if(findData.shippedDate === null && (order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed')){
@@ -316,58 +316,58 @@ async function sendEmail(user, config){
     if(!config.status){
         return;
     }
-    else if(checkRestrictDulation(config.from, config.to)){
+    if(checkRestrictDulation(config.from, config.to)){
         log('Now is in the restricted dulation');
         return;
     }
-    else{
-        try{
-            let data = await Data.findOne({email: user.email}).exec();
-            if(data.data_arr === null){
-                return;
-            }
-            const sendList = data.data_arr.filter(d => 
-                d.isSent === false && 
-                d.unSend === false && 
-                d.sendTarget === true &&
-                d.shippedDate !== null &&
-                (d.orderStatus === 'Shipped' || d.orderStatus === 'InvoiceUnconfirmed'));
-            log('SendList: ' + sendList);
-            for(let sendData of sendList){            
-                const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
-                const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
-                /* Check dulation from now to before 1 day */
-                log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - (24 * 60 * 60 * 1000)).toDateString()} ${new Date(now - (24 * 60 * 60 * 1000)).toTimeString()} < ${new Date(time).toDateString()} ${new Date(time).toTimeString()} <= ${new Date(now).toDateString()} ${new Date(now).toTimeString()}`);
-                if(now - (24 * 60 * 60 * 1000) < time && time <= now){
-                    let result = await Mail.findOne({email: user.email}).exec();
-                    const mailValue = {
-                        name: sendData.buyerName,
-                        orderId: sendData.orderId,
-                        itemName: sendData.itemName
-                    }
-                    let templete = handlebars.compile(result.html);
-                    let html = templete(mailValue);
-                    let templeteSub = handlebars.compile(result.subject);
-                    let subject = templeteSub(mailValue);
-                    await sendgrid.send({
-                        //to: sendData.buyerEmail,
-                        to: 'koki.alright@gmail.com',
-                        from: process.env.EMAILFROM,
-                        subject: subject,
-                        html: html
-                    });
-                    const index = data.data_arr.findIndex(d => d.orderId === sendData.orderId);
-                    data.data_arr[index].isSent = true;
-                    log('Successed for sending email to ' + sendData.buyerEmail);
+    
+    try{
+        let data = await Data.findOne({email: user.email}).exec();
+        if(data.data_arr === null){
+            return;
+        }
+        const sendList = data.data_arr.filter(d => 
+            d.isSent === false && 
+            d.unSend === false && 
+            d.sendTarget === true &&
+            d.shippedDate !== null &&
+            (d.orderStatus === 'Shipped' || d.orderStatus === 'InvoiceUnconfirmed'));
+        //log('SendList: ' + sendList);
+        for(let sendData of sendList){            
+            const now = Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000);
+            const time = sendData.shippedDate.getTime() + (config.dulation * 24 * 60 * 60 * 1000);
+            /* Check dulation from now to before 1 day */
+            log(`[${sendData.orderId}] ` + 'Check time for sending: ' + `${new Date(now - (24 * 60 * 60 * 1000)).toDateString()} ${new Date(now - (24 * 60 * 60 * 1000)).toTimeString()} < ${new Date(time).toDateString()} ${new Date(time).toTimeString()} <= ${new Date(now).toDateString()} ${new Date(now).toTimeString()}`);
+            if(now - (24 * 60 * 60 * 1000) < time && time <= now){
+                let result = await Mail.findOne({email: user.email}).exec();
+                const mailValue = {
+                    name: sendData.buyerName,
+                    orderId: sendData.orderId,
+                    itemName: sendData.itemName
                 }
+                let templete = handlebars.compile(result.html);
+                let html = templete(mailValue);
+                let templeteSub = handlebars.compile(result.subject);
+                let subject = templeteSub(mailValue);
+                await sendgrid.send({
+                    //to: sendData.buyerEmail,
+                    to: 'koki.alright@gmail.com',
+                    from: process.env.EMAILFROM,
+                    subject: subject,
+                    html: html
+                });
+                const index = data.data_arr.findIndex(d => d.orderId === sendData.orderId);
+                data.data_arr[index].isSent = true;
+                log(`[${sendData.orderId}] ` + 'Successed for sending email to: ' + sendData.buyerEmail);
             }
-            await Data.updateOne({email: user.email}, data).exec();
-            log('Reflect sending status');
         }
-        catch(error){
-            log(error);
-        }
+        await Data.updateOne({email: user.email}, data).exec();
+        log('Reflect sending status');
     }
+    catch(error){
+        log(error);
+    }
+    
     log('Exit sendEmail()');
 }
 
@@ -408,6 +408,7 @@ function getSendTarget(data, config){
 
 /* start end format: '12:34' */
 function checkRestrictDulation(start, end){
+    log('Check dulation');
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
@@ -441,4 +442,12 @@ function log(str) {
     });
 }
 
+function createLogFile() {
+    fs.writeFile(process.env.LOGFILE_PATH, '', error => {
+        if(error){
+            console.log('Write file failed. Abort');
+            exit(1);
+        }
+    });
+}
 
