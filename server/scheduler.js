@@ -110,6 +110,7 @@ async function dataUpdate(user, config) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
+    log(`Create before: ${date.toString()}`);
     let orderList = [];
     try {
         let result = await sellingPartner.callAPI({
@@ -153,6 +154,7 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
+                log(result);
                 for(let order of result.Orders){
                     orderList.push(order);
                 }
