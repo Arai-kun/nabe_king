@@ -99,7 +99,7 @@ export class DataComponent implements OnInit, AfterViewInit{
         let date = new Date(this.data[i].purchaseDate);
         bufData.push({
           orderId: this.data[i].orderId,
-          purchaseDate: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/ ${date.getHours()}:${date.getMinutes()}`,
+          purchaseDate: `${date.getFullYear()}/${('0' + (date.getMonth() + 1)).slice(-2)}/${('0' + date.getDate()).slice(-2)}/ ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`,
           itemName: this.data[i].itemName,
           orderStatus: bufOrderStatus,
           isSent: bufIsSent,
