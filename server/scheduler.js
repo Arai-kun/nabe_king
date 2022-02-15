@@ -126,7 +126,7 @@ async function dataUpdate(user, config) {
         });
         const limit = result.headers['x-amzn-ratelimit-limit'];
         result = JSON.parse(result.body).payload;
-        log(result);
+        //log(result);
         for(let order of result.Orders){
             orderList.push(order);
         }
@@ -154,7 +154,7 @@ async function dataUpdate(user, config) {
                         NextToken: result.NextToken
                     }
                 });
-                log(result);
+                //log(result);
                 for(let order of result.Orders){
                     orderList.push(order);
                 }
@@ -173,7 +173,12 @@ async function dataUpdate(user, config) {
                 findData = data.data_arr.find(d => d.orderId === order.AmazonOrderId);
             }
             /* Probably when get new data, buyeremail is not ready. Or change system? */
-            if(findData !== undefined  || findData.buyerEmail === ''){
+            if(findData !== undefined){
+                if(findData.buyerEmail === ''){
+                    findData = undefined;
+                }
+            }
+            if(findData !== undefined){
                 /* Update the data */
                 let sendTarget = getSendTarget(findData, config);
                 if(findData.shippedDate === null && (order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed')){
@@ -223,7 +228,7 @@ async function dataUpdate(user, config) {
                     if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
                         buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
                     }
-                    log(`buyerEmail: ${buyerEmail}`);
+                    log(`Get buyerEmail: ${buyerEmail}`);
 
                     /* Get item name */
                     /* Refresh credential role if spent 1 hour */
