@@ -26,7 +26,13 @@ db.once("open", () => {
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* Reset every time for saving storage */
-createLogFile();
+console.log('Create log file');
+fs.writeFile(process.env.LOGFILE_PATH, '', error => {
+    if(error){
+        console.log('Write file failed. Abort');
+        exit(1);
+    }
+});
 
 let User = require('./models/user');
 let Config = require('./models/config');
@@ -51,7 +57,7 @@ async function main() {
 
     /* Save log for a week */
     schedule.scheduleJob('* * */7 * *', function() {
-        createLogFile();
+        resetLogFile(fs);
     });
 
     while(1){
@@ -439,8 +445,8 @@ function log(str) {
     });
 }
 
-function createLogFile() {
-    console.log('Create log file');
+function resetLogFile(fs) {
+    console.log('Reset log file');
     fs.writeFile(process.env.LOGFILE_PATH, '', error => {
         if(error){
             console.log('Write file failed. Abort');
