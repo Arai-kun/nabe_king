@@ -56,7 +56,9 @@ async function main() {
     });
 
     /* Save log for a week */
-    schedule.scheduleJob('* * */7 * *', function() {
+    let rule = new schedule.RecurrenceRule();
+    rule.dayOfWeek = 3; // Every Wednesday
+    schedule.scheduleJob(rule, function() {
         resetLogFile(fs);
     });
 
