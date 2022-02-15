@@ -386,24 +386,21 @@ async function sendEmailJob(){
 }
 
 function getSendTarget(data, config){
-    if(
-        (data.fullfillment === 'AFN' && config.fba === true) ||
-        (data.fullfillment === 'MFN' && config.mba === true) ||
-        (data.condition === 'New' && config.new === true) ||
-        (data.condition === 'Used' && 
-            (
-                (data.subCondition === 'Mint' && config.mint === true) ||
-                (data.subCondition === 'Very Good' && config.verygood === true) ||
-                (data.subCondition === 'Good' && config.good === true) ||
-                (data.subCondition === 'Acceptable' && config.acceptable === true)
-            )
-        )
-    ){
-        return true;
-    }
-    else{
-        return false;
-    }
+    if((data.fullfillment === 'AFN' && config.fba) || (data.fullfillment === 'MFN' && config.mba)){
+        if((data.condition === 'New' && config.new) || 
+            (data.condition === 'Used' && 
+                (
+                    (data.subCondition === 'Mint' && config.mint) ||
+                    (data.subCondition === 'Very Good' && config.verygood) ||
+                    (data.subCondition === 'Good' && config.good) ||
+                    (data.subCondition === 'Acceptable' && config.acceptable)
+                )
+            ))
+        {
+            return true;
+        }
+    } 
+    return false;
 }
 
 /* start end format: '12:34' */
@@ -443,6 +440,7 @@ function log(str) {
 }
 
 function createLogFile() {
+    console.log('Create log file');
     fs.writeFile(process.env.LOGFILE_PATH, '', error => {
         if(error){
             console.log('Write file failed. Abort');
