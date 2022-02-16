@@ -56,11 +56,17 @@ async function main() {
     });
 
     /* Save log for a week */
+    /**
+     * TODO: Set date for saving log
+     * rule.dayOfWeek = 3; => Keep triger among Wednesday
+     * When set two job, the first job disappear
+     */
+    /*
     let rule = new schedule.RecurrenceRule();
-    rule.dayOfWeek = 3; // Every Wednesday
+    rule.dayOfWeek = 3; 
     schedule.scheduleJob(rule, function() {
         resetLogFile(fs);
-    });
+    });*/
 
     while(1){
 
