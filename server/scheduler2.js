@@ -116,7 +116,7 @@ async function dataUpdate(user, config) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    log(`Create before: ${date.toString()}`);
+    log(`Create after: ${date.toString()}`);
     let orderList = [];
     try {
         let result = await sellingPartner.callAPI({
@@ -284,7 +284,7 @@ async function dataUpdate(user, config) {
                 let sendTarget = false;
                 if(order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed'){
                     shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-                    if(!(shippedDate.getTime() - new Date(order.PurchaseDate).getTime() <= 24 * 60 * 60 * 1000)){
+                    if(!(shippedDate.getTime() - new Date(order.PurchaseDate).getTime() <= 15 * 60 * 60 * 1000)){
                         /* Order out range */
                         unSend = true;
                     }
@@ -499,7 +499,6 @@ function checkRestrictDulation(start, end){
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    console.log(startDate.toISOString());
     const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     if(startDate.getHours() < endDate.getHours() || 
