@@ -242,9 +242,9 @@ async function dataUpdate(user, config) {
                         }
     
                         findData.sendTarget = getSendTarget({
-                            condition: conditionId,
-                            subCondition: conditionSubId,
-                            fullfillment: order.FulfillmentChannel
+                            condition: findData.conditionId,
+                            subCondition: findData.conditionSubId,
+                            fullfillment: findData.fullfillment
                         }, config);
     
                         newDataList.push({
