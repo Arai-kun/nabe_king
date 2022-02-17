@@ -426,7 +426,7 @@ function getSendTarget(data, config){
 
 /* start end format: '12:34' */
 function checkRestrictDulation(start, end){
-    log('Check dulation');
+    log('Check dulation: ' + `From ${start} to ${end}`);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
