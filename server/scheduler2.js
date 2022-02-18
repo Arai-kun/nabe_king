@@ -247,21 +247,7 @@ async function dataUpdate(user, config) {
                             fullfillment: findData.fullfillment
                         }, config);
     
-                        newDataList.push({
-                            orderId: findData.orderId,
-                            purchaseDate: findData.purchaseDate,
-                            orderStatus: order.OrderStatus,
-                            shippedDate: findData.shippedDate,
-                            buyerEmail: findData.buyerEmail,
-                            buyerName: findData.buyerName,
-                            itemName: findData.itemName,
-                            isSent: findData.isSent,
-                            unSend: findData.unSend,
-                            sendTarget: findData.sendTarget,
-                            condition: findData.condition,
-                            subCondition: findData.subCondition,
-                            fullfillment: findData.fullfillment
-                        });
+                        
                         rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
                         log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
                         const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -271,6 +257,21 @@ async function dataUpdate(user, config) {
                         log(error);
                     }
                 }
+                newDataList.push({
+                    orderId: findData.orderId,
+                    purchaseDate: findData.purchaseDate,
+                    orderStatus: order.OrderStatus,
+                    shippedDate: findData.shippedDate,
+                    buyerEmail: findData.buyerEmail,
+                    buyerName: findData.buyerName,
+                    itemName: findData.itemName,
+                    isSent: findData.isSent,
+                    unSend: findData.unSend,
+                    sendTarget: findData.sendTarget,
+                    condition: findData.condition,
+                    subCondition: findData.subCondition,
+                    fullfillment: findData.fullfillment
+                });
             }
             else{
                 /* New data */
@@ -501,6 +502,7 @@ function checkRestrictDulation(start, end){
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
                         + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    log('Compare: ' + `start => ${startDate.toString()} end => ${endDate.toString()} now => ${now.toString()}`);
     if(startDate.getHours() < endDate.getHours() || 
         (startDate.getHours() === endDate.getHours() && startDate.getMinutes() < endDate.getMinutes())){
         if(startDate.getTime() <= now.getTime() && now.getTime() < endDate.getTime()){
