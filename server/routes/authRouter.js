@@ -7,6 +7,7 @@ let crypto = require('crypto');
 let bcrypt = require('bcrypt');
 const sendgrid = require('@sendgrid/mail');
 require('dotenv').config();
+const saltRounds = 10;
 
 let tokens = { access_token: "", refresh_token: "" };
 
