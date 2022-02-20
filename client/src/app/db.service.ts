@@ -15,29 +15,6 @@ export class DbService {
 
   constructor(private http: HttpClient) { }
 
-  createUser(user: user): Observable<any>{
-    return this.http.post('user', user, this.httpOptions)
-    .pipe(
-      catchError(this.handleError<any>(null)),
-      shareReplay(1)
-    );
-  }
-
-  userExist(email: string): Observable<boolean> {
-    return this.http.post<boolean>('user/exist', JSON.stringify({"email": email}), this.httpOptions)
-    .pipe(
-      map(result => {
-        if(result){
-          return true;
-        }
-        else{
-          return false;
-        }
-      }),
-      catchError(this.handleError<boolean>(false))
-    );
-  }
-
   tokensExist(): Observable<boolean> {
     return this.http.get<boolean>('user/tokens', this.httpOptions)
     .pipe(

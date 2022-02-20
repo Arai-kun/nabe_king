@@ -11,6 +11,29 @@ const saltRounds = 10;
 
 let tokens = { access_token: "", refresh_token: "" };
 
+authRouter.post('/create', function(req, res, next){
+  bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
+      if(error) next(error);
+      req.body['password'] = hash;
+      User.create(req.body, error => {
+          if(error) next(error);
+          res.json({result: 'success'});
+      });
+  });
+});
+
+authRouter.post('/exist', function(req, res, next){
+  User.findOne({email: req.body['email']}, function(error, user){
+      if(error) next(error);
+      if(!user){
+          res.json(false);
+      }
+      else{
+          res.json(true);
+      }
+  })
+});
+
 /* POST Login. */
 authRouter.post('/login', passport.authenticate('local', { session: true }), function(req, res) {
   res.json(true);
@@ -36,10 +59,6 @@ authRouter.get('/logout', function(req, res, next){
 });
 
 authRouter.post('/exchange', function(req, res, next){
-  /**
-   * ユースケース: 既に他アカウントにamazonが紐づいている時に、このアカウントに同じamazonを紐づけようとする
-   * seller_partner_idが既存か確認。以下、ない場合
-   */
   User.findOne({seller_partner_id: req.body['id']}, (error, user) => {
     if(error) next(error);
     if(user){

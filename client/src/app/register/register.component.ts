@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit {
     }
     else{
       this.overlaySpinnerService.attach();
-      this.dbService.userExist(this.user.email)
+      this.authService.userExist(this.user.email)
       .subscribe(exist => {
         if(exist){
           this.overlaySpinnerService.detach();
@@ -65,7 +65,7 @@ export class RegisterComponent implements OnInit {
           //this.router.navigate(['login']);
         }
         else{
-          this.dbService.createUser(this.user)
+          this.authService.createUser(this.user)
           .subscribe(() => {
             this.authService.login(this.user)
             .subscribe(() => {

@@ -5,31 +5,6 @@ let Config = require('../models/config');
 let Data = require('../models/data');
 let Mail = require('../models/mail');
 let MailDesign = require('../models/mailDesign');
-let bcrypt = require('bcrypt');
-const saltRounds = 10;
-
-dbRouter.post('/', function(req, res, next){
-    bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
-        if(error) next(error);
-        req.body['password'] = hash;
-        User.create(req.body, error => {
-            if(error) next(error);
-            res.json({result: 'success'});
-        });
-    });
-});
-
-dbRouter.post('/exist', function(req, res, next){
-    User.findOne({email: req.body['email']}, function(error, user){
-        if(error) next(error);
-        if(!user){
-            res.json(false);
-        }
-        else{
-            res.json(true);
-        }
-    })
-});
 
 dbRouter.get('/tokens', function(req, res, next){
     //console.log(req);
