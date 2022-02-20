@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatSpinner } from '@angular/material/progress-spinner';
-import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OverlaySpinnerService {
 
   constructor(
-    private overlay: Overlay,
-    private toastrService: ToastrService
+    private overlay: Overlay
   ) { }
 
   overlayRef = this.overlay.create({
@@ -22,11 +20,6 @@ export class OverlaySpinnerService {
 
   attach(): void {
     this.overlayRef.attach(new ComponentPortal(MatSpinner));
-    setTimeout(() => {
-      if(this.overlayRef.hasAttached()){
-        this.toastrService.error('ネットワークに問題がある恐れがあります。このままお待ちいただくか、しばらく経ってから再度お試しください', 'ネットワークエラー', { positionClass: 'toast-bottom-full-width', disableTimeOut: true, closeButton: true});
-      }
-    }, 10000);
   }
   
   detach(): void {

@@ -18,7 +18,7 @@ export class ContactComponent implements OnInit {
   emailControl = new FormControl(this.email);
   subjectControl = new FormControl(null, Validators.required);
   contentControl = new FormControl(null, Validators.required);
-  ADMIN_EMAIL: string = 'koki.alright@gmail.com'; 
+  ADMIN_EMAIL: string = 'nabe.daisuke@gmail.com'; 
   
 
   constructor(

@@ -5,6 +5,7 @@ let createError = require('http-errors')
 let logger = require('morgan');
 let mongoose = require('mongoose');
 let cloudinary = require('cloudinary').v2;
+let compression = require('compression');
 const sendgrid = require('@sendgrid/mail');
 require('dotenv').config();
 
@@ -45,8 +46,8 @@ let mailRouter = require('./routes/mailRouter');
 
 let app = express();
 
+app.use(compression());
 app.enable('trust proxy');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
