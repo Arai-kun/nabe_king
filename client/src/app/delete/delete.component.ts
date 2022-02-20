@@ -31,6 +31,7 @@ export class DeleteComponent implements OnInit {
         this.toastrService.success('アカウントを削除しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.overlaySpinnerService.detach();
         this.router.navigate(['/']);
+        this.dialogRef.close();
       }
     })
   }
