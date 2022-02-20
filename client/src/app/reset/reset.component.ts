@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { DbService } from '../db.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-reset',
@@ -22,7 +22,7 @@ export class ResetComponent implements OnInit {
 
   
   constructor(
-    private dbService: DbService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
@@ -51,7 +51,7 @@ export class ResetComponent implements OnInit {
     }
     else{
       this.overlaySpinnerService.attach();
-      this.dbService.pwRepublish(this.email, this.password)
+      this.authService.pwRepublish(this.email, this.password)
       .subscribe(result => {
         if(result){
           this.overlaySpinnerService.detach();
@@ -68,7 +68,7 @@ export class ResetComponent implements OnInit {
 
   checkToken(): void {
     const token = String(this.route.snapshot.paramMap.get('token'));
-    this.dbService.pwReset(token)
+    this.authService.tokenCheck(token)
     .subscribe(res => {
       switch(res['result']){
         case 0:

@@ -175,34 +175,6 @@ dbRouter.get('/subject', function(req, res, next){
     });
 });
 
-dbRouter.post('/reset', function(req, res, next){
-    const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    User.findOne({pw_reset_token: req.body['token'], pw_reset_token_expire: {$gt: now }}, (error, user) => {
-        if(error) next(error)
-        if(!user){
-            /* Invalid token or expired */
-            res.json({result: 1});
-        }
-        else{
-            res.json({result: 0, email: user.email});
-        }
-    });
-});
-
-dbRouter.post('/republish', function(req, res, next){
-    bcrypt.hash(req.body['password'], saltRounds, function(error, hash){
-        if(error) next(error);
-        User.updateOne({email: req.body['email']}, {
-            password: hash,
-            pw_reset_token: null,
-            pw_reset_token_expire: null
-        }, error => {
-            if(error) next(error);
-            res.json(true);
-        });
-    });
-});
-
 dbRouter.get('/delete', function(req, res, next){
     const mail = req.user['email'];
     MailDesign.deleteOne({email: mail}, error => {

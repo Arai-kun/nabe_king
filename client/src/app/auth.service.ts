@@ -72,6 +72,28 @@ export class AuthService {
     );
   }
 
+  tokenCheck(token: string): Observable<any> {
+    return this.http.post('auth/tokenCheck', JSON.stringify({"token": token}), this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null))
+    );
+  }
+
+  pwRepublish(email: string, password: string): Observable<boolean> {
+    return this.http.post('auth/republish', JSON.stringify({"email": email, "password": password}), this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+  }
+
   handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
       console.log(error);

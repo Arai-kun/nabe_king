@@ -110,10 +110,20 @@ function passwordValidator(reqPassword, dbPassword) {
     return bcrypt.compareSync(reqPassword, dbPassword);
 }
 
+function isLogined(req, res, next){
+  if(req.isAuthenticated()){
+    next();
+  }
+  else{
+    res.status(401);
+    res.json({message: 'Unauthorized'})
+  }
+}
+
 app.use('/auth', authRouter);
-app.use('/user', dbRouter);
-app.use('/file', fileRouter);
-app.use('/mail', mailRouter);
+app.use('/user', isLogined, dbRouter);
+app.use('/file', isLogined, fileRouter);
+app.use('/mail', isLogined, mailRouter);
 
 app.use(express.static(path.join(__dirname, '../client/dist/client')));
 app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));
