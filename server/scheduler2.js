@@ -90,6 +90,7 @@ async function main() {
 
 async function dataUpdate(user, config) {
     log('Enter in dataUpdate()');
+    log(`[${user.email}] config: ${config}`);
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
         //access_token: user.access_token,
@@ -233,20 +234,17 @@ async function dataUpdate(user, config) {
                         result3 = JSON.parse(result3.body).payload.OrderItems[0];
     
                         //console.log(result3);
-                        findData.conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
+                        if('Title' in result3){
+                            findData.itemName = result3.Title;
+                        }
+
+                        findData.condition = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
                         if('ConditionId' in result3){
-                            findData.conditionId = result3.ConditionId;
+                            findData.condition = result3.ConditionId;
                         }
                         if('ConditionSubtypeId' in result3){
-                            findData.conditionSubId = result3.ConditionSubtypeId;
-                        }
-    
-                        findData.sendTarget = getSendTarget({
-                            condition: findData.conditionId,
-                            subCondition: findData.conditionSubId,
-                            fullfillment: findData.fullfillment
-                        }, config);
-    
+                            findData.subCondition = result3.ConditionSubtypeId;
+                        }    
                         
                         rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
                         log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
@@ -257,6 +255,13 @@ async function dataUpdate(user, config) {
                         log(error);
                     }
                 }
+
+                findData.sendTarget = getSendTarget({
+                    condition: findData.condition,
+                    subCondition: findData.subCondition,
+                    fullfillment: findData.fullfillment
+                }, config);
+
                 newDataList.push({
                     orderId: findData.orderId,
                     purchaseDate: findData.purchaseDate,
@@ -338,7 +343,10 @@ async function dataUpdate(user, config) {
                             }
                             let rate = result3.headers['x-amzn-ratelimit-limit'];
                             result3 = JSON.parse(result3.body).payload.OrderItems[0];
-                            itemName = result3.Title;
+                            
+                            if('Title' in result3){
+                                itemName = result3.Title;
+                            }
         
                             //console.log(result3);
                             conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
@@ -348,12 +356,6 @@ async function dataUpdate(user, config) {
                             if('ConditionSubtypeId' in result3){
                                 conditionSubId = result3.ConditionSubtypeId;
                             }
-        
-                            sendTarget = getSendTarget({
-                                condition: conditionId,
-                                subCondition: conditionSubId,
-                                fullfillment: order.FulfillmentChannel
-                            }, config);
 
                             rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
                             log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
@@ -366,6 +368,12 @@ async function dataUpdate(user, config) {
 
                     }
                 }
+
+                sendTarget = getSendTarget({
+                    condition: conditionId,
+                    subCondition: conditionSubId,
+                    fullfillment: order.FulfillmentChannel
+                }, config);
 
                 newDataList.push({
                     orderId: order.AmazonOrderId,
@@ -498,10 +506,8 @@ function getSendTarget(data, config){
 function checkRestrictDulation(start, end){
     log('Check dulation: ' + `From ${start} to ${end}`);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`));
+    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`));
     log('Compare: ' + `start => ${startDate.toString()} end => ${endDate.toString()} now => ${now.toString()}`);
     if(startDate.getHours() < endDate.getHours() || 
         (startDate.getHours() === endDate.getHours() && startDate.getMinutes() < endDate.getMinutes())){

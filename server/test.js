@@ -8,12 +8,12 @@ const list = [
         end: '17:00'
     },
     {
-        start: '14:10',
-        end: '14:43'
+        start: '11:10',
+        end: '11:59'
     },
     {
-        start: '14:59',
-        end: '14:30'
+        start: '11:23',
+        end: '10:30'
     }
 ];
 
@@ -30,11 +30,9 @@ list.forEach(test => {
 function checkRestrictDulation(start, end){
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     console.log(now);
-    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`));
     console.log(startDate.toISOString());
-    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`));
     console.log(endDate);
     console.log(`${startDate.getHours()}:${startDate.getMinutes()}`);
     console.log(`${endDate.getHours()}:${endDate.getMinutes()}`);
