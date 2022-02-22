@@ -1,0 +1,23 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card class="box">
+      <p class="img_logo">
+        <img src="https://res.cloudinary.com/dctfqlyj9/image/upload/v1643959198/icons8-starfish-96_gzopmn.png"/>
+      </p>
+      <mat-card-header>
+        <mat-card-title>パスワード再発行</mat-card-title>
+      </mat-card-header>
+  
+      <form class="example-form" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="登録しているメールアドレス" type="email" name="email" formControlName="email">
+            <mat-error *ngIf="emailControl.hasError('required') || emailControl.hasError('email')">
+                <strong>メールアドレスを入力してください</strong>
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+        <button mat-raised-button color="accent" class="btn-block" type="submit" [disabled]="form.invalid">送信</button>
+      </form>
+    </mat-card>
+    
+  </div>

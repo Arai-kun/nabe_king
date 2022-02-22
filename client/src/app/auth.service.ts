@@ -18,12 +18,40 @@ export class AuthService {
     private http: HttpClient
   ) { }
 
+  createUser(user: user): Observable<any>{
+    return this.http.post('auth/create', user, this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null)),
+      shareReplay(1)
+    );
+  }
+
+  userExist(email: string): Observable<boolean> {
+    return this.http.post<boolean>('auth/exist', JSON.stringify({"email": email}), this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+  }
+
+
   login(user: user): Observable<boolean>{
     return this.http.post<user>('/auth/login', user, this.httpOptions)
     .pipe(
       map(result =>{
-        if(result) return true;
-        return false;
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
       }),
       catchError(this.handleError<boolean>(false)),
       shareReplay(1)
@@ -57,6 +85,36 @@ export class AuthService {
     .pipe(
       catchError(this.handleError<any>(null)),
       shareReplay(1)
+    );
+  }
+
+  pwReset(email: string): Observable<any> {
+    return this.http.post('auth/reset', JSON.stringify({"email": email}),this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null)),
+      shareReplay(1)
+    );
+  }
+
+  tokenCheck(token: string): Observable<any> {
+    return this.http.post('auth/tokenCheck', JSON.stringify({"token": token}), this.httpOptions)
+    .pipe(
+      catchError(this.handleError<any>(null))
+    );
+  }
+
+  pwRepublish(email: string, password: string): Observable<boolean> {
+    return this.http.post('auth/republish', JSON.stringify({"email": email, "password": password}), this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
     );
   }
 

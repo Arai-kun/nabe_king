@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>このまま移動しても大丈夫ですか？</h2>
+<div mat-dialog-content>
+  <p>保存していないデータは失われます</p>
+</div>
+<div mat-dialog-actions class="dialog-buttons">
+  <button mat-button (click)="cancel()">いいえ</button>
+  <span fxFlexOffset="auto">
+    <button mat-raised-button color="primary" (click)="ok()">はい</button>
+  </span>
+</div>

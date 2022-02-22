@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
-import { user } from './user';
-import { config } from './config'; 
+import { user } from './user'; 
 
 @Injectable({
   providedIn: 'root'
@@ -15,29 +14,6 @@ export class DbService {
   };
 
   constructor(private http: HttpClient) { }
-
-  createUser(user: user): Observable<any>{
-    return this.http.post('user', user, this.httpOptions)
-    .pipe(
-      catchError(this.handleError<any>(null)),
-      shareReplay(1)
-    );
-  }
-
-  userExist(email: string): Observable<boolean> {
-    return this.http.post<boolean>('user/exist', JSON.stringify({"email": email}), this.httpOptions)
-    .pipe(
-      map(result => {
-        if(result){
-          return true;
-        }
-        else{
-          return false;
-        }
-      }),
-      catchError(this.handleError<boolean>(false))
-    );
-  }
 
   tokensExist(): Observable<boolean> {
     return this.http.get<boolean>('user/tokens', this.httpOptions)
@@ -92,6 +68,23 @@ export class DbService {
       }),
       catchError(this.handleError<boolean>(false))
     );
+  }
+
+  delete() : Observable<boolean> {
+    const url = 'user/delete';
+    return this.http.get(url, this.httpOptions)
+    .pipe(
+      map(result => {
+        if(result){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }),
+      catchError(this.handleError<boolean>(false))
+    );
+
   }
 
   private handleError<T>(result?: T) {

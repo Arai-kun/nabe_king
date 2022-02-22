@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { DbService } from '../db.service';
 import { data } from '../data';
+import { MatTableDataSource } from '@angular/material/table';
+import { OverlaySpinnerService } from '../overlay-spinner.service';
+import { ToastrService } from 'ngx-toastr';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 export interface displayData {
     orderId: string,
     purchaseDate: string,
-    orderStatus: string,
-    buyerEmail: string,
-    buyerName: string,
     itemName: string,
-    quantityOrdered: number,
+    orderStatus: string,
     isSent: string,
     unSend: boolean
 }
@@ -31,86 +33,102 @@ export interface displayData {
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css']
 })
-export class DataComponent implements OnInit {
-  submitting: boolean = false;
-  data_arr!: data['data_arr'];
+export class DataComponent implements OnInit, AfterViewInit{
+  data!: data['data_arr']; 
   displayedColumns: string[] = [
     'orderId',
     'purchaseDate',
-    'buyerName',
-    'buyerEmail',
     'itemName',
-    'quantityOrdered',
     'orderStatus',
     'isSent',
     'notSend'
   ];
-  dataSource: displayData[] = [{
-    orderId: "",
-    purchaseDate: "",
-    buyerName: "",
-    buyerEmail: "",
-    itemName: "",
-    quantityOrdered: 0,
-    orderStatus: "",
-    isSent: "",
-    unSend: false
-  }];
+
+  dataSource = new MatTableDataSource<displayData>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private dbService: DbService
+    private dbService: DbService,
+    private overlaySpinnerService: OverlaySpinnerService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
-    this.submitting = false;
+    this.overlaySpinnerService.attach();
     this.getData();
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+  
+  /**
+   * Notice!: Push() for dataSource does not generate a trigger of object change in mat-table.
+   *          Use '=' to provide data to dataSource.
+   */
 
   getData(): void {
     this.dbService.get<data>('data')
     .subscribe(data => {
-      this.data_arr = data['data_arr'];
-      for(let i = 0; i < this.data_arr.length; i++){
-        if(this.data_arr[i].orderStatus === 'Shipped' || this.data_arr[i].orderStatus === 'InvoiceUnconfirmed'){
-          this.dataSource[i].orderStatus = '発送済';
-        }
-        else{
-          this.dataSource[i].orderStatus = '未発送';
-        }
-        if(this.data_arr[i].isSent){
-          this.dataSource[i].isSent = '配信済';
-        }
-        else{
-          this.dataSource[i].isSent = '未配信';
-        }
-        this.dataSource[i].orderId = this.data_arr[i].orderId;
-        this.data_arr[i].purchaseDate = new Date(this.data_arr[i].purchaseDate);
-        this.dataSource[i].purchaseDate = `${this.data_arr[i].purchaseDate.getFullYear()}年${this.data_arr[i].purchaseDate.getMonth() + 1}月${this.data_arr[i].purchaseDate.getDate()}日${this.data_arr[i].purchaseDate.getHours()}時${this.data_arr[i].purchaseDate.getMinutes()}分`;
-        this.dataSource[i].buyerName = this.data_arr[i].buyerName;
-        this.dataSource[i].buyerEmail = this.data_arr[i].buyerEmail;
-        this.dataSource[i].itemName= this.data_arr[i].itemName;
-        this.dataSource[i].quantityOrdered = this.data_arr[i].quantityOrdered;
-        this.dataSource[i].unSend = this.data_arr[i].unSend
+      this.data = data['data_arr'];
+      if(!this.data){
+        this.overlaySpinnerService.detach();
+        return;
       }
+      let bufOrderStatus: string;
+      let bufIsSent: string;
+      let bufData: displayData[] = [];
+      for(let i = 0; i < this.data.length; i++){
+        if(this.data[i].orderStatus === 'Shipped' || this.data[i].orderStatus === 'InvoiceUnconfirmed'){
+          //this.dataSource[i].orderStatus = '発送済';
+          bufOrderStatus = '発送済';
+        }
+        else{
+          bufOrderStatus = '未発送';
+        }
+        if(this.data[i].isSent){
+          bufIsSent = '配信済';
+        }
+        else{
+          //this.dataSource[i].isSent = '未配信';
+          bufIsSent = '未配信';
+        }
+        let date = new Date(this.data[i].purchaseDate);
+        bufData.push({
+          orderId: this.data[i].orderId,
+          purchaseDate: `${date.getFullYear()}/${('0' + (date.getMonth() + 1)).slice(-2)}/${('0' + date.getDate()).slice(-2)}/ ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`,
+          itemName: this.data[i].itemName,
+          orderStatus: bufOrderStatus,
+          isSent: bufIsSent,
+          unSend: this.data[i].unSend
+        });
+      }
+      this.dataSource.data = bufData;
+      this.overlaySpinnerService.detach();
     });
   }
 
   onSave(): void {
-    this.submitting = true;
+    this.overlaySpinnerService.attach();
     /* 未配信のみの配列に絞るべきか */
-    for(let i = 0; i < this.dataSource.length; i++){
-      if(this.dataSource[i].unSend === true) this.data_arr[i].unSend = true;
-      if(this.dataSource[i].unSend === false) this.data_arr[i].unSend = false;
+    for(let i = 0; i < this.dataSource.data.length; i++){
+      if(this.dataSource.data[i].unSend === true) this.data[i].unSend = true;
+      if(this.dataSource.data[i].unSend === false) this.data[i].unSend = false;
     }
-    this.dbService.update<data>('data', {email: "", data_arr: this.data_arr})
+    this.dbService.update<data>('data', {email: "", data_arr: this.data})
     .subscribe(result => {
       if(result){
+        this.overlaySpinnerService.detach();
+        this.toastrService.success('反映しました', '', { positionClass: 'toast-bottom-center', timeOut: 5000, closeButton: true});
         this.ngOnInit();
       }
       else{
-        console.log('data update failed');
+        this.overlaySpinnerService.detach();
+        this.toastrService.error('大変申し訳ありません。お手数ですが、お問い合わせからご報告をお願いいたします', '反映失敗', { positionClass: 'toast-bottom-full-width', timeOut: 6000, closeButton: true});
       }
-    })
+    });
   }
-
 }

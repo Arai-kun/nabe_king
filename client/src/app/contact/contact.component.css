@@ -1,0 +1,11 @@
+.contact-card {
+    margin: 1em 1em;
+}
+
+.readonly-email {
+    margin-bottom: 24px;
+}
+
+mat-card-header {
+    margin-bottom: 24px;
+}

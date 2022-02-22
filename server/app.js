@@ -4,20 +4,33 @@ let cookieParser = require('cookie-parser');
 let createError = require('http-errors')
 let logger = require('morgan');
 let mongoose = require('mongoose');
+let cloudinary = require('cloudinary').v2;
+let compression = require('compression');
+const sendgrid = require('@sendgrid/mail');
+require('dotenv').config();
 
 mongoose.connect(
-    "mongodb://localhost:27017/nabe_king?authSource=admin",
+    "mongodb://localhost:27017/rakucomeDb?authSource=admin",
     {
         useNewUrlParser: true,
         user: "admin",
-        pass: "Bach01070202"
+        pass: process.env.DB_ADMINPW
     }
 );
 
 let db = mongoose.connection;
 db.once("open", () => {
-  console.log("Successfully connected to MongoDB using Mongoose!");
+  console.log("Successfully connected to MongoDB using Mongoose");
 });
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.CLOUD_API_KEY, 
+  api_secret: process.env.CLOUD_API_SECRET,
+  secure: true
+});
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -28,17 +41,19 @@ let User = require('./models/user');
 
 let authRouter = require('./routes/authRouter');
 let dbRouter = require('./routes/dbRouter');
+let fileRouter = require('./routes/fileRouter');
+let mailRouter = require('./routes/mailRouter');
 
 let app = express();
 
+app.use(compression());
 app.enable('trust proxy');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-    secret: 'nabe_king',      // クッキーの暗号化に使用するキー
+    secret: process.env.SESSION_SECRET,      // クッキーの暗号化に使用するキー
     resave: false,             // セッションチェックする領域にリクエストするたびにセッションを作り直してしまうので false
     saveUninitialized: false,  // 未認証時のセッションを保存しないようにする
     cookie: {
@@ -75,7 +90,7 @@ passport.use('local', new LocalStrategy({
         auth: true,
         email: user.email
       };
-      return done(null, authUser);　//この第二引数がsessionに保存される
+      return done(null, authUser); //この第二引数がsessionに保存される
     });
 }));
   
@@ -95,8 +110,20 @@ function passwordValidator(reqPassword, dbPassword) {
     return bcrypt.compareSync(reqPassword, dbPassword);
 }
 
+function isLogined(req, res, next){
+  if(req.isAuthenticated()){
+    next();
+  }
+  else{
+    res.status(401);
+    res.json({message: 'Unauthorized'})
+  }
+}
+
 app.use('/auth', authRouter);
-app.use('/user', dbRouter);
+app.use('/user', isLogined, dbRouter);
+app.use('/file', isLogined, fileRouter);
+app.use('/mail', isLogined, mailRouter);
 
 app.use(express.static(path.join(__dirname, '../client/dist/client')));
 app.use('/*', express.static(path.join(__dirname, '../client/dist/client/index.html')));

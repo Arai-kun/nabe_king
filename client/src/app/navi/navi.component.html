@@ -5,9 +5,10 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>メニュー</mat-toolbar>
     <mat-nav-list>
+      <a mat-list-item [routerLink]="['/home/mail']">メール作成</a>
       <a mat-list-item [routerLink]="['/home/config']">設定</a>
       <a mat-list-item [routerLink]="['/home/data']">データ</a>
-      <a mat-list-item [routerLink]="['/home/mail']">メール作成</a>
+      <a mat-list-item [routerLink]="['/home/contact']">お問い合わせ</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -20,13 +21,14 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>アプリケーション</span>
-      <span fxFlexOffset="auto">
+      <span>楽コメ <small>～RakuComeRakuCome～</small></span>
+      <span class="email" fxFlexOffset="auto" >
+        {{email}}
         <button
           type="button"
-          mat-raised-button
+          mat-icon-button
           (click)="onLogout()">
-          ログアウト
+          <mat-icon>logout</mat-icon>
         </button>
       </span>
     </mat-toolbar>
