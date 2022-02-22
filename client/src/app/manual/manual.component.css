@@ -5,3 +5,7 @@
 .manual-header {
     padding-bottom: 16px;
 }
+
+.mat-card-content {
+    padding: 0 16px;
+}

@@ -5,7 +5,7 @@
         </mat-card-header>
         <mat-card-content>
             <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
-                <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="10px">
+                <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
                     <div fxLayout="row" fxLayoutAlign="start center">
                         <label class="example-margin">メール自動配信</label>
                         <mat-radio-group [formControl]="radioControl"
@@ -35,7 +35,7 @@
                         </mat-form-field>
                     </div>
   
-                    <div class="example-margin-2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                    <div class="example-margin-2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
                         <mat-form-field>
                             <mat-label>開始時刻</mat-label>
                             <input matInput type="time" name="from" [(ngModel)]="from" formControlName="from"/>
