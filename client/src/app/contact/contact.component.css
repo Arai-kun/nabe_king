@@ -1,6 +1,5 @@
 .contact-card {
     margin: 1em 1em;
-    padding-bottom: 8px;
 }
 
 .readonly-email {
@@ -12,5 +11,6 @@ mat-card-header {
 }
 
 .mat-card-header .mat-card-title {
+    margin-top: 8px;
     margin-bottom: 0;
 }

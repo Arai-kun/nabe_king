@@ -9,3 +9,8 @@
 .mat-card-content {
     padding: 0 16px;
 }
+
+.mat-card-header .mat-card-title {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
