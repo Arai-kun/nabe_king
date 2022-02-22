@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>manual.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>本アプリケーション(Webアプリおよびホストサーバーを含む全体)は、Amazon Sellerアカウントと連携して、購入者へ自動メール配信を行うシステムになります。特に、本Webアプリでは、それに係るメールテンプレートの作成や配信ターゲットの設定等の機能を持ちます。</p>
+<p>以下で各項目において簡単な説明事項を記載しますので、ご参考ください。</p>
+<hr>
+<ul>
+<li>
+<p>画面構成</p>
+<p>左部はメニューです。クリックして各メニューに切り替えることができます。上部右はログインしているメールアドレスが表示され、メールアドレス右部のアイコンをクリックすることでログアウトができます。それ以外の領域が主なコンテンツ部分になります。</p>
+</li>
+<li>
+<p>認証および連携</p>
+<p>登録していただいたメールアドレスに対応してAmazon Sellerアカウントが紐づけられます。したがって、Amazon Sellerアカウントをお持ちでないユーザーは同アプリに登録することができません。連携プロセスは初回登録時のみ行われます。</p>
+<p>重複するメールアドレスの登録、<strong>既にいずれかのメールアドレスに紐づいているAmazon Sellerアカウントを新たに別のメールアドレスに紐づけることはできません</strong>。どうしても当該操作を行いたい場合は、後述しますアカウント削除機能をご活用ください。</p>
+<p>ログインページではパスワード再発行機能が使用できます。登録しているメールアドレスを入力して、再発行用メールが届きますので、そのプロセスに従ってください。</p>
+</li>
+<li>
+<p>メニュー「メール作成」</p>
+<p>ドラッグ&amp;ドロップを使用して限りなく自由なメールテンプレートを作成できます。右部のコンポーネント群からドラッグし左部のメールテンプレートへドロップすることで、テンプレートをカスタマイズしていくことができます。例えば、画像のコンポーネントをドラッグ&amp;ドロップで追加した場合、追加された左部の画像コンポーネント領域をクリックすると、画像アップロードを含む詳細な編集ができます。</p>
+<p>左部のメールテンプレートのデザインが視覚的にそのままメールとして送信されます。下部のボタンから登録しているメールアドレスにテストメールを送信できますので、適宜ご活用ください。</p>
+<p>また、<strong>下部の保存ボタンで保存を行うことを忘れないでください</strong>。編集したものを保存しないまま他のメニューへ遷移すると、その編集は失わてしまいます。</p>
+<p>より詳しい使い方については右部下のunlayerのリンクからご確認ください。</p>
+</li>
+<li>
+<p>メニュー「設定」</p>
+<p>ここではメール配信に係る設定を行います。初期時では、<strong>メール配信が無効の設定になっていますので、必要に応じて有効に切り替えてください</strong>。</p>
+<p>発送から配信までの日数の設定については、注文が発送状態になってから何日後にメールを配信するか設定します。例えばそれを3日後と設定し、2022/02/22 11:33に発送になれば、2022/02/25 11:33が配信時間になります(厳密には15分間隔でメール配信をしているので、最も早い周期として2022/02/25 11:45が正確な配信時間になります)。</p>
+<p>その下に続く期間の設定では、配信除外時間帯を設定します。23:00-08:00と入力すれば、いわゆる夜間時間帯は配信されません。その時間帯に配信するはずだったメールは8:00以降に順次配信されます。</p>
+<p>残りの設定項目は注文ごとに異なるフルフィルメントおよび商品状態に対して配信するかしないかのターゲット設定をします。初期時では、フルフィルメントがFBA、商品状態が新品の注文に対して、配信する設定になっています。<strong>ひとつもチェックがなければ、実質配信無効となります</strong>。</p>
+<p>上記の項目を編集したならば、下部右の更新ボタンで更新することを忘れないでください。</p>
+<p>またその更に下部には、アカウント削除ボタンがあります。このボタンによって、アカウント削除をする場合、メールアドレスに対するAmazon Sellerアカウントの紐づけを含む全てのデータが削除されます。削除したデータは復元できませんのでご注意ください。</p>
+</li>
+<li>
+<p>メニュー「データ」</p>
+<p>ここでは監視している注文データの一覧およびその状況の表示、配信対象外設定をします。常に過去1か月間の注文を監視します。発送を検知すると、商品名が記載され、未発送の場合は、商品名は空欄です。また、過去1か月間の注文を取得する際、既に発送済みで一定の時間が経っている場合は、監視対象外とみなし、商品名は空欄で、配信対象外の設定になります。その仕様上、初回登録時にはそのようなデータは多く見られます。</p>
+<p>右部トグルボタンでは、各注文に対して配信対象外の設定ができます。変更した場合、上部右の反映ボタンで反映させるのを忘れないでください。</p>
+<p>これらのデータはあくまで同アプリケーション内での必要事項に特化した内容であり、詳細な注文データを閲覧したい場合は、引き続きAmazon Seller Centralを利用してください。</p>
+</li>
+<li>
+<p>メニュー「お問い合わせ」</p>
+<p>ここでは管理者へお問い合わせをすることができます。不具合報告や質問等ありましたら、ご利用ください。登録しているメールアドレスに返信する形で回答します。</p>
+</li>
+<li>
+<p>セキュリティ</p>
+<p>本アプリケーションで利用するユーザーの機密情報管理の堅牢性は、Amazon、特にOAuth規格に依存する部分では元より、それ以外の部分でも実装仕様から完全であることを主張します。また、管理者がそれらの機密情報を本アプリケーション上の使用目的以外の用途で利用することはありません。</p>
+</li>
+</ul>
+
+</body>
+</html>
