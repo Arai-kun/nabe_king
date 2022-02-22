@@ -24,3 +24,7 @@
     margin-right: 14px;
 }
 
+.mat-card-header .mat-card-title {
+    margin-bottom: 0;
+}
+

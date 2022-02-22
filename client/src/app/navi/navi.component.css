@@ -19,3 +19,12 @@
 .email {
   font-size: 14px;
 }
+
+.navi-title {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.list-icon {
+  padding-right: 8px;
+}
