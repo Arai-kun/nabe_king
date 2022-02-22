@@ -13,6 +13,7 @@ import { ContactComponent } from './contact/contact.component';
 import { CanDeactivateGuard } from './can-deactivate-guard.service';
 import { ForgotComponent } from './forgot/forgot.component';
 import { ResetComponent } from './reset/reset.component';
+import { ManualComponent } from './manual/manual.component';
 
 
 const routes: Routes = [
@@ -29,7 +30,8 @@ const routes: Routes = [
       { path: "config", component: ConfigComponent },
       { path: "data", component: DataComponent },
       { path: "mail", component: MailComponent, canDeactivate: [CanDeactivateGuard] },
-      { path: "contact", component: ContactComponent }
+      { path: "contact", component: ContactComponent },
+      { path: "manual", component: ManualComponent }
     ]
   },
   { path: "**", redirectTo: "auth" }
