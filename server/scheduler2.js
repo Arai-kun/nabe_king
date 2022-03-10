@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 const sendgrid = require('@sendgrid/mail');
-let fs = require('fs');
+//let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
 const { exit } = require('process');
 let handlebars = require('handlebars');
@@ -26,13 +26,14 @@ db.once("open", () => {
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* Reset every time for saving storage */
+/*
 console.log('Create log file');
 fs.writeFile(process.env.LOGFILE_PATH, '', error => {
     if(error){
         console.log('Write file failed. Abort');
         exit(1);
     }
-});
+});*/
 
 let User = require('./models/user');
 let Config = require('./models/config');
@@ -449,8 +450,7 @@ async function sendEmail(user, config){
                 let templeteSub = handlebars.compile(result.subject);
                 let subject = templeteSub(mailValue);
                 await sendgrid.send({
-                    //to: sendData.buyerEmail,
-                    to: 'koki.alright@gmail.com',
+                    to: sendData.buyerEmail,
                     from: process.env.EMAILFROM,
                     subject: subject,
                     html: html
@@ -527,13 +527,14 @@ function checkRestrictDulation(start, end){
 
 function log(str) {
     console.log(str);
+    /*
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     fs.appendFile(process.env.LOGFILE_PATH, `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}: ` + str + '\n', error => {
         if(error){
             console.log('Append file failed. Abort');
             exit(1);
         }
-    });
+    });*/
 }
 
 function resetLogFile(fs) {
