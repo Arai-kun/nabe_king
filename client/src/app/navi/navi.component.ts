@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { OverlaySpinnerService } from '../overlay-spinner.service';
 import { DbService } from '../db.service';
 import { user } from '../user';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteComponent } from '../delete/delete.component';
 
 @Component({
   selector: 'app-navi',
@@ -27,7 +29,8 @@ export class NaviComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private overlaySpinnerService: OverlaySpinnerService,
-    private dbService: DbService
+    private dbService: DbService,
+    public dialog: MatDialog
     ) {}
 
   ngOnInit(): void {
@@ -44,6 +47,12 @@ export class NaviComponent implements OnInit {
     this.authService.logout().subscribe(() => {
       this.overlaySpinnerService.detach();
       this.router.navigate(['/']);
+    });
+  }
+
+  onDelete(): void {
+    this.dialog.open(DeleteComponent, {
+      width: '380px'
     });
   }
 

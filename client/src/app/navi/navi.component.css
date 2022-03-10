@@ -3,7 +3,7 @@
 }
 
 .sidenav {
-  width: 160px;
+  width: 184px;
 }
 
 .sidenav .mat-toolbar {
@@ -18,4 +18,17 @@
 
 .email {
   font-size: 14px;
+}
+
+.navi-title {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.list-icon {
+  padding-right: 8px;
+}
+
+.mat-menu-item .mat-icon {
+  margin-right: 8px;
 }

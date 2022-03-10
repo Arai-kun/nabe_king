@@ -5,10 +5,11 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>メニュー</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['/home/mail']">メール作成</a>
-      <a mat-list-item [routerLink]="['/home/config']">設定</a>
-      <a mat-list-item [routerLink]="['/home/data']">データ</a>
-      <a mat-list-item [routerLink]="['/home/contact']">お問い合わせ</a>
+      <a mat-list-item [routerLink]="['/home/mail']"><mat-icon class="list-icon">email</mat-icon>メール作成</a>
+      <a mat-list-item [routerLink]="['/home/config']"><mat-icon class="list-icon">settings</mat-icon>設定</a>
+      <a mat-list-item [routerLink]="['/home/data']"><mat-icon class="list-icon">description</mat-icon>データ</a>
+      <a mat-list-item [routerLink]="['/home/contact']"><mat-icon class="list-icon">contact_support</mat-icon>お問い合わせ</a>
+      <a mat-list-item [routerLink]="['/home/manual']"><mat-icon class="list-icon">info</mat-icon>マニュアル</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -17,19 +18,28 @@
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>楽コメ <small>～RakuComeRakuCome～</small></span>
+      <span class="navi-title">楽コメ <small>～RakuComeRakuCome～</small></span>
       <span class="email" fxFlexOffset="auto" >
         {{email}}
         <button
           type="button"
           mat-icon-button
-          (click)="onLogout()">
-          <mat-icon>logout</mat-icon>
+          [matMenuTriggerFor]="userMenu">
+          <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
+        <mat-menu #userMenu="matMenu" class="user-profile">
+          <button mat-menu-item (click)="onLogout()">
+              <mat-icon>logout</mat-icon>
+              ログアウト
+          </button>
+          <button mat-menu-item (click)="onDelete()">
+              <mat-icon>delete_forever</mat-icon>
+              アカウント削除
+          </button>
+        </mat-menu>
       </span>
     </mat-toolbar>
     <ng-content></ng-content>

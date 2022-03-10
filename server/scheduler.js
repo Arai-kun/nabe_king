@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 const sendgrid = require('@sendgrid/mail');
-let fs = require('fs');
+//let fs = require('fs');
 let SellingPartnerAPI = require('amazon-sp-api');
 const { exit } = require('process');
 let handlebars = require('handlebars');
@@ -26,13 +26,14 @@ db.once("open", () => {
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* Reset every time for saving storage */
+/*
 console.log('Create log file');
 fs.writeFile(process.env.LOGFILE_PATH, '', error => {
     if(error){
         console.log('Write file failed. Abort');
         exit(1);
     }
-});
+});*/
 
 let User = require('./models/user');
 let Config = require('./models/config');
@@ -90,6 +91,7 @@ async function main() {
 
 async function dataUpdate(user, config) {
     log('Enter in dataUpdate()');
+    log(`[${user.email}] config: ${config}`);
     let sellingPartner = new SellingPartnerAPI({
         region: 'fe',
         //access_token: user.access_token,
@@ -116,7 +118,7 @@ async function dataUpdate(user, config) {
      */
 
     date = new Date(date.setMonth((date.getMonth() + 1 - 2)));
-    log(`Create before: ${date.toString()}`);
+    log(`Create after: ${date.toString()}`);
     let orderList = [];
     try {
         let result = await sellingPartner.callAPI({
@@ -178,18 +180,88 @@ async function dataUpdate(user, config) {
             if(data.data_arr !== null){
                 findData = data.data_arr.find(d => d.orderId === order.AmazonOrderId);
             }
-            /* Probably when get new data, buyeremail is not ready. Or change system? */
-            if(findData !== undefined){
-                if(findData.buyerEmail === ''){
-                    findData = undefined;
-                }
-            }
+
             if(findData !== undefined){
                 /* Update the data */
-                let sendTarget = getSendTarget(findData, config);
                 if(findData.shippedDate === null && (order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed')){
                     findData.shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+                    /* Get each information because it became 'Shipped' status */
+                    log(`[${findData.orderId}] Detect order change to Shipped etc`);
+                    try{
+                        /* Get buyer email */
+                        /* Refresh credential role if spent 1 hour */
+                        if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                            await sellingPartner.refreshAccessToken();
+                            await sellingPartner.refreshRoleCredentials();
+                            log('Refresh token and credential role');
+                            startTime = Date.now();
+                        }
+                        let result2 = await sellingPartner.callAPI({
+                            api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                            method: 'GET',
+                            options: {
+                                raw_result: true
+                            }
+                        });
+                        if(Number(result2.statusCode) !== 200){
+                            log('API failed: buyerInfo');
+                            throw (order.AmazonOrderId + ' ' + result2.body);
+                        }
+                        if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
+                            findData.buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
+                        }
+                        log(`Get buyerEmail: ${findData.buyerEmail}`);
+    
+                        /* Get item name */
+                        /* Refresh credential role if spent 1 hour */
+                        if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                            await sellingPartner.refreshAccessToken();
+                            await sellingPartner.refreshRoleCredentials();
+                            log('Refresh token and credential role');
+                            startTime = Date.now();
+                        }
+                        let result3 = await sellingPartner.callAPI({
+                            api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                            method: 'GET',
+                            options: {
+                                raw_result: true
+                            }
+                        });
+                        if(Number(result3.statusCode) !== 200){
+                            log('API failed: orderItems');
+                            throw (order.AmazonOrderId + ' ' + result3.body);
+                        }
+                        let rate = result3.headers['x-amzn-ratelimit-limit'];
+                        result3 = JSON.parse(result3.body).payload.OrderItems[0];
+    
+                        //console.log(result3);
+                        if('Title' in result3){
+                            findData.itemName = result3.Title;
+                        }
+
+                        findData.condition = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
+                        if('ConditionId' in result3){
+                            findData.condition = result3.ConditionId;
+                        }
+                        if('ConditionSubtypeId' in result3){
+                            findData.subCondition = result3.ConditionSubtypeId;
+                        }    
+                        
+                        rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
+                        log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
+                        const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                        await _sleep((1 / Number(rate)) * 1000);
+                    }
+                    catch(error){
+                        log(error);
+                    }
                 }
+
+                findData.sendTarget = getSendTarget({
+                    condition: findData.condition,
+                    subCondition: findData.subCondition,
+                    fullfillment: findData.fullfillment
+                }, config);
 
                 newDataList.push({
                     orderId: findData.orderId,
@@ -201,117 +273,124 @@ async function dataUpdate(user, config) {
                     itemName: findData.itemName,
                     isSent: findData.isSent,
                     unSend: findData.unSend,
-                    sendTarget: sendTarget,
+                    sendTarget: findData.sendTarget,
                     condition: findData.condition,
                     subCondition: findData.subCondition,
                     fullfillment: findData.fullfillment
                 });
-
             }
             else{
                 /* New data */
-                try{
-                    /* Get buyer email */
-                    /* Refresh credential role if spent 1 hour */
-                    if((Date.now() - startTime) >= (60 * 60 * 1000)){
-                        await sellingPartner.refreshAccessToken();
-                        await sellingPartner.refreshRoleCredentials();
-                        log('Refresh token and credential role');
-                        startTime = Date.now();
-                    }
-                    let result2 = await sellingPartner.callAPI({
-                        api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
-                        method: 'GET',
-                        options: {
-                            raw_result: true
-                        }
-                    });
-                    if(Number(result2.statusCode) !== 200){
-                        log('API failed: buyerInfo');
-                        throw (order.AmazonOrderId + ' ' + result2.body);
-                    }
-                    let buyerEmail =''
-                    if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
-                        buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
-                    }
-                    log(`Get buyerEmail: ${buyerEmail}`);
-
-                    /* Get item name */
-                    /* Refresh credential role if spent 1 hour */
-                    if((Date.now() - startTime) >= (60 * 60 * 1000)){
-                        await sellingPartner.refreshAccessToken();
-                        await sellingPartner.refreshRoleCredentials();
-                        log('Refresh token and credential role');
-                        startTime = Date.now();
-                    }
-                    let result3 = await sellingPartner.callAPI({
-                        api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
-                        method: 'GET',
-                        options: {
-                            raw_result: true
-                        }
-                    });
-                    if(Number(result3.statusCode) !== 200){
-                        log('API failed: orderItems');
-                        throw (order.AmazonOrderId + ' ' + result3.body);
-                    }
-                    let rate = result3.headers['x-amzn-ratelimit-limit'];
-                    result3 = JSON.parse(result3.body).payload.OrderItems[0];
-
-                    /*
-                    let sendTarget = getSendTarget({
-                        condition: result3.ConditionId,
-                        subCondition: result3.ConditionSubtypeId,
-                        fullfillment: order.FulfillmentChannel
-                    }, config);*/
-
-                    /* When it is already something like Shipped for some reason, unSend will be true */
-                    let unSend = false;
-                    let shippedDate = null;
-                    if(order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed'){
-                        shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+                /* When it is already something like Shipped for some reason, unSend will be true */
+                let unSend = false;
+                let shippedDate = null;
+                let buyerEmail ='';
+                let conditionId = '';
+                let conditionSubId = '';
+                let itemName = '';
+                let sendTarget = false;
+                if(order.OrderStatus === 'Shipped' || order.OrderStatus === 'InvoiceUnconfirmed'){
+                    shippedDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+                    if(!(shippedDate.getTime() - new Date(order.PurchaseDate).getTime() <= 15 * 60 * 60 * 1000)){
+                        /* Order out range */
                         unSend = true;
                     }
+                    else{
+                        /* Order in range */
+                        log(`[${order.AmazonOrderId}] Detect order to be already Shipped etc`);
+                        try{
+                            /* Get buyer email */
+                            /* Refresh credential role if spent 1 hour */
+                            if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                                await sellingPartner.refreshAccessToken();
+                                await sellingPartner.refreshRoleCredentials();
+                                log('Refresh token and credential role');
+                                startTime = Date.now();
+                            }
+                            let result2 = await sellingPartner.callAPI({
+                                api_path: `/orders/v0/orders/${order.AmazonOrderId}/buyerInfo`,
+                                method: 'GET',
+                                options: {
+                                    raw_result: true
+                                }
+                            });
+                            if(Number(result2.statusCode) !== 200){
+                                log('API failed: buyerInfo');
+                                throw (order.AmazonOrderId + ' ' + result2.body);
+                            }
+                            if(JSON.parse(result2.body).payload.BuyerEmail !== undefined){
+                                buyerEmail = JSON.parse(result2.body).payload.BuyerEmail;
+                            }
+                            log(`Get buyerEmail: ${buyerEmail}`);
+        
+                            /* Get item name */
+                            /* Refresh credential role if spent 1 hour */
+                            if((Date.now() - startTime) >= (60 * 60 * 1000)){
+                                await sellingPartner.refreshAccessToken();
+                                await sellingPartner.refreshRoleCredentials();
+                                log('Refresh token and credential role');
+                                startTime = Date.now();
+                            }
+                            let result3 = await sellingPartner.callAPI({
+                                api_path: `/orders/v0/orders/${order.AmazonOrderId}/orderItems`,
+                                method: 'GET',
+                                options: {
+                                    raw_result: true
+                                }
+                            });
+                            if(Number(result3.statusCode) !== 200){
+                                log('API failed: orderItems');
+                                throw (order.AmazonOrderId + ' ' + result3.body);
+                            }
+                            let rate = result3.headers['x-amzn-ratelimit-limit'];
+                            result3 = JSON.parse(result3.body).payload.OrderItems[0];
+                            
+                            if('Title' in result3){
+                                itemName = result3.Title;
+                            }
+        
+                            //console.log(result3);
+                            conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
+                            if('ConditionId' in result3){
+                                conditionId = result3.ConditionId;
+                            }
+                            if('ConditionSubtypeId' in result3){
+                                conditionSubId = result3.ConditionSubtypeId;
+                            }
 
-                    //console.log(result3);
-                    let conditionId = 'New'; // => Set New as default because kinds of product to eat has no ConditionId in Iteminfo 
-                    let conditionSubId = '';
-                    if('ConditionId' in result3){
-                        conditionId = result3.ConditionId;
+                            rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
+                            log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
+                            const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                            await _sleep((1 / Number(rate)) * 1000);
+                        }
+                        catch(error){
+                            log(error);
+                        }
+
                     }
-                    if('ConditionSubtypeId' in result3){
-                        conditionSubId = result3.ConditionSubtypeId;
-                    }
-
-                    let sendTarget = getSendTarget({
-                        condition: conditionId,
-                        subCondition: conditionSubId,
-                        fullfillment: order.FulfillmentChannel
-                    }, config);
-
-                    newDataList.push({
-                        orderId: order.AmazonOrderId,
-                        purchaseDate: new Date(order.PurchaseDate),
-                        orderStatus: order.OrderStatus,
-                        shippedDate: shippedDate,
-                        buyerEmail: buyerEmail,
-                        buyerName: 'ご購入者', // Cannot get buyerName because of PII in Amazon
-                        itemName: result3.Title,
-                        isSent: false,
-                        unSend: unSend,
-                        sendTarget: sendTarget,
-                        condition: conditionId,
-                        subCondition: conditionSubId,
-                        fullfillment: order.FulfillmentChannel
-                    });
-                    rate = rate < result2.headers['x-amzn-ratelimit-limit'] ? rate : result2.headers['x-amzn-ratelimit-limit'];
-                    log(`[/orders/v0/orders buyerInfo or itemInfo] Wait ${(1 / Number(rate)) * 1000} ms...`);
-                    const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                    await _sleep((1 / Number(rate)) * 1000);
                 }
-                catch(error){
-                    log(error);
-                }
+
+                sendTarget = getSendTarget({
+                    condition: conditionId,
+                    subCondition: conditionSubId,
+                    fullfillment: order.FulfillmentChannel
+                }, config);
+
+                newDataList.push({
+                    orderId: order.AmazonOrderId,
+                    purchaseDate: new Date(order.PurchaseDate),
+                    orderStatus: order.OrderStatus,
+                    shippedDate: shippedDate,
+                    buyerEmail: buyerEmail,
+                    buyerName: 'ご購入者', // Cannot get buyerName because of PII in Amazon
+                    itemName: itemName,
+                    isSent: false,
+                    unSend: unSend,
+                    sendTarget: sendTarget,
+                    condition: conditionId,
+                    subCondition: conditionSubId,
+                    fullfillment: order.FulfillmentChannel
+                });
             }
         }
         /* Save to DB */
@@ -371,8 +450,7 @@ async function sendEmail(user, config){
                 let templeteSub = handlebars.compile(result.subject);
                 let subject = templeteSub(mailValue);
                 await sendgrid.send({
-                    //to: sendData.buyerEmail,
-                    to: 'koki.alright@gmail.com',
+                    to: sendData.buyerEmail,
                     from: process.env.EMAILFROM,
                     subject: subject,
                     html: html
@@ -428,11 +506,9 @@ function getSendTarget(data, config){
 function checkRestrictDulation(start, end){
     log('Check dulation: ' + `From ${start} to ${end}`);
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`) 
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
-    console.log(startDate.toISOString());
-    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`)
-                        + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    const startDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${start}`));
+    const endDate = new Date(Date.parse(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${end}`));
+    log('Compare: ' + `start => ${startDate.toString()} end => ${endDate.toString()} now => ${now.toString()}`);
     if(startDate.getHours() < endDate.getHours() || 
         (startDate.getHours() === endDate.getHours() && startDate.getMinutes() < endDate.getMinutes())){
         if(startDate.getTime() <= now.getTime() && now.getTime() < endDate.getTime()){
@@ -451,13 +527,14 @@ function checkRestrictDulation(start, end){
 
 function log(str) {
     console.log(str);
+    /*
     const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     fs.appendFile(process.env.LOGFILE_PATH, `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}: ` + str + '\n', error => {
         if(error){
             console.log('Append file failed. Abort');
             exit(1);
         }
-    });
+    });*/
 }
 
 function resetLogFile(fs) {
